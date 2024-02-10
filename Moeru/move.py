@@ -1,19 +1,22 @@
 import pygame as py
+import time
 
 move_id = 0
 
 # pygame setup
 py.init()
+
 screen = py.display.set_mode((1280, 720))
 clock = py.time.Clock()
 running = True
 
 rect = py.Rect(0, 0, 5, 5)
-shot = py.Rect(rect.left + 1, rect.top + 1, 3, 3)
+base_shot = py.Rect(rect.left + 1, rect.top + 1, 3, 3)
 
 surface = py.display.get_surface()
 
 size = (1280, 720)
+last_move = 'z'
 
 while running:
     # poll for events
@@ -23,13 +26,13 @@ while running:
         rect.top = rect.top - 3
 
         if move_id == 0:
-            shot.top = shot.top - 3
+            base_shot.top = base_shot.top - 3
 
         if rect.top < 0:
             rect.top = 0
 
             if move_id == 0:
-                shot.top = 1
+                base_shot.top = 1
 
         last_move = 'z'
 
@@ -37,13 +40,13 @@ while running:
         rect.left = rect.left - 3
 
         if move_id == 0:
-            shot.left = shot.left - 3
+            base_shot.left = base_shot.left - 3
 
         if rect.left < 0:
             rect.left = 0
 
             if move_id == 0:
-                shot.left = 1
+                base_shot.left = 1
 
         last_move = 'q'
 
@@ -51,13 +54,13 @@ while running:
         rect.top = rect.top + 3
 
         if move_id == 0:
-            shot.top = shot.top + 3
+            base_shot.top = base_shot.top + 3
 
         if rect.top > size[1] - 5:
             rect.top = size[1] - 5
 
             if move_id == 0:
-                shot.top = size[1] - 6
+                base_shot.top = size[1] - 6
 
         last_move = 's'
 
@@ -65,13 +68,13 @@ while running:
         rect.left = rect.left + 3
 
         if move_id == 0:
-            shot.left = shot.left + 3
+            base_shot.left = base_shot.left + 3
 
         if rect.left > size[0] - 5:
             rect.left = size[0] - 5
 
             if move_id == 0:
-                shot.top = size[0] - 6
+                base_shot.top = size[0] - 6
 
         last_move = 'd'
 
@@ -102,18 +105,22 @@ while running:
 
         if event.type == py.MOUSEBUTTONUP:
             if last_move == 'z' and move_id == 0:
+                basic_shot_start = time.time()
                 move_id = 1
                 print("L'utilisateur tir !")
 
             elif last_move == 'q' and move_id == 0:
+                basic_shot_start = time.time()
                 move_id = 2
                 print("L'utilisateur tir !")
 
             elif last_move == 's' and move_id == 0:
+                basic_shot_start = time.time()
                 move_id = 3
                 print("L'utilisateur tir !")
 
             elif last_move == 'd' and move_id == 0:
+                basic_shot_start = time.time()
                 move_id = 4
                 print("L'utilisateur tir !")
 
@@ -121,49 +128,49 @@ while running:
     screen.fill("purple")
 
     # RENDER YOUR GAME HERE
-    if move_id !=0:
+    if move_id != 0:
         if move_id == 1: # mouvement du tir (haut)
-            shot.top = shot.top - 5
+            base_shot.top = base_shot.top - 5
 
-            if shot.top <= 0:
+            if (base_shot.top <= 0) or ((time.time() - basic_shot_start) > 2.5):
                 move_id = 0
-                shot.left = rect.left + 1
-                shot.top = rect.top + 1
+                base_shot.left = rect.left + 1
+                base_shot.top = rect.top + 1
                 print("Le tir est de nouveau prêt !")
         
         if move_id == 2: # mouvement du tir (gauche)
-            shot.left = shot.left - 5
+            base_shot.left = base_shot.left - 5
 
-            if shot.left <= 0:
+            if (base_shot.left <= 0) or ((time.time() - basic_shot_start) > 2.5):
                 move_id = 0
-                shot.left = rect.left + 1
-                shot.top = rect.top + 1
+                base_shot.left = rect.left + 1
+                base_shot.top = rect.top + 1
                 print("Le tir est de nouveau prêt !")
 
         if move_id == 3: # mouvement du tir (bas)
-            shot.top = shot.top + 5
+            base_shot.top = base_shot.top + 5
 
-            if (shot.top >= size[1]):
+            if base_shot.top >= size[1] or ((time.time() - basic_shot_start) > 2.5):
                 move_id = 0
-                shot.left = rect.left + 1
-                shot.top = rect.top + 1
+                base_shot.left = rect.left + 1
+                base_shot.top = rect.top + 1
                 print("Le tir est de nouveau prêt !")
 
         if move_id == 4: # mouvement du tir (droite)
-            shot.left = shot.left + 5
+            base_shot.left = base_shot.left + 5
 
-            if (shot.left >= size[0]):
+            if (base_shot.left >= size[0]) or ((time.time() - basic_shot_start) > 2.5):
                 move_id = 0
-                shot.left = rect.left + 1
-                shot.top = rect.top + 1
+                base_shot.left = rect.left + 1
+                base_shot.top = rect.top + 1
                 print("Le tir est de nouveau prêt !")
 
     py.draw.rect(surface = surface, color = (255, 0, 0, 100), rect = rect)
-    py.draw.rect(surface = surface, color = (255, 0, 0, 80), rect = shot)
+    py.draw.rect(surface = surface, color = (255, 0, 0, 80), rect = base_shot)
 
     # flip() the display to put your work on screen
     py.display.flip()
 
-    clock.tick(60) # limits FPS to 60
+    clock.tick(75) # limits FPS to 75
 
 py.quit()
