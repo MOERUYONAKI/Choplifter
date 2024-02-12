@@ -21,6 +21,12 @@ surface = py.display.get_surface()
 
 bg = py.image.load('C:\\Users\\1bbor\\Pictures\\Choplifters\\49c21344-36b4-4a8b-b73b-31e28d0d5fba.webp').convert_alpha()
 bg = py.transform.scale(bg, size)
+bg_rect = bg.get_rect()
+
+bg2 = py.image.load('C:\\Users\\1bbor\\Pictures\\Choplifters\\49c21344-36b4-4a8b-b73b-31e28d0d5fba.webp').convert_alpha()
+bg2 = py.transform.scale(bg, size)
+bg2_rect = bg2.get_rect()
+bg2_rect.left = size[0]
 
 cms_font = py.font.Font('C:\\Windows\\WinSxS\\amd64_microsoft-windows-f..ruetype-comicsansms_31bf3856ad364e35_10.0.22621.1_none_3deaef772e20c404\\comicbd.ttf', 24)
 title = cms_font.render(f'CHOPLIFTER', True, (0, 0, 0, 0))
@@ -78,6 +84,10 @@ while running:
         if chop_rect.left < 0:
             chop_rect.left = 0
 
+            if bg_rect.left < 0:
+                bg_rect.left += 5
+                bg2_rect.left += 5
+
             if move_id == 0:
                 pew_rect.left = chop_rect.left + 32
 
@@ -117,6 +127,10 @@ while running:
 
         if chop_rect.left > size[0] - 64:
             chop_rect.left = size[0] - 64
+
+            if bg2_rect.left >= 5:
+                bg_rect.left -= 5
+                bg2_rect.left -= 5
 
             if move_id == 0:
                 pew_rect.left = chop_rect.left + 32
@@ -191,9 +205,13 @@ while running:
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("lavender")
+    screen.blit(bg, bg_rect)
+    screen.blit(bg2, bg2_rect)
 
-    screen.blit(bg, (0, 0))
+    # Textes
     screen.blit(title, title_rect)
+
+    # Assets
     screen.blit(pew_image, pew_rect)
     screen.blit(pew2_image, pew2_rect)
     screen.blit(chop_image, chop_rect)
