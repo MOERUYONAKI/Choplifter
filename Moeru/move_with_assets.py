@@ -122,6 +122,12 @@ while running:
                 size = (py.display.Info().current_w, py.display.Info().current_h)
 
         if event.type == py.KEYDOWN:
+            if event.key == py.K_SPACE: # Tir bas
+                if move_id2 == 0:
+                    down_shot_start = time.time()
+                    move_id2 = 1
+                    print("L'utilisateur tir !")
+
             if event.key == py.K_z: # Haut
                 print("L'utilisateur se déplace sur le haut !")
 
@@ -135,14 +141,9 @@ while running:
                 print("L'utilisateur se déplace sur la droite !")
 
         if event.type == py.MOUSEBUTTONUP:
-            if last_move == 'd' and move_id == 0:
+            if move_id == 0:
                 basic_shot_start = time.time()
                 move_id = 1
-                print("L'utilisateur tir !")
-            
-            elif last_move == 's' and move_id2 == 0:
-                down_shot_start = time.time()
-                move_id2 = 1
                 print("L'utilisateur tir !")
 
     # fill the screen with a color to wipe away anything from last frame
