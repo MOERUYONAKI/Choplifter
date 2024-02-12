@@ -50,6 +50,8 @@ while running:
 
             if move_id == 0:
                 pew_rect.top = chop_rect.top + 16
+
+            if move_id2 == 0:
                 pew2_rect.top = chop_rect.top + 12
 
         last_move = 'z'
@@ -68,6 +70,8 @@ while running:
 
             if move_id == 0:
                 pew_rect.left = chop_rect.left + 32
+
+            if move_id2 == 0:
                 pew2_rect.left = chop_rect.left + 36
 
         last_move = 'q'
@@ -86,6 +90,8 @@ while running:
 
             if move_id == 0:
                 pew_rect.top = chop_rect.top + 16
+
+            if move_id2 == 0:
                 pew2_rect.top = chop_rect.top + 12
 
         last_move = 's'
@@ -104,6 +110,8 @@ while running:
 
             if move_id == 0:
                 pew_rect.left = chop_rect.left + 32
+
+            if move_id2 == 0:
                 pew2_rect.left = chop_rect.left + 36
 
         last_move = 'd'
