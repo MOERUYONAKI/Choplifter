@@ -11,9 +11,21 @@ move_id2 = 0 # pew2_rect
 # pygame setup
 py.init()
 
+start_timer = time.time()
+
 screen = py.display.set_mode((1280, 720))
 clock = py.time.Clock()
 running = True
+
+surface = py.display.get_surface()
+
+bg = py.image.load('C:\\Users\\1bbor\\Pictures\\Choplifters\\49c21344-36b4-4a8b-b73b-31e28d0d5fba.webp').convert_alpha()
+bg = py.transform.scale(bg, size)
+
+cms_font = py.font.Font('C:\\Windows\\WinSxS\\amd64_microsoft-windows-f..ruetype-comicsansms_31bf3856ad364e35_10.0.22621.1_none_3deaef772e20c404\\comicbd.ttf', 24)
+title = cms_font.render(f'CHOPLIFTER', True, (0, 0, 0, 0))
+title_rect = title.get_rect()
+title_rect.center = (size[0] // 2, 12)
 
 chop_image = py.image.load('Python scripts\\Choplifter\\assets\\helicopter.png').convert_alpha()
 chop_rect = chop_image.get_rect()
@@ -29,8 +41,6 @@ pew2_rect = pew2_image.get_rect()
 
 pew2_rect.left = chop_rect.left + 36
 pew2_rect.top = chop_rect.top + 12
-
-surface = py.display.get_surface()
 
 while running:
     # poll for events
@@ -124,10 +134,12 @@ while running:
             if event.key == py.K_f and not py.display.is_fullscreen(): # set fullscreen mode
                 screen = py.display.set_mode((0, 0), py.FULLSCREEN)
                 size = (py.display.Info().current_w, py.display.Info().current_h)
+                bg = py.transform.scale(bg, size)
 
             if event.key == py.K_ESCAPE and py.display.is_fullscreen(): # set window mode
                 screen = py.display.set_mode((1280, 720))
                 size = (py.display.Info().current_w, py.display.Info().current_h)
+                bg = py.transform.scale(bg, size)
 
         if event.type == py.KEYDOWN:
             if event.key == py.K_SPACE: # Tir bas
@@ -148,21 +160,18 @@ while running:
             if event.key == py.K_d: # Droite
                 print("L'utilisateur se déplace sur la droite !")
 
-        if event.type == py.MOUSEBUTTONUP:
-            if move_id == 0:
+        if event.type == py.MOUSEBUTTONDOWN:
+            if move_id == 0 and event.button == 1: # 1 - Click gauche
                 basic_shot_start = time.time()
                 move_id = 1
                 print("L'utilisateur tir !")
-
-    # fill the screen with a color to wipe away anything from last frame
-    screen.fill("purple")
 
     # RENDER YOUR GAME HERE
     if move_id != 0:
         if move_id == 1: # mouvement du tir (droite)
             pew_rect.left = pew_rect.left + 8
 
-            if (pew_rect.left >= size[0]) or ((time.time() - basic_shot_start) > 2.5):
+            if (pew_rect.left >= size[0]) or ((time.time() - basic_shot_start) > 2):
                 move_id = 0
                 pew_rect.left = chop_rect.left + 32
                 pew_rect.top = chop_rect.top + 16
@@ -172,12 +181,17 @@ while running:
         if move_id2 == 1: # mouvement du tir (bas)
             pew2_rect.top = pew2_rect.top + 8
 
-            if pew2_rect.top >= size[1] or ((time.time() - down_shot_start) > 2.5):
+            if pew2_rect.top >= size[1] or ((time.time() - down_shot_start) > 3):
                 move_id2 = 0
                 pew2_rect.left = chop_rect.left + 36
                 pew2_rect.top = chop_rect.top + 12
                 print("Le tir est de nouveau prêt !")
 
+    # fill the screen with a color to wipe away anything from last frame
+    screen.fill("lavender")
+
+    screen.blit(bg, (0, 0))
+    screen.blit(title, title_rect)
     screen.blit(pew_image, pew_rect)
     screen.blit(pew2_image, pew2_rect)
     screen.blit(chop_image, chop_rect)
