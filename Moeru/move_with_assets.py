@@ -2,9 +2,11 @@ import pygame as py
 import time
 import chopper
 
-move_id = 0
 last_move = 'z'
 size = (1280, 720)
+
+move_id = 0 # pew_rect
+move_id2 = 0 # pew2_rect
 
 # pygame setup
 py.init()
@@ -22,6 +24,12 @@ pew_rect = pew_image.get_rect()
 pew_rect.left = chop_rect.left + 32
 pew_rect.top = chop_rect.top + 16
 
+pew2_image = py.image.load('Python scripts\\Choplifter\\assets\\pewpew2.png').convert_alpha()
+pew2_rect = pew2_image.get_rect()
+
+pew2_rect.left = chop_rect.left + 36
+pew2_rect.top = chop_rect.top + 12
+
 surface = py.display.get_surface()
 
 while running:
@@ -34,11 +42,15 @@ while running:
         if move_id == 0:
             pew_rect.top = pew_rect.top - 5
 
+        if move_id2 == 0:
+            pew2_rect.top = pew2_rect.top - 5
+
         if chop_rect.top < 0:
             chop_rect.top = 0
 
             if move_id == 0:
-                pew_rect.top = 5
+                pew_rect.top = chop_rect.top + 16
+                pew2_rect.top = chop_rect.top + 12
 
         last_move = 'z'
 
@@ -48,11 +60,15 @@ while running:
         if move_id == 0:
             pew_rect.left = pew_rect.left - 5
 
+        if move_id2 == 0:
+            pew2_rect.left = pew2_rect.left - 5
+
         if chop_rect.left < 0:
             chop_rect.left = 0
 
             if move_id == 0:
-                pew_rect.left = 5
+                pew_rect.left = chop_rect.left + 32
+                pew2_rect.left = chop_rect.left + 36
 
         last_move = 'q'
 
@@ -62,11 +78,15 @@ while running:
         if move_id == 0:
             pew_rect.top = pew_rect.top + 5
 
+        if move_id2 == 0:
+            pew2_rect.top = pew2_rect.top + 5
+
         if chop_rect.top > size[1] - 32:
             chop_rect.top = size[1] - 32
 
             if move_id == 0:
-                pew_rect.top = size[1] - 5
+                pew_rect.top = chop_rect.top + 16
+                pew2_rect.top = chop_rect.top + 12
 
         last_move = 's'
 
@@ -76,11 +96,15 @@ while running:
         if move_id == 0:
             pew_rect.left = pew_rect.left + 5
 
+        if move_id2 == 0:
+            pew2_rect.left = pew2_rect.left + 5
+
         if chop_rect.left > size[0] - 64:
             chop_rect.left = size[0] - 64
 
             if move_id == 0:
-                pew_rect.top = size[0] - 5
+                pew_rect.left = chop_rect.left + 32
+                pew2_rect.left = chop_rect.left + 36
 
         last_move = 'd'
 
@@ -111,14 +135,14 @@ while running:
                 print("L'utilisateur se déplace sur la droite !")
 
         if event.type == py.MOUSEBUTTONUP:
-            if last_move == 's' and move_id == 0:
+            if last_move == 'd' and move_id == 0:
                 basic_shot_start = time.time()
-                move_id = 3
+                move_id = 1
                 print("L'utilisateur tir !")
-
-            elif last_move == 'd' and move_id == 0:
-                basic_shot_start = time.time()
-                move_id = 4
+            
+            elif last_move == 's' and move_id2 == 0:
+                down_shot_start = time.time()
+                move_id2 = 1
                 print("L'utilisateur tir !")
 
     # fill the screen with a color to wipe away anything from last frame
@@ -126,16 +150,7 @@ while running:
 
     # RENDER YOUR GAME HERE
     if move_id != 0:
-        if move_id == 3: # mouvement du tir (bas)
-            pew_rect.top = pew_rect.top + 8
-
-            if pew_rect.top >= size[1] or ((time.time() - basic_shot_start) > 2.5):
-                move_id = 0
-                pew_rect.left = chop_rect.left + 32
-                pew_rect.top = chop_rect.top + 16
-                print("Le tir est de nouveau prêt !")
-
-        if move_id == 4: # mouvement du tir (droite)
+        if move_id == 1: # mouvement du tir (droite)
             pew_rect.left = pew_rect.left + 8
 
             if (pew_rect.left >= size[0]) or ((time.time() - basic_shot_start) > 2.5):
@@ -144,7 +159,18 @@ while running:
                 pew_rect.top = chop_rect.top + 16
                 print("Le tir est de nouveau prêt !")
 
+    if move_id2 != 0:
+        if move_id2 == 1: # mouvement du tir (bas)
+            pew2_rect.top = pew2_rect.top + 8
+
+            if pew2_rect.top >= size[1] or ((time.time() - down_shot_start) > 2.5):
+                move_id2 = 0
+                pew2_rect.left = chop_rect.left + 36
+                pew2_rect.top = chop_rect.top + 12
+                print("Le tir est de nouveau prêt !")
+
     screen.blit(pew_image, pew_rect)
+    screen.blit(pew2_image, pew2_rect)
     screen.blit(chop_image, chop_rect)
 
     # flip() the display to put your work on screen
