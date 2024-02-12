@@ -135,11 +135,13 @@ while running:
                 screen = py.display.set_mode((0, 0), py.FULLSCREEN)
                 size = (py.display.Info().current_w, py.display.Info().current_h)
                 bg = py.transform.scale(bg, size)
+                title_rect.center = (size[0] // 2, 12)
 
             if event.key == py.K_ESCAPE and py.display.is_fullscreen(): # set window mode
                 screen = py.display.set_mode((1280, 720))
                 size = (py.display.Info().current_w, py.display.Info().current_h)
                 bg = py.transform.scale(bg, size)
+                title_rect.center = (size[0] // 2, 12)
 
         if event.type == py.KEYDOWN:
             if event.key == py.K_SPACE: # Tir bas
