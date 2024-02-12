@@ -18,13 +18,13 @@ running = True
 chop_image = py.image.load('Python scripts\\Choplifter\\assets\\helicopter.png').convert_alpha()
 chop_rect = chop_image.get_rect()
 
-pew_image = py.image.load('Python scripts\\Choplifter\\assets\\pewpew.png').convert_alpha()
+pew_image = py.image.load('Python scripts\\Choplifter\\assets\\green_pewpew.png').convert_alpha()
 pew_rect = pew_image.get_rect()
 
 pew_rect.left = chop_rect.left + 32
 pew_rect.top = chop_rect.top + 16
 
-pew2_image = py.image.load('Python scripts\\Choplifter\\assets\\pewpew2.png').convert_alpha()
+pew2_image = py.image.load('Python scripts\\Choplifter\\assets\\green_pewpew2.png').convert_alpha()
 pew2_rect = pew2_image.get_rect()
 
 pew2_rect.left = chop_rect.left + 36
