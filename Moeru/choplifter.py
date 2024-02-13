@@ -14,6 +14,8 @@ def choplifter(size : tuple = (1280, 720)):
     jet_move = 0
     jet_destroyed = 0
 
+    bases_numbers = random.randint(2, 3)
+    bases = []
     base_destroyed = 0
 
     move_id = 0 # pew_rect
@@ -66,11 +68,12 @@ def choplifter(size : tuple = (1280, 720)):
     jet2_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
     jet2_rect.left = size[0] + 32
 
-    base_image = py.image.load('Python scripts\\Choplifter\\assets\\basement.png').convert_alpha()
-    base_image = py.transform.scale(base_image, (81, 60))
-    base_rect = base_image.get_rect()
-    base_rect.top = size[1] - 57
-    base_rect.left = random.randint(100, int(round(2 * size[0], 0)) - 100)
+    for i in range(bases_numbers):
+        bases.append([py.image.load('Python scripts\\Choplifter\\assets\\basement.png').convert_alpha()])
+        bases[i][0] = py.transform.scale(bases[i][0], (81, 60))
+        bases[i].append(bases[i][0].get_rect())
+        bases[i][1].top = size[1] - 57
+        bases[i][1].left = random.randint(100 + int(round((2 * size[0] / bases_numbers) * (i), 0)), int(round((2 * size[0] / bases_numbers) * (i + 1), 0)) - 100)
 
     pew_image = py.image.load('Python scripts\\Choplifter\\assets\\green_pewpew.png').convert_alpha()
     pew_rect = pew_image.get_rect()
@@ -116,11 +119,13 @@ def choplifter(size : tuple = (1280, 720)):
                 if bg_rect.left <= 5:
                     bg_rect.left += 5
                     bg2_rect.left += 5
-                    base_rect.left += 5
+                    for base in bases:
+                        base[1].left += 5
 
                 else:
                     bg2_rect.left -= bg_rect.left
-                    base_rect.left -= bg_rect.left
+                    for base in bases:
+                        base[1].left -= bg2_rect.left
                     bg_rect.left = 0
 
             else:
@@ -170,11 +175,13 @@ def choplifter(size : tuple = (1280, 720)):
                 if bg2_rect.left >= 5:
                     bg_rect.left -= 5
                     bg2_rect.left -= 5
-                    base_rect.left -= 5
+                    for base in bases:
+                        base[1].left -= 5
 
                 else:
                     bg_rect.left -= bg2_rect.left
-                    base_rect.left -= bg2_rect.left
+                    for base in bases:
+                        base[1].left -= bg2_rect.left
                     bg2_rect.left = 0  
             
             else:
@@ -199,7 +206,7 @@ def choplifter(size : tuple = (1280, 720)):
 
         for event in py.event.get():
             if event.type == py.QUIT:
-                print(f"Ennemis éliminés : \n{base_destroyed} base - {tank_destroyed} tanks - {jet_destroyed} jets")
+                print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets")
                 running = False # end of the loop
 
             if event.type == py.KEYDOWN:
@@ -330,7 +337,7 @@ def choplifter(size : tuple = (1280, 720)):
         # Collision events
         if chop_rect.colliderect(tank_rect) or chop_rect.colliderect(tank2_rect) or chop_rect.colliderect(jet_rect) or chop_rect.colliderect(jet2_rect):
             print("Hélicoptère détruit... \n")
-            print(f"Ennemis éliminés : \n{base_destroyed} base - {tank_destroyed} tanks - {jet_destroyed} jets")
+            print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets")
             running = False
 
         if pew_rect.colliderect(tank_rect) or pew2_rect.colliderect(tank_rect):
@@ -369,11 +376,17 @@ def choplifter(size : tuple = (1280, 720)):
             print("Jet détruit !")
             jet_destroyed += 1
 
-        if pew_rect.colliderect(base_rect) or pew2_rect.colliderect(base_rect):
-            base_rect.top = 0 - 250
+        for base in bases:
+            if pew_rect.colliderect(base[1]) or pew2_rect.colliderect(base[1]):
+                base[1].top = 0 - 250
 
-            print("Bâtiment détruit !")
-            base_destroyed += 1
+                print("Bâtiment détruit !")
+                base_destroyed += 1
+
+            elif chop_rect.colliderect(base[1]):
+                print("Hélicoptère détruit... \n")
+                print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets")
+                running = False
 
         # fill the screen with a color to wipe away anything from last frame
         screen.fill("lavender")
@@ -388,7 +401,10 @@ def choplifter(size : tuple = (1280, 720)):
         screen.blit(tank2_image, tank2_rect)
         screen.blit(jet_image, jet_rect)
         screen.blit(jet2_image, jet2_rect)
-        screen.blit(base_image, base_rect)
+
+        for base in bases:
+            screen.blit(base[0], base[1])
+
         screen.blit(pew_image, pew_rect)
         screen.blit(pew2_image, pew2_rect)
         screen.blit(chop_image, chop_rect)
