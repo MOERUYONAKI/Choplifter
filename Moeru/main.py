@@ -2,8 +2,6 @@ import time
 import pygame as py
 from choplifter import *
 
-
-
 def help():
     print('Commands list -')
     print('1 - /clear \n - Clear the CHPrompt')
@@ -27,6 +25,7 @@ def play(fullscreen : bool = False):
     print('Game logs will now be sent here \n')
 
     time.sleep(0.5)
+    print(size)
     choplifter(size)
 
     time.sleep(1)

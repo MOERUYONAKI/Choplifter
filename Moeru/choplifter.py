@@ -22,7 +22,7 @@ def choplifter(size : tuple = (1280, 720)):
 
     start_timer = time.time()
 
-    screen = py.display.set_mode((1280, 720))
+    screen = py.display.set_mode(size)
     clock = py.time.Clock()
     running = True
 
@@ -56,12 +56,12 @@ def choplifter(size : tuple = (1280, 720)):
 
     jet_image = py.image.load('Python scripts\\Choplifter\\assets\\jet.png').convert_alpha()
     jet_rect = jet_image.get_rect()
-    jet_rect.top = random.randint(200, 650)
+    jet_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
     jet_rect.left = 0 - 72
 
     jet2_image = py.image.load('Python scripts\\Choplifter\\assets\\revert_jet.png').convert_alpha()
     jet2_rect = jet2_image.get_rect()
-    jet2_rect.top = random.randint(200, 650)
+    jet2_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
     jet2_rect.left = size[0] + 32
 
     pew_image = py.image.load('Python scripts\\Choplifter\\assets\\green_pewpew.png').convert_alpha()
@@ -102,12 +102,16 @@ def choplifter(size : tuple = (1280, 720)):
             last_move = 'z'
 
         if pressed[py.K_q]: # - Gauche  
-            if chop_rect.left < 336 and bg_rect.left < 0:
+            if chop_rect.left < int(round(0.3 * size[0], 0)) and bg_rect.left < 0:
                 bg_move = 2
 
-                if bg_rect.left < 0:
+                if bg_rect.left <= 5:
                     bg_rect.left += 5
                     bg2_rect.left += 5
+
+                else:
+                    bg2_rect.left -= bg_rect.left
+                    bg_rect.left = 0
 
             else:
                 chop_rect.left = chop_rect.left - 5
@@ -150,12 +154,16 @@ def choplifter(size : tuple = (1280, 720)):
             last_move = 's'
 
         if pressed[py.K_d]: # - Droite
-            if chop_rect.left > size[0] - 400 and bg2_rect.left > 0:
+            if chop_rect.left > (size[0] - int(round(0.3 * size[0], 0))) and bg2_rect.left > 0:
                 bg_move = 1
 
                 if bg2_rect.left >= 5:
                     bg_rect.left -= 5
                     bg2_rect.left -= 5
+
+                else:
+                    bg_rect.left -= bg2_rect.left
+                    bg2_rect.left = 0  
             
             else:
                 chop_rect.left = chop_rect.left + 5
@@ -180,37 +188,6 @@ def choplifter(size : tuple = (1280, 720)):
         for event in py.event.get():
             if event.type == py.QUIT:
                 running = False # end of the loop
-
-            if event.type == py.KEYUP: 
-                current_w = size[0]
-
-                ''' - Mode "Plein écran" désactivé
-                if event.key == py.K_f and not py.display.is_fullscreen(): # set fullscreen mode
-                    screen = py.display.set_mode((0, 0), py.FULLSCREEN)
-                    size = (py.display.Info().current_w, py.display.Info().current_h)
-
-                    bg = py.transform.scale(bg, size)
-                    bg2 = py.transform.scale(bg, size)
-                    bg2_rect.left = size[0] - (current_w - bg2_rect.left)
-                    
-                    tank_rect.top = size[1] - 27
-                    tank2_rect.top = size[1] - 27
-
-                    title_rect.center = (size[0] // 2, 12)
-
-                if event.key == py.K_ESCAPE and py.display.is_fullscreen(): # set window mode
-                    screen = py.display.set_mode((1280, 720))
-                    size = (py.display.Info().current_w, py.display.Info().current_h)
-
-                    bg = py.transform.scale(bg, size)
-                    bg2 = py.transform.scale(bg, size)
-                    bg2_rect.left = size[0] - (current_w - bg2_rect.left)
-
-                    tank_rect.top = size[1] - 27
-                    tank2_rect.top = size[1] - 27
-
-                    title_rect.center = (size[0] // 2, 12)
-                '''
 
             if event.type == py.KEYDOWN:
                 if event.key == py.K_SPACE: # Tir bas
@@ -240,7 +217,14 @@ def choplifter(size : tuple = (1280, 720)):
         # RENDER YOUR GAME HERE
         if move_id != 0:
             if move_id == 1: # mouvement du tir (droite)
-                pew_rect.left = pew_rect.left + 10
+                if bg_move == 1: # Mouvement vers la droite
+                    pew_rect.left += 5
+
+                elif bg_move == 2: # Mouvement vers la gauche
+                    pew_rect.left += 15
+                
+                else:
+                    pew_rect.left += 10
 
                 if (time.time() - basic_shot_start) > 1.75:
                     move_id = 0
@@ -250,6 +234,12 @@ def choplifter(size : tuple = (1280, 720)):
 
         if move_id2 != 0:
             if move_id2 == 1: # mouvement du tir (bas)
+                if bg_move == 1: # Mouvement vers la droite
+                    pew2_rect.left -= 5
+
+                elif bg_move == 2: # Mouvement vers la gauche
+                    pew2_rect.left += 5
+                
                 pew2_rect.top = pew2_rect.top + 8
 
                 if pew2_rect.top >= size[1]:
@@ -259,7 +249,7 @@ def choplifter(size : tuple = (1280, 720)):
                     print("Le tir est de nouveau prêt !")
 
         # Tanks moves
-        if tank_position < 2572 and tank_move == 0:
+        if tank_position < (2 * size[0] + 72) and tank_move == 0:
             tank_position += 3
 
             if bg_move == 1: # Mouvement vers la droite
@@ -288,10 +278,10 @@ def choplifter(size : tuple = (1280, 720)):
             tank_position = 0 - 72
             tank_move = 0
             tank_rect.left = bg_rect.left - 72
-            tank2_rect.left = bg2_rect.left + size[0] + 12
+            tank2_rect.left = bg2_rect.left + size[0] + 72
 
         # Jets moves
-        if jet_position < 2572 and jet_move == 0:
+        if jet_position < (2 * size[0] + 32) and jet_move == 0:
             jet_position += 8
 
             if bg_move == 1: # Mouvement vers la droite
@@ -321,8 +311,8 @@ def choplifter(size : tuple = (1280, 720)):
             jet_move = 0
             jet_rect.left = bg_rect.left - 72
             jet2_rect.left = bg2_rect.left + size[0] + 32
-            jet_rect.top = random.randint(200, 650)
-            jet2_rect.top = random.randint(200, 650)
+            jet_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
+            jet2_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
 
         # Collision events
         if chop_rect.colliderect(tank_rect) or chop_rect.colliderect(tank2_rect) or chop_rect.colliderect(jet_rect) or chop_rect.colliderect(jet2_rect):
