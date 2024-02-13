@@ -72,27 +72,29 @@ while running:
 
         last_move = 'z'
 
-    if pressed[py.K_q]: # - Gauche    
-        chop_rect.left = chop_rect.left - 5
-
-        if move_id == 0:
-            pew_rect.left = pew_rect.left - 5
-
-        if move_id2 == 0:
-            pew2_rect.left = pew2_rect.left - 5
-
-        if chop_rect.left < 0:
-            chop_rect.left = 0
-
+    if pressed[py.K_q]: # - Gauche  
+        if chop_rect.left < 336 and bg_rect.left < 0:
             if bg_rect.left < 0:
                 bg_rect.left += 5
                 bg2_rect.left += 5
 
+        else:  
+            chop_rect.left = chop_rect.left - 5
+
             if move_id == 0:
-                pew_rect.left = chop_rect.left + 32
+                pew_rect.left = pew_rect.left - 5
 
             if move_id2 == 0:
-                pew2_rect.left = chop_rect.left + 36
+                pew2_rect.left = pew2_rect.left - 5
+
+            if chop_rect.left < 0:
+                chop_rect.left = 0
+
+                if move_id == 0:
+                    pew_rect.left = chop_rect.left + 32
+
+                if move_id2 == 0:
+                    pew2_rect.left = chop_rect.left + 36
 
         last_move = 'q'
 
@@ -117,26 +119,28 @@ while running:
         last_move = 's'
 
     if pressed[py.K_d]: # - Droite
-        chop_rect.left = chop_rect.left + 5
-
-        if move_id == 0:
-            pew_rect.left = pew_rect.left + 5
-
-        if move_id2 == 0:
-            pew2_rect.left = pew2_rect.left + 5
-
-        if chop_rect.left > size[0] - 64:
-            chop_rect.left = size[0] - 64
-
+        if chop_rect.left > size[0] - 400 and bg2_rect.left > 0:
             if bg2_rect.left >= 5:
                 bg_rect.left -= 5
                 bg2_rect.left -= 5
+        
+        else:
+            chop_rect.left = chop_rect.left + 5
 
             if move_id == 0:
-                pew_rect.left = chop_rect.left + 32
+                pew_rect.left = pew_rect.left + 5
 
             if move_id2 == 0:
-                pew2_rect.left = chop_rect.left + 36
+                pew2_rect.left = pew2_rect.left + 5
+
+            if chop_rect.left > size[0] - 64:
+                chop_rect.left = size[0] - 64
+
+                if move_id == 0:
+                    pew_rect.left = chop_rect.left + 32
+
+                if move_id2 == 0:
+                    pew2_rect.left = chop_rect.left + 36
 
         last_move = 'd'
 
@@ -145,16 +149,26 @@ while running:
             running = False # end of the loop
 
         if event.type == py.KEYUP: 
+            current_w = size[0]
+
             if event.key == py.K_f and not py.display.is_fullscreen(): # set fullscreen mode
                 screen = py.display.set_mode((0, 0), py.FULLSCREEN)
                 size = (py.display.Info().current_w, py.display.Info().current_h)
+
                 bg = py.transform.scale(bg, size)
+                bg2 = py.transform.scale(bg, size)
+                bg2_rect.left = size[0] - (current_w - bg2_rect.left)
+
                 title_rect.center = (size[0] // 2, 12)
 
             if event.key == py.K_ESCAPE and py.display.is_fullscreen(): # set window mode
                 screen = py.display.set_mode((1280, 720))
                 size = (py.display.Info().current_w, py.display.Info().current_h)
+
                 bg = py.transform.scale(bg, size)
+                bg2 = py.transform.scale(bg, size)
+                bg2_rect.left = size[0] - (current_w - bg2_rect.left)
+
                 title_rect.center = (size[0] // 2, 12)
 
         if event.type == py.KEYDOWN:
@@ -187,7 +201,7 @@ while running:
         if move_id == 1: # mouvement du tir (droite)
             pew_rect.left = pew_rect.left + 8
 
-            if (pew_rect.left >= size[0]) or ((time.time() - basic_shot_start) > 2):
+            if (time.time() - basic_shot_start) > 2:
                 move_id = 0
                 pew_rect.left = chop_rect.left + 32
                 pew_rect.top = chop_rect.top + 16
@@ -208,7 +222,7 @@ while running:
     screen.blit(bg, bg_rect)
     screen.blit(bg2, bg2_rect)
 
-    # Textes
+    # Texts
     screen.blit(title, title_rect)
 
     # Assets
