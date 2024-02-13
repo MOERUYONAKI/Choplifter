@@ -9,6 +9,7 @@ def help():
     print('2 - /exit \n - Close the CHPrompt')
     print('3 - /help \n - Give the commands list')
     print('4 - /play \n - Start the Choplifter game (-f for fullscreen mode)')
+    print('5 - /repo \n - Return the repository link')
 
     time.sleep(1)
     print(' ')
@@ -42,12 +43,20 @@ def exit():
     print('Exiting command prompt...')
     time.sleep(0.5)
 
+def repo():
+    print('Repository link : https://github.com/MOERUYONAKI/Choplifter')
+    
+    time.sleep(0.5)
+    print(' ')
+    cmd_start()
+
 def cmd_start():
     commands = [
         "/help",
         "/play",
         "/clear",
-        "/exit"
+        "/exit",
+        "/repo"
     ]
 
     cmd = input("CHPrompt > ")
@@ -74,6 +83,9 @@ def cmd_start():
 
         elif cmd[0] in ('exit', '/exit'):
             exit()
+
+        elif cmd[0] in ('repo', '/repo'):
+            repo()
 
     else:
         print('Unknown command - try "/help"\n')

@@ -20,3 +20,6 @@
 > Start the Choplifter game  
 > [ -f ] - Mode plein écran  
   
+**5 - /repo**  
+> Return the repository link  
+  
