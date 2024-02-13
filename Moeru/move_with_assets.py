@@ -5,6 +5,10 @@ import chopper
 last_move = 'z'
 size = (1280, 720)
 
+tank_position = 0 - 72
+tank_move = 0
+
+bg_move = 0
 move_id = 0 # pew_rect
 move_id2 = 0 # pew2_rect
 
@@ -36,6 +40,15 @@ title_rect.center = (size[0] // 2, 12)
 chop_image = py.image.load('Python scripts\\Choplifter\\assets\\helicopter.png').convert_alpha()
 chop_rect = chop_image.get_rect()
 
+tank_image = py.image.load('Python scripts\\Choplifter\\assets\\tank.png').convert_alpha()
+tank_rect = tank_image.get_rect()
+tank_rect.top = size[1] - 27
+
+tank2_image = py.image.load('Python scripts\\Choplifter\\assets\\revert_tank.png').convert_alpha()
+tank2_rect = tank2_image.get_rect()
+tank2_rect.top = size[1] - 27
+tank2_rect.left = size[0] + 12
+
 pew_image = py.image.load('Python scripts\\Choplifter\\assets\\green_pewpew.png').convert_alpha()
 pew_rect = pew_image.get_rect()
 
@@ -51,6 +64,7 @@ pew2_rect.top = chop_rect.top + 12
 while running:
     # poll for events
     pressed = py.key.get_pressed()
+    bg_move = 0
 
     if pressed[py.K_z]: # - Haut
         chop_rect.top = chop_rect.top - 5
@@ -74,11 +88,13 @@ while running:
 
     if pressed[py.K_q]: # - Gauche  
         if chop_rect.left < 336 and bg_rect.left < 0:
+            bg_move = 2
+
             if bg_rect.left < 0:
                 bg_rect.left += 5
                 bg2_rect.left += 5
 
-        else:  
+        else:
             chop_rect.left = chop_rect.left - 5
 
             if move_id == 0:
@@ -120,6 +136,8 @@ while running:
 
     if pressed[py.K_d]: # - Droite
         if chop_rect.left > size[0] - 400 and bg2_rect.left > 0:
+            bg_move = 1
+
             if bg2_rect.left >= 5:
                 bg_rect.left -= 5
                 bg2_rect.left -= 5
@@ -151,6 +169,7 @@ while running:
         if event.type == py.KEYUP: 
             current_w = size[0]
 
+            ''' - Mode "Plein écran" désactivé
             if event.key == py.K_f and not py.display.is_fullscreen(): # set fullscreen mode
                 screen = py.display.set_mode((0, 0), py.FULLSCREEN)
                 size = (py.display.Info().current_w, py.display.Info().current_h)
@@ -158,6 +177,9 @@ while running:
                 bg = py.transform.scale(bg, size)
                 bg2 = py.transform.scale(bg, size)
                 bg2_rect.left = size[0] - (current_w - bg2_rect.left)
+                  
+                tank_rect.top = size[1] - 27
+                tank2_rect.top = size[1] - 27
 
                 title_rect.center = (size[0] // 2, 12)
 
@@ -169,7 +191,11 @@ while running:
                 bg2 = py.transform.scale(bg, size)
                 bg2_rect.left = size[0] - (current_w - bg2_rect.left)
 
+                tank_rect.top = size[1] - 27
+                tank2_rect.top = size[1] - 27
+
                 title_rect.center = (size[0] // 2, 12)
+            '''
 
         if event.type == py.KEYDOWN:
             if event.key == py.K_SPACE: # Tir bas
@@ -217,6 +243,37 @@ while running:
                 pew2_rect.top = chop_rect.top + 12
                 print("Le tir est de nouveau prêt !")
 
+    if tank_position < 2572 and tank_move == 0:
+        tank_position += 3
+
+        if bg_move == 1: # Mouvement vers la droite
+            tank_rect.left -= 2
+
+        elif bg_move == 2: # Mouvement vers la gauche
+            tank_rect.left += 8
+        
+        else:
+            tank_rect.left += 3
+
+    elif tank_position > 0 - 72:
+        tank_move = 1
+        tank_position -= 3
+        
+        if bg_move == 1: # Mouvement vers la droite
+            tank2_rect.left -= 8
+
+        elif bg_move == 2: # Mouvement vers la gauche
+            tank2_rect.left += 2
+        
+        else:
+            tank2_rect.left -= 3
+
+    else:
+        tank_position = 0 - 72
+        tank_move = 0
+        tank_rect.left = 0 - 72
+        tank2_rect.left = size[0] + 12
+
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("lavender")
     screen.blit(bg, bg_rect)
@@ -226,6 +283,8 @@ while running:
     screen.blit(title, title_rect)
 
     # Assets
+    screen.blit(tank_image, tank_rect)
+    screen.blit(tank2_image, tank2_rect)
     screen.blit(pew_image, pew_rect)
     screen.blit(pew2_image, pew2_rect)
     screen.blit(chop_image, chop_rect)
