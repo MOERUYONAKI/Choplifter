@@ -53,10 +53,14 @@ def repo():
 def cmd_start():
     commands = [
         "/help",
+        'h',
         "/play",
+        'p',
         "/clear",
+        'cls',
         "/exit",
-        "/repo"
+        "/repo",
+        'r'
     ]
 
     cmd = input("CHPrompt > ")
@@ -64,10 +68,10 @@ def cmd_start():
     cmd_size = len(cmd)
 
     if cmd[0] in commands or f'/{cmd[0]}' in commands:
-        if cmd[0] in ('help', '/help'):
+        if cmd[0] in ('help', '/help', 'h'):
             help()
 
-        elif cmd[0] in ('play', '/play'):
+        elif cmd[0] in ('play', '/play', 'p'):
             if cmd_size == 1:
                 play()
 
@@ -78,13 +82,13 @@ def cmd_start():
                 else:
                     play()
 
-        elif cmd[0] in ('clear', '/clear'):
+        elif cmd[0] in ('clear', '/clear', 'cls'):
             clear()
 
         elif cmd[0] in ('exit', '/exit'):
             exit()
 
-        elif cmd[0] in ('repo', '/repo'):
+        elif cmd[0] in ('repo', '/repo', 'r'):
             repo()
 
     else:
