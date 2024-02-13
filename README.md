@@ -3,7 +3,6 @@
 ### I - Requirements
 
 **Python 3** or later
-> "Time" lib  
 > "**Pygame 2.5.0**" lib  
   
 ### II - Commands for CHPrompt
