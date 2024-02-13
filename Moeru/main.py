@@ -1,5 +1,8 @@
 import time
+import pygame as py
 from choplifter import *
+
+
 
 def help():
     print('Commands list -')
@@ -12,12 +15,19 @@ def help():
     print(' ')
     cmd_start()
 
-def play():
+def play(fullscreen : bool = False):
+    if fullscreen:
+        py.display.set_mode((0, 0), py.FULLSCREEN)
+        size = (py.display.Info().current_w, py.display.Info().current_h)
+
+    else:
+        size = (1280, 720)
+
     print('Choplifter is starting...')
     print('Game logs will now be sent here \n')
 
     time.sleep(0.5)
-    choplifter()
+    choplifter(size)
 
     time.sleep(1)
     print(' ')
@@ -44,13 +54,22 @@ def cmd_start():
 
     cmd = input("CHPrompt > ")
     cmd = cmd.split(' ')
+    cmd_size = len(cmd)
 
     if cmd[0] in commands or f'/{cmd[0]}' in commands:
         if cmd[0] in ('help', '/help'):
             help()
 
         elif cmd[0] in ('play', '/play'):
-            play()
+            if cmd_size == 1:
+                play()
+
+            else:
+                if cmd[1] == '-f':
+                    play(fullscreen = True)
+
+                else:
+                    play()
 
         elif cmd[0] in ('clear', '/clear'):
             clear()
