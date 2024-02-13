@@ -1,14 +1,19 @@
 import pygame as py
 import time
+import random
 import chopper
 
 last_move = 'z'
 size = (1280, 720)
 
+bg_move = 0
+
 tank_position = 0 - 72
 tank_move = 0
 
-bg_move = 0
+jet_position = 0 - 32
+jet_move = 0
+
 move_id = 0 # pew_rect
 move_id2 = 0 # pew2_rect
 
@@ -48,6 +53,16 @@ tank2_image = py.image.load('Python scripts\\Choplifter\\assets\\revert_tank.png
 tank2_rect = tank2_image.get_rect()
 tank2_rect.top = size[1] - 27
 tank2_rect.left = size[0] + 12
+
+jet_image = py.image.load('Python scripts\\Choplifter\\assets\\jet.png').convert_alpha()
+jet_rect = jet_image.get_rect()
+jet_rect.top = random.randint(200, 650)
+jet_rect.left = 0 - 72
+
+jet2_image = py.image.load('Python scripts\\Choplifter\\assets\\revert_jet.png').convert_alpha()
+jet2_rect = jet2_image.get_rect()
+jet2_rect.top = random.randint(200, 650)
+jet2_rect.left = size[0] + 32
 
 pew_image = py.image.load('Python scripts\\Choplifter\\assets\\green_pewpew.png').convert_alpha()
 pew_rect = pew_image.get_rect()
@@ -225,9 +240,9 @@ while running:
     # RENDER YOUR GAME HERE
     if move_id != 0:
         if move_id == 1: # mouvement du tir (droite)
-            pew_rect.left = pew_rect.left + 8
+            pew_rect.left = pew_rect.left + 10
 
-            if (time.time() - basic_shot_start) > 2:
+            if (time.time() - basic_shot_start) > 1.75:
                 move_id = 0
                 pew_rect.left = chop_rect.left + 32
                 pew_rect.top = chop_rect.top + 16
@@ -237,12 +252,13 @@ while running:
         if move_id2 == 1: # mouvement du tir (bas)
             pew2_rect.top = pew2_rect.top + 8
 
-            if pew2_rect.top >= size[1] or ((time.time() - down_shot_start) > 3):
+            if pew2_rect.top >= size[1]:
                 move_id2 = 0
                 pew2_rect.left = chop_rect.left + 36
                 pew2_rect.top = chop_rect.top + 12
                 print("Le tir est de nouveau prêt !")
 
+    # Tanks moves
     if tank_position < 2572 and tank_move == 0:
         tank_position += 3
 
@@ -274,9 +290,43 @@ while running:
         tank_rect.left = bg_rect.left - 72
         tank2_rect.left = bg2_rect.left + size[0] + 12
 
+    # Jets moves
+    if jet_position < 2572 and jet_move == 0:
+        jet_position += 8
+
+        if bg_move == 1: # Mouvement vers la droite
+            jet_rect.left += 3
+
+        elif bg_move == 2: # Mouvement vers la gauche
+            jet_rect.left += 13
+        
+        else:
+            jet_rect.left += 8
+
+    elif jet_position > 0 - 72:
+        jet_move = 1
+        jet_position -= 8
+        
+        if bg_move == 1: # Mouvement vers la droite
+            jet2_rect.left -= 13
+
+        elif bg_move == 2: # Mouvement vers la gauche
+            jet2_rect.left -= 3
+        
+        else:
+            jet2_rect.left -= 8
+
+    else:
+        jet_position = 0 - 72
+        jet_move = 0
+        jet_rect.left = bg_rect.left - 72
+        jet2_rect.left = bg2_rect.left + size[0] + 12
+        jet_rect.top = random.randint(200, 650)
+        jet2_rect.top = random.randint(200, 650)
+
     # Collision events
-    if chop_rect.colliderect(tank_rect) or chop_rect.colliderect(tank2_rect):
-        print("Hélicoptère détruit !")
+    if chop_rect.colliderect(tank_rect) or chop_rect.colliderect(tank2_rect) or chop_rect.colliderect(jet_rect) or chop_rect.colliderect(jet2_rect):
+        print("Hélicoptère détruit...")
         running = False
 
     if pew_rect.colliderect(tank_rect) or pew2_rect.colliderect(tank_rect):
@@ -293,6 +343,20 @@ while running:
         tank2_rect.left = bg2_rect.left + size[0] + 12
         print("Tank détruit !")
 
+    if pew_rect.colliderect(jet_rect) or pew2_rect.colliderect(jet_rect):
+        jet_position = bg2_rect.left + size[0] + 32
+        jet_move = 1
+        jet_rect.left = bg_rect.left - 72
+        jet2_rect.left = bg2_rect.left + size[0] + 32
+        print("Jet détruit !")
+
+    if pew_rect.colliderect(jet2_rect) or pew2_rect.colliderect(jet2_rect):
+        jet_position = 0 - 32
+        jet_move = 0
+        jet_rect.left = bg_rect.left - 72
+        jet2_rect.left = bg2_rect.left + size[0] + 32
+        print("Jet détruit !")
+
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("lavender")
     screen.blit(bg, bg_rect)
@@ -304,6 +368,8 @@ while running:
     # Assets
     screen.blit(tank_image, tank_rect)
     screen.blit(tank2_image, tank2_rect)
+    screen.blit(jet_image, jet_rect)
+    screen.blit(jet2_image, jet2_rect)
     screen.blit(pew_image, pew_rect)
     screen.blit(pew2_image, pew2_rect)
     screen.blit(chop_image, chop_rect)
