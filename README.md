@@ -1,6 +1,12 @@
 # Choplifter
 
-### I - Commands for CHPrompt
+### I - Requirements
+
+Python 3 or later
+> "Time" lib  
+> "Pygame" lib  
+  
+### II - Commands for CHPrompt
 
 **1 - /clear**  
 > Clear the CHPrompt  
