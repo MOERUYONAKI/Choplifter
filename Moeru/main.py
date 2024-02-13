@@ -1,5 +1,6 @@
-import time
 import pygame as py
+import time
+import os 
 from choplifter import *
 
 def help():
@@ -7,9 +8,9 @@ def help():
     print('1 - /clear \n - Clear the CHPrompt')
     print('2 - /exit \n - Close the CHPrompt')
     print('3 - /help \n - Give the commands list')
-    print('4 - /play \n - Start the Choplifter game')
+    print('4 - /play \n - Start the Choplifter game (-f for fullscreen mode)')
 
-    time.sleep(2)
+    time.sleep(1)
     print(' ')
     cmd_start()
 
@@ -33,10 +34,8 @@ def play(fullscreen : bool = False):
     cmd_start()
 
 def clear():
-    print('En attente de création...')
-
+    os.system('cls')
     time.sleep(0.5)
-    print(' ')
     cmd_start()
 
 def exit():

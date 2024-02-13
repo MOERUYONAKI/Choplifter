@@ -11,6 +11,7 @@
 **3 - /help**  
 > Give the commands list  
   
-**4 - /play**  
+**4 - /play [-f]**  
 > Start the Choplifter game  
+> [-f] _ Mode plein écran  
   
