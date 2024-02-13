@@ -13,5 +13,5 @@
   
 **4 - /play [-f]**  
 > Start the Choplifter game  
-> [-f] _ Mode plein écran  
+> *[ -f ]* - Mode plein écran  
   
