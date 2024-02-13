@@ -174,7 +174,7 @@ def choplifter(size : tuple = (1280, 720)):
 
                 else:
                     bg_rect.left -= bg2_rect.left
-                    base_rect -= bg2_rect.left
+                    base_rect.left -= bg2_rect.left
                     bg2_rect.left = 0  
             
             else:
