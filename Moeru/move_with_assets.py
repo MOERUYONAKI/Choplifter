@@ -320,7 +320,7 @@ while running:
         jet_position = 0 - 72
         jet_move = 0
         jet_rect.left = bg_rect.left - 72
-        jet2_rect.left = bg2_rect.left + size[0] + 12
+        jet2_rect.left = bg2_rect.left + size[0] + 32
         jet_rect.top = random.randint(200, 650)
         jet2_rect.top = random.randint(200, 650)
 
@@ -351,10 +351,10 @@ while running:
         print("Jet détruit !")
 
     if pew_rect.colliderect(jet2_rect) or pew2_rect.colliderect(jet2_rect):
-        jet_position = 0 - 32
+        jet_position = 0 - 72
         jet_move = 0
         jet_rect.left = bg_rect.left - 72
-        jet2_rect.left = bg2_rect.left + size[0] + 32
+        jet2_rect.left = bg2_rect.left + size[0] + 72
         print("Jet détruit !")
 
     # fill the screen with a color to wipe away anything from last frame
