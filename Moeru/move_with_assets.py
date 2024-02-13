@@ -271,8 +271,27 @@ while running:
     else:
         tank_position = 0 - 72
         tank_move = 0
-        tank_rect.left = 0 - 72
-        tank2_rect.left = size[0] + 12
+        tank_rect.left = bg_rect.left - 72
+        tank2_rect.left = bg2_rect.left + size[0] + 12
+
+    # Collision events
+    if chop_rect.colliderect(tank_rect) or chop_rect.colliderect(tank2_rect):
+        print("Hélicoptère détruit !")
+        running = False
+
+    if pew_rect.colliderect(tank_rect) or pew2_rect.colliderect(tank_rect):
+        tank_position = bg2_rect.left + size[0] + 12
+        tank_move = 1
+        tank_rect.left = bg_rect.left - 72
+        tank2_rect.left = bg2_rect.left + size[0] + 12
+        print("Tank détruit !")
+
+    if pew_rect.colliderect(tank2_rect) or pew2_rect.colliderect(tank2_rect):
+        tank_position = 0 - 72
+        tank_move = 0
+        tank_rect.left = bg_rect.left - 72
+        tank2_rect.left = bg2_rect.left + size[0] + 12
+        print("Tank détruit !")
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("lavender")
