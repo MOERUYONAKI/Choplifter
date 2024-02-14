@@ -441,7 +441,7 @@ def choplifter(size : tuple = (1280, 720)):
             print("Tank détruit !")
             tank_destroyed += 1
 
-        if pew_rect.colliderect(tank2_rect) or pew2_rect.colliderect(tank2_rect) or pew3_rect.colliderect(tank_rect):
+        if pew_rect.colliderect(tank2_rect) or pew2_rect.colliderect(tank2_rect) or pew3_rect.colliderect(tank2_rect):
             tank_position = 0 - 72
             tank_move = 0
             tank_rect.left = bg_rect.left - 72
@@ -450,7 +450,7 @@ def choplifter(size : tuple = (1280, 720)):
             print("Tank détruit !")
             tank_destroyed += 1
 
-        if pew_rect.colliderect(jet_rect) or pew2_rect.colliderect(jet_rect) or pew3_rect.colliderect(tank_rect):
+        if pew_rect.colliderect(jet_rect) or pew2_rect.colliderect(jet_rect) or pew3_rect.colliderect(jet_rect):
             jet_position = bg2_rect.left + size[0] + 32
             jet_move = 1
             jet_rect.left = bg_rect.left - 72
@@ -459,7 +459,7 @@ def choplifter(size : tuple = (1280, 720)):
             print("Jet détruit !")
             jet_destroyed += 1
 
-        if pew_rect.colliderect(jet2_rect) or pew2_rect.colliderect(jet2_rect) or pew3_rect.colliderect(tank_rect):
+        if pew_rect.colliderect(jet2_rect) or pew2_rect.colliderect(jet2_rect) or pew3_rect.colliderect(jet2_rect):
             jet_position = 0 - 72
             jet_move = 0
             jet_rect.left = bg_rect.left - 72
