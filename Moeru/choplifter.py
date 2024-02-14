@@ -49,6 +49,9 @@ def choplifter(size : tuple = (1280, 720)):
     chop_image = py.image.load('Python scripts\\Choplifter\\assets\\helicopter.png').convert_alpha()
     chop_rect = chop_image.get_rect()
 
+    chop2_image = py.image.load('Python scripts\\Choplifter\\assets\\revert_helicopter.png').convert_alpha()
+    chop2_rect = chop2_image.get_rect()
+
     tank_image = py.image.load('Python scripts\\Choplifter\\assets\\tank.png').convert_alpha()
     tank_rect = tank_image.get_rect()
     tank_rect.top = size[1] - 27
@@ -87,25 +90,37 @@ def choplifter(size : tuple = (1280, 720)):
     pew2_rect.left = chop_rect.left + 36
     pew2_rect.top = chop_rect.top + 12
 
+    pew3_image = py.image.load('Python scripts\\Choplifter\\assets\\green_revert_pewpew.png').convert_alpha()
+    pew3_rect = pew3_image.get_rect()
+
+    pew3_rect.left = chop_rect.left + 32
+    pew3_rect.top = chop_rect.top + 16
+
     while running:
         # poll for events
         pressed = py.key.get_pressed()
         bg_move = 0
 
         if pressed[py.K_z]: # - Haut
-            chop_rect.top = chop_rect.top - 5
+            chop_rect.top -= 5
+            chop2_rect.top -= 5
 
-            if move_id == 0:
-                pew_rect.top = pew_rect.top - 5
+            if move_id != 1:
+                pew_rect.top -= 5
+
+            if move_id != 2:
+                pew3_rect.top -= 5
 
             if move_id2 == 0:
-                pew2_rect.top = pew2_rect.top - 5
+                pew2_rect.top -= 5
 
             if chop_rect.top < 0:
                 chop_rect.top = 0
+                chop2_rect.top = 0
 
                 if move_id == 0:
                     pew_rect.top = chop_rect.top + 16
+                    pew3_rect.top = chop_rect.top + 16
 
                 if move_id2 == 0:
                     pew2_rect.top = chop_rect.top + 12
@@ -129,19 +144,25 @@ def choplifter(size : tuple = (1280, 720)):
                     bg_rect.left = 0
 
             else:
-                chop_rect.left = chop_rect.left - 5
+                chop_rect.left -= 5
+                chop2_rect.left -= 5
 
-                if move_id == 0:
-                    pew_rect.left = pew_rect.left - 5
+                if move_id != 1:
+                    pew_rect.left -= 5
+
+                if move_id != 2:
+                    pew3_rect.left -= 5
 
                 if move_id2 == 0:
                     pew2_rect.left = pew2_rect.left - 5
 
                 if chop_rect.left < 0:
                     chop_rect.left = 0
+                    chop2_rect.left = 0
 
                     if move_id == 0:
                         pew_rect.left = chop_rect.left + 32
+                        pew3_rect.left = chop_rect.left + 32
 
                     if move_id2 == 0:
                         pew2_rect.left = chop_rect.left + 36
@@ -149,19 +170,25 @@ def choplifter(size : tuple = (1280, 720)):
             last_move = 'q'
 
         if pressed[py.K_s]: # - Bas
-            chop_rect.top = chop_rect.top + 5
+            chop_rect.top += 5
+            chop2_rect.top += 5
 
-            if move_id == 0:
-                pew_rect.top = pew_rect.top + 5
+            if move_id != 1:
+                pew_rect.top += 5
+
+            if move_id != 2:
+                pew3_rect.top += 5
 
             if move_id2 == 0:
                 pew2_rect.top = pew2_rect.top + 5
 
             if chop_rect.top > size[1] - 32:
                 chop_rect.top = size[1] - 32
+                chop2_rect.top = size[1] - 32
 
                 if move_id == 0:
                     pew_rect.top = chop_rect.top + 16
+                    pew3_rect.top = chop_rect.top + 16
 
                 if move_id2 == 0:
                     pew2_rect.top = chop_rect.top + 12
@@ -185,19 +212,25 @@ def choplifter(size : tuple = (1280, 720)):
                     bg2_rect.left = 0  
             
             else:
-                chop_rect.left = chop_rect.left + 5
+                chop_rect.left += 5
+                chop2_rect.left += 5
 
-                if move_id == 0:
-                    pew_rect.left = pew_rect.left + 5
+                if move_id != 1:
+                    pew_rect.left += 5
+
+                if move_id != 2:
+                    pew3_rect.left += 5
 
                 if move_id2 == 0:
                     pew2_rect.left = pew2_rect.left + 5
 
                 if chop_rect.left > size[0] - 64:
                     chop_rect.left = size[0] - 64
+                    chop2_rect.left = size[0] - 64
 
                     if move_id == 0:
                         pew_rect.left = chop_rect.left + 32
+                        pew3_rect.left = chop_rect.left + 32
 
                     if move_id2 == 0:
                         pew2_rect.left = chop_rect.left + 36
@@ -230,9 +263,18 @@ def choplifter(size : tuple = (1280, 720)):
 
             if event.type == py.MOUSEBUTTONDOWN:
                 if move_id == 0 and event.button == 1: # 1 - Click gauche
-                    basic_shot_start = time.time()
-                    move_id = 1
-                    print("L'utilisateur tir !")
+                    if last_move == 'd':
+                        move_id = 1
+                        basic_shot_start = time.time()
+                        print("L'utilisateur tir !")
+
+                    elif last_move == 'q':
+                        move_id = 2
+                        basic_shot_start = time.time()
+                        print("L'utilisateur tir !")
+
+                    else:
+                        print("Impossible de tirer !")
 
         # RENDER YOUR GAME HERE
         if move_id != 0:
@@ -250,6 +292,26 @@ def choplifter(size : tuple = (1280, 720)):
                     move_id = 0
                     pew_rect.left = chop_rect.left + 32
                     pew_rect.top = chop_rect.top + 16
+                    print("Le tir est de nouveau prêt !")
+
+            if move_id == 2: # mouvement du tir (gauche)
+                if pew3_rect.left >= bg_rect.left - 5:
+                    if bg_move == 2: # Mouvement vers la gauche
+                        pew3_rect.left -= 5
+
+                    elif bg_move == 1: # Mouvement vers la droite
+                        pew3_rect.left -= 15
+                    
+                    else:
+                        pew3_rect.left -= 10
+
+                elif pew3_rect.left > bg_rect.left - 18:
+                    pew3_rect.left = bg_rect.left - 18
+
+                if (time.time() - basic_shot_start) > 1.75:
+                    move_id = 0
+                    pew3_rect.left = chop_rect.left + 32
+                    pew3_rect.top = chop_rect.top + 16
                     print("Le tir est de nouveau prêt !")
 
         if move_id2 != 0:
@@ -340,7 +402,7 @@ def choplifter(size : tuple = (1280, 720)):
             print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets")
             running = False
 
-        if pew_rect.colliderect(tank_rect) or pew2_rect.colliderect(tank_rect):
+        if pew_rect.colliderect(tank_rect) or pew2_rect.colliderect(tank_rect) or pew3_rect.colliderect(tank_rect):
             tank_position = bg2_rect.left + size[0] + 12
             tank_move = 1
             tank_rect.left = bg_rect.left - 72
@@ -349,7 +411,7 @@ def choplifter(size : tuple = (1280, 720)):
             print("Tank détruit !")
             tank_destroyed += 1
 
-        if pew_rect.colliderect(tank2_rect) or pew2_rect.colliderect(tank2_rect):
+        if pew_rect.colliderect(tank2_rect) or pew2_rect.colliderect(tank2_rect) or pew3_rect.colliderect(tank_rect):
             tank_position = 0 - 72
             tank_move = 0
             tank_rect.left = bg_rect.left - 72
@@ -358,7 +420,7 @@ def choplifter(size : tuple = (1280, 720)):
             print("Tank détruit !")
             tank_destroyed += 1
 
-        if pew_rect.colliderect(jet_rect) or pew2_rect.colliderect(jet_rect):
+        if pew_rect.colliderect(jet_rect) or pew2_rect.colliderect(jet_rect) or pew3_rect.colliderect(tank_rect):
             jet_position = bg2_rect.left + size[0] + 32
             jet_move = 1
             jet_rect.left = bg_rect.left - 72
@@ -367,7 +429,7 @@ def choplifter(size : tuple = (1280, 720)):
             print("Jet détruit !")
             jet_destroyed += 1
 
-        if pew_rect.colliderect(jet2_rect) or pew2_rect.colliderect(jet2_rect):
+        if pew_rect.colliderect(jet2_rect) or pew2_rect.colliderect(jet2_rect) or pew3_rect.colliderect(tank_rect):
             jet_position = 0 - 72
             jet_move = 0
             jet_rect.left = bg_rect.left - 72
@@ -377,7 +439,7 @@ def choplifter(size : tuple = (1280, 720)):
             jet_destroyed += 1
 
         for base in bases:
-            if pew_rect.colliderect(base[1]) or pew2_rect.colliderect(base[1]):
+            if pew_rect.colliderect(base[1]) or pew2_rect.colliderect(base[1]) or pew3_rect.colliderect(base[1]):
                 base[1].top = 0 - 250
 
                 print("Bâtiment détruit !")
@@ -405,9 +467,20 @@ def choplifter(size : tuple = (1280, 720)):
         for base in bases:
             screen.blit(base[0], base[1])
 
-        screen.blit(pew_image, pew_rect)
-        screen.blit(pew2_image, pew2_rect)
-        screen.blit(chop_image, chop_rect)
+        if move_id == 1:
+            screen.blit(pew_image, pew_rect)
+
+        if move_id == 2:
+            screen.blit(pew3_image, pew3_rect)
+
+        if move_id2:
+            screen.blit(pew2_image, pew2_rect)
+
+        if last_move != 'q':
+            screen.blit(chop_image, chop_rect)
+
+        elif last_move == 'q':
+            screen.blit(chop2_image, chop2_rect)
 
         # flip() the display to put your work on screen
         py.display.flip()
