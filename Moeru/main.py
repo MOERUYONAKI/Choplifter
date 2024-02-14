@@ -3,7 +3,7 @@ import time
 import os 
 from choplifter import *
 
-def help():
+def help(): # Commande d'aide - renvoie la liste des commandes avec une description rapide
     print('Commands list -')
     print('1 - /clear \n - Clear the CHPrompt')
     print('2 - /exit \n - Close the CHPrompt')
@@ -15,7 +15,7 @@ def help():
     print(' ')
     cmd_start()
 
-def play(fullscreen : bool = False):
+def play(fullscreen : bool = False): # Commande de démarrage - lance le jeu en plein écran ou fenêtré
     if fullscreen:
         py.display.set_mode((0, 0), py.FULLSCREEN)
         size = (py.display.Info().current_w, py.display.Info().current_h)
@@ -34,24 +34,24 @@ def play(fullscreen : bool = False):
     print(' ')
     cmd_start()
 
-def clear():
+def clear(): # Commande de suppression - vide la console CHPrompt
     os.system('cls')
     time.sleep(0.5)
     cmd_start()
 
-def exit():
+def exit(): # Commande de sortie - ferme la console CHPrompt
     print('Exiting command prompt...')
     time.sleep(0.5)
 
-def repo():
+def repo(): # Commande d'information - renvoie le lien vers le dépot distant
     print('Repository link : https://github.com/MOERUYONAKI/Choplifter')
     
     time.sleep(0.5)
     print(' ')
     cmd_start()
 
-def cmd_start():
-    commands = [
+def cmd_start(): # Démarage de la console CHPrompt
+    commands = [ # Liste des commandes et leur raccourci
         "/help",
         'h',
         "/play",
@@ -91,7 +91,7 @@ def cmd_start():
         elif cmd[0] in ('repo', '/repo', 'r'):
             repo()
 
-    else:
+    else: # Message d'erreur en cas de mauvais renvoie
         print('Unknown command - try "/help"\n')
         time.sleep(0.5)
         cmd_start()
