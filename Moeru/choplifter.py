@@ -5,6 +5,7 @@ import random
 def choplifter(size : tuple = (1280, 720)):
     last_move = 'z'
     bg_move = 0
+    grounded = 0
 
     tank_position = 0 - 72
     tank_move = 0
@@ -56,6 +57,11 @@ def choplifter(size : tuple = (1280, 720)):
     chop3_rect = chop3_image.get_rect()
     chop3_rect.left = chop_rect.left + 16
 
+    chop4_image = py.image.load('Python scripts\\Choplifter\\assets\\grounded_helicopter.png').convert_alpha()
+    chop4_rect = chop4_image.get_rect()
+    chop4_rect.left = chop_rect.left + 16
+    chop4_rect.top = chop_rect.top + 9
+
     tank_image = py.image.load('Python scripts\\Choplifter\\assets\\tank.png').convert_alpha()
     tank_rect = tank_image.get_rect()
     tank_rect.top = size[1] - 27
@@ -91,7 +97,7 @@ def choplifter(size : tuple = (1280, 720)):
     pew2_image = py.image.load('Python scripts\\Choplifter\\assets\\green_pewpew2.png').convert_alpha()
     pew2_rect = pew2_image.get_rect()
 
-    pew2_rect.left = chop_rect.left + 36
+    pew2_rect.left = chop_rect.left + 26
     pew2_rect.top = chop_rect.top + 12
 
     pew3_image = py.image.load('Python scripts\\Choplifter\\assets\\green_revert_pewpew.png').convert_alpha()
@@ -106,9 +112,12 @@ def choplifter(size : tuple = (1280, 720)):
         bg_move = 0
 
         if pressed[py.K_z]: # - Haut
+            grounded = 0
+
             chop_rect.top -= 5
             chop2_rect.top -= 5
             chop3_rect.top -= 5
+            chop4_rect.top -= 5
 
             if move_id != 1:
                 pew_rect.top -= 5
@@ -123,6 +132,7 @@ def choplifter(size : tuple = (1280, 720)):
                 chop_rect.top = 0
                 chop2_rect.top = 0
                 chop3_rect.top = 0
+                chop4_rect.top = 9
 
                 if move_id == 0:
                     pew_rect.top = chop_rect.top + 16
@@ -137,6 +147,7 @@ def choplifter(size : tuple = (1280, 720)):
             chop_rect.top += 5
             chop2_rect.top += 5
             chop3_rect.top += 5
+            chop4_rect.top += 5
 
             if move_id != 1:
                 pew_rect.top += 5
@@ -148,9 +159,12 @@ def choplifter(size : tuple = (1280, 720)):
                 pew2_rect.top = pew2_rect.top + 5
 
             if chop_rect.top > size[1] - 32:
+                grounded = 1
+
                 chop_rect.top = size[1] - 32
                 chop2_rect.top = size[1] - 32
                 chop3_rect.top = size[1] - 32
+                chop4_rect.top = size[1] - 21
 
                 if move_id == 0:
                     pew_rect.top = chop_rect.top + 16
@@ -161,7 +175,7 @@ def choplifter(size : tuple = (1280, 720)):
 
             last_move = 's'
 
-        if pressed[py.K_q]: # - Gauche  
+        if pressed[py.K_q] and grounded == 0: # - Gauche  
             if chop_rect.left < int(round(0.3 * size[0], 0)) and bg_rect.left < 0:
                 bg_move = 2
 
@@ -181,6 +195,7 @@ def choplifter(size : tuple = (1280, 720)):
                 chop_rect.left -= 5
                 chop2_rect.left -= 5
                 chop3_rect.left -= 5
+                chop4_rect.left -= 5
 
                 if move_id != 1:
                     pew_rect.left -= 5
@@ -195,6 +210,7 @@ def choplifter(size : tuple = (1280, 720)):
                     chop_rect.left = 0
                     chop2_rect.left = 0
                     chop3_rect.left = 16
+                    chop4_rect.left = 16
 
                     if move_id == 0:
                         pew_rect.left = chop_rect.left + 32
@@ -205,7 +221,7 @@ def choplifter(size : tuple = (1280, 720)):
 
             last_move = 'q'
 
-        if pressed[py.K_d]: # - Droite
+        if pressed[py.K_d] and grounded == 0: # - Droite
             if chop_rect.left > (size[0] - int(round(0.3 * size[0], 0))) and bg2_rect.left > 0:
                 bg_move = 1
 
@@ -225,6 +241,7 @@ def choplifter(size : tuple = (1280, 720)):
                 chop_rect.left += 5
                 chop2_rect.left += 5
                 chop3_rect.left += 5
+                chop4_rect.left += 5
 
                 if move_id != 1:
                     pew_rect.left += 5
@@ -239,6 +256,7 @@ def choplifter(size : tuple = (1280, 720)):
                     chop_rect.left = size[0] - 64
                     chop2_rect.left = size[0] - 64
                     chop3_rect.left = size[0] - 49
+                    chop4_rect.left = size[0] - 49
 
                     if move_id == 0:
                         pew_rect.left = chop_rect.left + 32
@@ -256,7 +274,7 @@ def choplifter(size : tuple = (1280, 720)):
 
             if event.type == py.KEYDOWN:
                 if event.key == py.K_SPACE: # Tir bas
-                    if move_id2 == 0:
+                    if move_id2 == 0 and grounded == 0:
                         down_shot_start = time.time()
                         move_id2 = 1
                         print("L'utilisateur tir !")
@@ -338,7 +356,7 @@ def choplifter(size : tuple = (1280, 720)):
 
                 if pew2_rect.top >= size[1]:
                     move_id2 = 0
-                    pew2_rect.left = chop_rect.left + 36
+                    pew2_rect.left = chop_rect.left + 26
                     pew2_rect.top = chop_rect.top + 12
                     print("Le tir est de nouveau prêt !")
 
@@ -488,14 +506,18 @@ def choplifter(size : tuple = (1280, 720)):
         if move_id2:
             screen.blit(pew2_image, pew2_rect)
 
-        if last_move == 'd':
-            screen.blit(chop_image, chop_rect)
-
-        elif last_move == 'q':
-            screen.blit(chop2_image, chop2_rect)
+        if grounded != 0:
+            screen.blit(chop4_image, chop4_rect)
 
         else:
-            screen.blit(chop3_image, chop3_rect)
+            if last_move == 'd':
+                screen.blit(chop_image, chop_rect)
+
+            elif last_move == 'q':
+                screen.blit(chop2_image, chop2_rect)
+
+            else:
+                screen.blit(chop3_image, chop3_rect)
 
         # flip() the display to put your work on screen
         py.display.flip()
