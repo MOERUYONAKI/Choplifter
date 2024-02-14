@@ -392,7 +392,7 @@ def choplifter(size : tuple = (1280, 720)):
             jet_position = 0 - 72
             jet_move = 0
             jet_rect.left = bg_rect.left - 72
-            jet2_rect.left = bg2_rect.left + size[0] + 32
+            jet2_rect.left = 2 * size[0] + 32
             jet_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
             jet2_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
 
