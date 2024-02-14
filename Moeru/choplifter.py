@@ -54,7 +54,7 @@ def choplifter(size : tuple = (1280, 720)):
 
     chop3_image = py.image.load('Python scripts\\Choplifter\\assets\\helico_ball.png').convert_alpha()
     chop3_rect = chop3_image.get_rect()
-    chop3_rect.left = chop_rect.left + 18
+    chop3_rect.left = chop_rect.left + 16
 
     tank_image = py.image.load('Python scripts\\Choplifter\\assets\\tank.png').convert_alpha()
     tank_rect = tank_image.get_rect()
@@ -166,7 +166,7 @@ def choplifter(size : tuple = (1280, 720)):
                 if chop_rect.left < 0:
                     chop_rect.left = 0
                     chop2_rect.left = 0
-                    chop3_rect.left = 18
+                    chop3_rect.left = 16
 
                     if move_id == 0:
                         pew_rect.left = chop_rect.left + 32
@@ -238,7 +238,7 @@ def choplifter(size : tuple = (1280, 720)):
                 if chop_rect.left > size[0] - 64:
                     chop_rect.left = size[0] - 64
                     chop2_rect.left = size[0] - 64
-                    chop2_rect.left = (size[0] - 64) + 18
+                    chop2_rect.left = (size[0] - 64) + 16
 
                     if move_id == 0:
                         pew_rect.left = chop_rect.left + 32
