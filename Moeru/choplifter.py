@@ -238,7 +238,7 @@ def choplifter(size : tuple = (1280, 720)):
                 if chop_rect.left > size[0] - 64:
                     chop_rect.left = size[0] - 64
                     chop2_rect.left = size[0] - 64
-                    chop2_rect.left = (size[0] - 64) + 16
+                    chop3_rect.left = size[0] - 49
 
                     if move_id == 0:
                         pew_rect.left = chop_rect.left + 32
