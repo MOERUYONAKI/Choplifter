@@ -133,6 +133,34 @@ def choplifter(size : tuple = (1280, 720)):
 
             last_move = 'z'
 
+        if pressed[py.K_s]: # - Bas
+            chop_rect.top += 5
+            chop2_rect.top += 5
+            chop3_rect.top += 5
+
+            if move_id != 1:
+                pew_rect.top += 5
+
+            if move_id != 2:
+                pew3_rect.top += 5
+
+            if move_id2 == 0:
+                pew2_rect.top = pew2_rect.top + 5
+
+            if chop_rect.top > size[1] - 32:
+                chop_rect.top = size[1] - 32
+                chop2_rect.top = size[1] - 32
+                chop3_rect.top = size[1] - 32
+
+                if move_id == 0:
+                    pew_rect.top = chop_rect.top + 16
+                    pew3_rect.top = chop_rect.top + 16
+
+                if move_id2 == 0:
+                    pew2_rect.top = chop_rect.top + 12
+
+            last_move = 's'
+
         if pressed[py.K_q]: # - Gauche  
             if chop_rect.left < int(round(0.3 * size[0], 0)) and bg_rect.left < 0:
                 bg_move = 2
@@ -176,34 +204,6 @@ def choplifter(size : tuple = (1280, 720)):
                         pew2_rect.left = chop_rect.left + 36
 
             last_move = 'q'
-
-        if pressed[py.K_s]: # - Bas
-            chop_rect.top += 5
-            chop2_rect.top += 5
-            chop3_rect.top += 5
-
-            if move_id != 1:
-                pew_rect.top += 5
-
-            if move_id != 2:
-                pew3_rect.top += 5
-
-            if move_id2 == 0:
-                pew2_rect.top = pew2_rect.top + 5
-
-            if chop_rect.top > size[1] - 32:
-                chop_rect.top = size[1] - 32
-                chop2_rect.top = size[1] - 32
-                chop3_rect.top = size[1] - 32
-
-                if move_id == 0:
-                    pew_rect.top = chop_rect.top + 16
-                    pew3_rect.top = chop_rect.top + 16
-
-                if move_id2 == 0:
-                    pew2_rect.top = chop_rect.top + 12
-
-            last_move = 's'
 
         if pressed[py.K_d]: # - Droite
             if chop_rect.left > (size[0] - int(round(0.3 * size[0], 0))) and bg2_rect.left > 0:
