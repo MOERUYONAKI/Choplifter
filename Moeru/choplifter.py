@@ -11,13 +11,15 @@ def choplifter(size : tuple = (1280, 720)):
     tank_move = 0
     tank_destroyed = 0
 
+    tank2_move = 1
+
     jet_position = 0
     jet_move = 0
     jet_destroyed = 0
 
     alien_move = 0
     alien_destroyed = 0
-    alien_altitude = random.randint(int(round(0.16 * size[1])), int(round(0.32 * size[1])))
+    alien_altitude = random.randint(int(round(0.2 * size[1])), int(round(0.4 * size[1])))
 
     bases_numbers = random.randint(2, 3)
     bases = []
@@ -74,6 +76,17 @@ def choplifter(size : tuple = (1280, 720)):
     tank2_rect = tank2_image.get_rect()
     tank2_rect.top = size[1] - 27
     tank2_rect.left = bg2_rect.left + bg2_rect.width - tank_rect.width
+
+    tank3_image = py.image.load('Python scripts\\Choplifter\\assets\\tank.png').convert_alpha()
+    tank3_rect = tank3_image.get_rect()
+    tank3_rect.top = size[1] - 27
+
+    tank4_image = py.image.load('Python scripts\\Choplifter\\assets\\revert_tank.png').convert_alpha()
+    tank4_rect = tank4_image.get_rect()
+    tank4_rect.top = size[1] - 27
+    tank4_rect.left = bg2_rect.left + bg2_rect.width - tank3_rect.width
+    
+    tank2_position = (2 * size[0] - tank_rect.width)
 
     jet_image = py.image.load('Python scripts\\Choplifter\\assets\\jet.png').convert_alpha()
     jet_rect = jet_image.get_rect()
@@ -371,7 +384,7 @@ def choplifter(size : tuple = (1280, 720)):
                     pew2_rect.top = chop_rect.top + 12
                     print("Le tir est de nouveau prêt !")
 
-        # Tanks moves
+        # Tanks moves - 1st tank
         if tank_position < (2 * size[0] - tank_rect.width) and tank_move == 0:
             tank_position += 3
 
@@ -405,8 +418,42 @@ def choplifter(size : tuple = (1280, 720)):
             tank_rect.left = bg_rect.left
             tank2_rect.left = bg2_rect.left + bg2_rect.width - tank2_rect.width
 
+        # - 2nd tank
+        if tank2_position < (2 * size[0] - tank3_rect.width) and tank2_move == 0:
+            tank2_position += 3
+
+            if bg_move == 1: # Mouvement vers la droite
+                tank3_rect.left -= 2
+
+            elif bg_move == 2: # Mouvement vers la gauche
+                tank3_rect.left += 8
+            
+            else:
+                tank3_rect.left += 3
+
+        elif tank2_position > 0 and int(round(time.time() - start_timer, 0)) > 15:
+            tank4_rect.left = bg2_rect.left + bg2_rect.width - tank4_rect.width if tank2_move == 0 else tank4_rect.left
+
+            tank2_move = 1
+            tank2_position -= 3
+            
+            if bg_move == 1: # Mouvement vers la droite
+                tank4_rect.left -= 8
+
+            elif bg_move == 2: # Mouvement vers la gauche
+                tank4_rect.left += 2
+            
+            else:
+                tank4_rect.left -= 3
+
+        else:
+            tank2_position = 0
+            tank2_move = 0
+            tank3_rect.left = bg_rect.left
+            tank4_rect.left = bg2_rect.left + bg2_rect.width - tank4_rect.width
+
         # Jets moves
-        if jet_position < (2 * size[0]) and jet_move == 0:
+        if jet_position < (2 * size[0]) and jet_move == 0 and int(round(time.time() - start_timer, 0)) > 15: # arrivée après 15 secondes de jeu
             jet_position += 8
 
             if bg_move == 1: # Mouvement vers la droite
@@ -442,19 +489,19 @@ def choplifter(size : tuple = (1280, 720)):
             jet2_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
 
         # Aliens moves
-        if int(round(time.time() - start_timer, 0) + 1) % 15 == 0 and alien_move == 0:
+        if int(round(time.time() - start_timer, 0) + 1) % 15 == 0 and int(round(time.time() - start_timer, 0) + 1) > 45 and alien_move == 0: # Arrivée après 45 secondes de jeu / toute les 15 secondes
             alien_move = 1
             alien_rect.left = random.randint(int(round(0.75 * chop_rect.left, 0)), int(round(1.2 * chop_rect.left, 0)))
         
         if alien_move != 0:
             if alien_rect.top < alien_altitude and alien_move == 1:
                 alien_rect.top += 1
-                alien_rect.left += random.choice([-8, -5, -3, -1, 0, 1, 3, 5, 8])
+                alien_rect.left += random.choice([-12, -8, -5, -3, -1, 0, 1, 3, 5, 8, 12])
 
             elif alien_rect.top >= bg_rect.top:
                 alien_move = 2
                 alien_rect.top -= 2
-                alien_rect.left += random.choice([-8, -5, -3, -1, 0, 1, 3, 5, 8])
+                alien_rect.left += random.choice([-12, -8, -5, -3, -1, 0, 1, 3, 5, 8, 12])
 
             else:
                 alien_move = 0
@@ -535,6 +582,12 @@ def choplifter(size : tuple = (1280, 720)):
 
         elif tank_move == 1:
             screen.blit(tank2_image, tank2_rect)
+
+        if tank2_move == 0:
+            screen.blit(tank3_image, tank3_rect)
+
+        elif tank2_move == 1:
+            screen.blit(tank4_image, tank4_rect)
 
         if jet_move == 0:
 
