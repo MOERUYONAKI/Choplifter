@@ -15,6 +15,10 @@ def choplifter(size : tuple = (1280, 720)):
     jet_move = 0
     jet_destroyed = 0
 
+    alien_move = 0
+    alien_destroyed = 0
+    alien_altitude = random.randint(int(round(0.16 * size[1])), int(round(0.32 * size[1])))
+
     bases_numbers = random.randint(2, 3)
     bases = []
     base_destroyed = 0
@@ -82,6 +86,11 @@ def choplifter(size : tuple = (1280, 720)):
     jet2_rect = jet2_image.get_rect()
     jet2_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
     jet2_rect.left = bg2_rect.left + bg2_rect.width 
+
+    alien_image = py.image.load('Python scripts\\Choplifter\\assets\\saucer.png').convert_alpha()
+    alien_image = py.transform.scale(alien_image, (42, 38))
+    alien_rect = alien_image.get_rect()
+    alien_rect.top = bg_rect.top - alien_rect.height
 
     for i in range(bases_numbers):
         bases.append([py.image.load('Python scripts\\Choplifter\\assets\\basement.png').convert_alpha()])
@@ -271,7 +280,7 @@ def choplifter(size : tuple = (1280, 720)):
 
         for event in py.event.get():
             if event.type == py.QUIT:
-                print(f"\nEnnemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets")
+                print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
                 running = False # end of the loop
 
             if event.type == py.KEYDOWN:
@@ -432,10 +441,29 @@ def choplifter(size : tuple = (1280, 720)):
             jet_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
             jet2_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
 
+        # Aliens moves
+        if int(round(time.time() - start_timer, 0) + 1) % 15 == 0 and alien_move == 0:
+            alien_move = 1
+            alien_rect.left = random.randint(int(round(0.75 * chop_rect.left, 0)), int(round(1.2 * chop_rect.left, 0)))
+        
+        if alien_move != 0:
+            if alien_rect.top < alien_altitude and alien_move == 1:
+                alien_rect.top += 1
+                alien_rect.left += random.choice([-8, -5, -3, -1, 0, 1, 3, 5, 8])
+
+            elif alien_rect.top >= bg_rect.top:
+                alien_move = 2
+                alien_rect.top -= 2
+                alien_rect.left += random.choice([-8, -5, -3, -1, 0, 1, 3, 5, 8])
+
+            else:
+                alien_move = 0
+                alien_rect.top = bg_rect.top - alien_rect.height
+
         # Collision events
-        if chop_rect.colliderect(tank_rect) or chop_rect.colliderect(tank2_rect) or chop_rect.colliderect(jet_rect) or chop_rect.colliderect(jet2_rect):
+        if chop_rect.colliderect(tank_rect) or chop_rect.colliderect(tank2_rect) or chop_rect.colliderect(jet_rect) or chop_rect.colliderect(jet2_rect) or chop_rect.colliderect(alien_rect):
             print("Hélicoptère détruit... \n")
-            print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets")
+            print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
             running = False
 
         if pew_rect.colliderect(tank_rect) or pew2_rect.colliderect(tank_rect) or pew3_rect.colliderect(tank_rect):
@@ -474,6 +502,13 @@ def choplifter(size : tuple = (1280, 720)):
             print("Jet détruit !")
             jet_destroyed += 1
 
+        if pew_rect.colliderect(alien_rect) or pew2_rect.colliderect(alien_rect) or pew3_rect.colliderect(alien_rect):
+            alien_move = 0
+            alien_rect.top = bg_rect.top - alien_rect.height
+
+            print("Alien éliminé !")
+            alien_destroyed += 1
+
         for base in bases:
             if pew_rect.colliderect(base[1]) or pew2_rect.colliderect(base[1]) or pew3_rect.colliderect(base[1]):
                 base[1].top = 0 - 250
@@ -507,6 +542,9 @@ def choplifter(size : tuple = (1280, 720)):
         
         elif jet_move == 1:
             screen.blit(jet2_image, jet2_rect)
+
+        if alien_move != 0:
+            screen.blit(alien_image, alien_rect)
 
         for base in bases:
             screen.blit(base[0], base[1])
