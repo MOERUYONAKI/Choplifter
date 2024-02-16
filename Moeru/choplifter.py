@@ -72,12 +72,17 @@ def choplifter(size : tuple = (1280, 720)):
 
     chop_image = py.image.load('Python scripts\\Choplifter\\assets\\helicopter.png').convert_alpha()
     chop_rect = chop_image.get_rect()
+    chop_rect.left = heliport_rect.left + int(round(0.5 * heliport_rect.width)) - int(round(0.5 * chop_rect.width))
+    chop_rect.top = heliport_rect.top
 
     chop2_image = py.image.load('Python scripts\\Choplifter\\assets\\revert_helicopter.png').convert_alpha()
     chop2_rect = chop2_image.get_rect()
+    chop2_rect.top = chop_rect.top
+    chop2_rect.center = heliport_rect.center
 
     chop3_image = py.image.load('Python scripts\\Choplifter\\assets\\helico_ball.png').convert_alpha()
     chop3_rect = chop3_image.get_rect()
+    chop3_rect.top = chop_rect.top
     chop3_rect.left = chop_rect.left + 16
 
     chop4_image = py.image.load('Python scripts\\Choplifter\\assets\\grounded_helicopter.png').convert_alpha()
@@ -542,7 +547,7 @@ def choplifter(size : tuple = (1280, 720)):
             jet2_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
 
         # Aliens moves
-        if int(round(time.time() - start_timer, 0) + 1) % 15 == 0 and int(round(time.time() - start_timer, 0) + 1) > 45 and alien_move == 0: # Arrivée après 45 secondes de jeu / toute les 15 secondes
+        if int(round(time.time() - start_timer, 0) + 1) % 12 == 0 and int(round(time.time() - start_timer, 0) + 1) > 45 and alien_move == 0: # Arrivée après 45 secondes de jeu / toute les 15 secondes
             alien_move = 1
             alien_rect.left = random.randint(int(round(0.75 * chop_rect.left, 0)), int(round(1.2 * chop_rect.left, 0)))
         
@@ -565,6 +570,22 @@ def choplifter(size : tuple = (1280, 720)):
             print("Hélicoptère détruit... \n")
             print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
             running = False
+
+        if chop_rect.colliderect(heliport_rect) and last_move == 's': # Atterrissage
+            grounded = 1
+
+            chop_rect.left = heliport_rect.left + int(round(0.5 * heliport_rect.width)) - int(round(0.5 * chop_rect.width))
+            chop_rect.top = heliport_rect.top
+
+            chop2_rect.top = chop_rect.top
+            chop2_rect.center = heliport_rect.center
+
+            chop3_rect.top = chop_rect.top
+            chop3_rect.left = chop_rect.left + 16
+
+            
+            chop4_rect.left = chop_rect.left + 16
+            chop4_rect.top = chop_rect.top + 9
 
         if pew_rect.colliderect(tank_rect) or pew2_rect.colliderect(tank_rect) or pew3_rect.colliderect(tank_rect):
             tank_position = 2 * size[0] - tank_rect.width
