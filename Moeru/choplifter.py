@@ -23,6 +23,7 @@ def choplifter(size : tuple = (1280, 720)):
 
     bases_numbers = random.randint(2, 3)
     bases = []
+    hostages = []
     base_destroyed = 0
 
     move_id = 0 # pew_rect
@@ -106,11 +107,21 @@ def choplifter(size : tuple = (1280, 720)):
     alien_rect.top = bg_rect.top - alien_rect.height
 
     for i in range(bases_numbers):
+        # Création des bases
         bases.append([py.image.load('Python scripts\\Choplifter\\assets\\basement.png').convert_alpha()])
         bases[i][0] = py.transform.scale(bases[i][0], (81, 60))
         bases[i].append(bases[i][0].get_rect())
         bases[i][1].top = size[1] - 57
         bases[i][1].left = random.randint(100 + int(round((2 * size[0] / bases_numbers) * (i), 0)), int(round((2 * size[0] / bases_numbers) * (i + 1), 0)) - 100)
+
+        # Création des otages
+        hostages.append([[py.image.load('Python scripts\\Choplifter\\assets\\hostage.png').convert_alpha()], [py.image.load('Python scripts\\Choplifter\\assets\\revert_hostage.png').convert_alpha()]])
+        hostages[i][0].append(hostages[i][0][0].get_rect())
+        hostages[i][0].append(True)
+        hostages[i][1].append(hostages[i][1][0].get_rect())
+        hostages[i][1].append(False)
+        hostages[i][0][1].top = (size[1] - hostages[i][0][1].height) + 1
+        hostages[i][1][1].top = (size[1] - hostages[i][1][1].height) + 1
 
     pew_image = py.image.load('Python scripts\\Choplifter\\assets\\green_pewpew.png').convert_alpha()
     pew_rect = pew_image.get_rect()
@@ -293,7 +304,7 @@ def choplifter(size : tuple = (1280, 720)):
 
         for event in py.event.get():
             if event.type == py.QUIT:
-                print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
+                print(f"\nEnnemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
                 running = False # end of the loop
 
             if event.type == py.KEYDOWN:
