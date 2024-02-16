@@ -578,8 +578,8 @@ def choplifter(size : tuple = (1280, 720)):
                 alien_rect.top = bg_rect.top - alien_rect.height
 
         # Collision events
-        if chop_rect.colliderect(tank_rect) or chop_rect.colliderect(tank2_rect) or chop_rect.colliderect(jet_rect) or chop_rect.colliderect(jet2_rect) or chop_rect.colliderect(alien_rect):
-            if lives == 0:
+        if chop_rect.colliderect(tank_rect) or chop_rect.colliderect(tank2_rect) or chop_rect.colliderect(tank3_rect) or chop_rect.colliderect(tank4_rect) or chop_rect.colliderect(jet_rect) or chop_rect.colliderect(jet2_rect) or chop_rect.colliderect(alien_rect):
+            if lives == 1:
                 print("Hélicoptère détruit... \n")
                 print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
                 print(f"{rescued} otages secourus")
@@ -705,7 +705,7 @@ def choplifter(size : tuple = (1280, 720)):
                 base_destroyed += 1
 
             elif chop_rect.colliderect(base[1]):
-                if lives == 0:
+                if lives == 1:
                     print("Hélicoptère détruit... \n")
                     print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
                     print(f"{rescued} otages secourus")
