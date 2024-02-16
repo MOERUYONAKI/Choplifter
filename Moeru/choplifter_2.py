@@ -21,10 +21,6 @@ def choplifter_survival(size : tuple = (1280, 720)):
     alien_destroyed = 0
     alien_altitude = random.randint(int(round(0.2 * size[1])), int(round(0.4 * size[1])))
 
-    bases_numbers = random.randint(2, 3)
-    bases = []
-    base_destroyed = 0
-
     move_id = 0 # pew_rect
     move_id2 = 0 # pew2_rect
 
@@ -104,13 +100,6 @@ def choplifter_survival(size : tuple = (1280, 720)):
     alien_image = py.transform.scale(alien_image, (42, 38))
     alien_rect = alien_image.get_rect()
     alien_rect.top = bg_rect.top - alien_rect.height
-
-    for i in range(bases_numbers):
-        bases.append([py.image.load('Python scripts\\Choplifter\\assets\\basement.png').convert_alpha()])
-        bases[i][0] = py.transform.scale(bases[i][0], (81, 60))
-        bases[i].append(bases[i][0].get_rect())
-        bases[i][1].top = size[1] - 57
-        bases[i][1].left = random.randint(100 + int(round((2 * size[0] / bases_numbers) * (i), 0)), int(round((2 * size[0] / bases_numbers) * (i + 1), 0)) - 100)
 
     pew_image = py.image.load('Python scripts\\Choplifter\\assets\\green_pewpew.png').convert_alpha()
     pew_rect = pew_image.get_rect()
@@ -206,13 +195,9 @@ def choplifter_survival(size : tuple = (1280, 720)):
                 if bg_rect.left <= 5:
                     bg_rect.left += 5
                     bg2_rect.left += 5
-                    for base in bases:
-                        base[1].left += 5
 
                 else:
                     bg2_rect.left -= bg_rect.left
-                    for base in bases:
-                        base[1].left -= bg2_rect.left
                     bg_rect.left = 0
 
             else:
@@ -252,13 +237,9 @@ def choplifter_survival(size : tuple = (1280, 720)):
                 if bg2_rect.left >= 5:
                     bg_rect.left -= 5
                     bg2_rect.left -= 5
-                    for base in bases:
-                        base[1].left -= 5
 
                 else:
                     bg_rect.left -= bg2_rect.left
-                    for base in bases:
-                        base[1].left -= bg2_rect.left
                     bg2_rect.left = 0  
             
             else:
@@ -293,7 +274,7 @@ def choplifter_survival(size : tuple = (1280, 720)):
 
         for event in py.event.get():
             if event.type == py.QUIT:
-                print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
+                print(f"\nEnnemis éliminés : \n{tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
                 running = False # end of the loop
 
             if event.type == py.KEYDOWN:
@@ -522,7 +503,7 @@ def choplifter_survival(size : tuple = (1280, 720)):
         # Collision events
         if chop_rect.colliderect(tank_rect) or chop_rect.colliderect(tank2_rect) or chop_rect.colliderect(jet_rect) or chop_rect.colliderect(jet2_rect) or chop_rect.colliderect(alien_rect):
             print("Hélicoptère détruit... \n")
-            print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
+            print(f"Ennemis éliminés : \n{tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
             running = False
 
         if pew_rect.colliderect(tank_rect) or pew2_rect.colliderect(tank_rect) or pew3_rect.colliderect(tank_rect):
@@ -586,18 +567,6 @@ def choplifter_survival(size : tuple = (1280, 720)):
             print("Alien éliminé !")
             alien_destroyed += 1
 
-        for base in bases:
-            if pew_rect.colliderect(base[1]) or pew2_rect.colliderect(base[1]) or pew3_rect.colliderect(base[1]):
-                base[1].top = 0 - 250
-
-                print("Bâtiment détruit !")
-                base_destroyed += 1
-
-            elif chop_rect.colliderect(base[1]):
-                print("Hélicoptère détruit... \n")
-                print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets")
-                running = False
-
         # fill the screen with a color to wipe away anything from last frame
         screen.fill("lavender")
         screen.blit(bg, bg_rect)
@@ -628,9 +597,6 @@ def choplifter_survival(size : tuple = (1280, 720)):
 
         if alien_move != 0:
             screen.blit(alien_image, alien_rect)
-
-        for base in bases:
-            screen.blit(base[0], base[1])
 
         if move_id == 1:
             screen.blit(pew_image, pew_rect)
