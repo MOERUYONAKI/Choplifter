@@ -543,6 +543,24 @@ def choplifter_survival(size : tuple = (1280, 720)):
             print("Tank détruit !")
             tank_destroyed += 1
 
+        if pew_rect.colliderect(tank3_rect) or pew2_rect.colliderect(tank3_rect) or pew3_rect.colliderect(tank3_rect):
+            tank2_position = 2 * size[0] - tank3_rect.width
+            tank2_move = 1
+            tank3_rect.left = bg_rect.left
+            tank4_rect.left =  bg2_rect.left + bg2_rect.width - tank4_rect.width
+
+            print("Tank détruit !")
+            tank_destroyed += 1
+
+        if pew_rect.colliderect(tank4_rect) or pew2_rect.colliderect(tank4_rect) or pew3_rect.colliderect(tank4_rect):
+            tank2_position = 0
+            tank2_move = 0
+            tank3_rect.left = bg_rect.left
+            tank4_rect.left =  bg2_rect.left + bg2_rect.width - tank4_rect.width
+
+            print("Tank détruit !")
+            tank_destroyed += 1
+
         if pew_rect.colliderect(jet_rect) or pew2_rect.colliderect(jet_rect) or pew3_rect.colliderect(jet_rect):
             jet_position = bg2_rect.left + bg2_rect.width 
             jet_move = 1
