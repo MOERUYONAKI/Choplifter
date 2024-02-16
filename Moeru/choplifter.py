@@ -5,6 +5,7 @@ import random
 def choplifter(size : tuple = (1280, 720)):
     last_move = 'z'
     bg_move = 0
+    lives = 3
     grounded = 1
     based = 1
 
@@ -24,6 +25,7 @@ def choplifter(size : tuple = (1280, 720)):
     bases_numbers = random.randint(2, 3)
     bases = []
     base_destroyed = 0
+    bases_lefts = []
 
     hostages = []
     inside = 0
@@ -70,7 +72,7 @@ def choplifter(size : tuple = (1280, 720)):
     heliport_rect.left = int(round(0.4 * bg0_rect.width, 0))
 
     cms_font = py.font.Font('C:\\Windows\\WinSxS\\amd64_microsoft-windows-f..ruetype-comicsansms_31bf3856ad364e35_10.0.22621.1_none_3deaef772e20c404\\comicbd.ttf', 24)
-    title = cms_font.render(f'CHOPLIFTER', True, (0, 0, 0, 0))
+    title = cms_font.render(f'CHOPLIFTER - {lives} lives', True, (0, 0, 0, 0))
     title_rect = title.get_rect()
     title_rect.center = (size[0] // 2, 12)
 
@@ -107,6 +109,7 @@ def choplifter(size : tuple = (1280, 720)):
     tank3_image = py.image.load('Python scripts\\Choplifter\\assets\\tank.png').convert_alpha()
     tank3_rect = tank3_image.get_rect()
     tank3_rect.top = size[1] - 27
+    tank3_rect.left = bg_rect.left
 
     tank4_image = py.image.load('Python scripts\\Choplifter\\assets\\revert_tank.png').convert_alpha()
     tank4_rect = tank4_image.get_rect()
@@ -139,7 +142,9 @@ def choplifter(size : tuple = (1280, 720)):
         bases[i].append(bases[i][0].get_rect())
         bases[i].append(True)
         bases[i][1].top = size[1] - 57
-        bases[i][1].left = random.randint(size[0] + 100 + int(round((2 * size[0] / bases_numbers) * (i), 0)), int(round((2 * size[0] / bases_numbers) * (i + 1), 0)) + size[0] - 100)
+        rdm_left = random.randint(size[0] + 100 + int(round((2 * size[0] / bases_numbers) * (i), 0)), int(round((2 * size[0] / bases_numbers) * (i + 1), 0)) + size[0] - 100)
+        bases[i][1].left = rdm_left
+        bases_lefts.append(rdm_left)
 
         # Création des otages
         hostages.append([])
@@ -574,10 +579,45 @@ def choplifter(size : tuple = (1280, 720)):
 
         # Collision events
         if chop_rect.colliderect(tank_rect) or chop_rect.colliderect(tank2_rect) or chop_rect.colliderect(jet_rect) or chop_rect.colliderect(jet2_rect) or chop_rect.colliderect(alien_rect):
-            print("Hélicoptère détruit... \n")
-            print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
-            print(f"{rescued} otages secourus")
-            running = False
+            if lives == 0:
+                print("Hélicoptère détruit... \n")
+                print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
+                print(f"{rescued} otages secourus")
+                running = False
+
+            else:
+                print("Hélicoptère détruit... \n")
+                lives -= 1
+
+                bg0_rect.left = 0
+                bg_rect.left = size[0]
+                bg2_rect.left = bg_rect.left + size[0]
+
+                helibase_rect.top = size[1] - (helibase_rect.height)
+                helibase_rect.left = int(round(0.4 * bg0_rect.width, 0)) - helibase_rect.width
+
+                heliport_rect.top = size[1] - heliport_rect.height - 8
+                heliport_rect.left = int(round(0.4 * bg0_rect.width, 0))
+
+                chop_rect.left = heliport_rect.left + int(round(0.5 * heliport_rect.width)) - int(round(0.5 * chop_rect.width))
+                chop_rect.top = heliport_rect.top
+
+                chop2_rect.top = chop_rect.top
+                chop2_rect.center = heliport_rect.center
+
+                chop3_rect.top = chop_rect.top
+                chop3_rect.left = chop_rect.left + 16
+
+                chop4_rect.left = chop_rect.left + 16
+                chop4_rect.top = chop_rect.top + 9
+
+                tank_rect.left = bg_rect.left
+                tank2_rect.left = bg2_rect.left + bg2_rect.width - tank_rect.width
+                tank3_rect.left = bg_rect.left
+                tank4_rect.left = bg2_rect.left + bg2_rect.width - tank3_rect.width
+
+                for k in range(len(bases)):
+                    bases[k][1].left = bases_lefts[k]
 
         if chop_rect.colliderect(heliport_rect) and last_move == 's': # Atterrissage
             grounded = 1
@@ -591,7 +631,6 @@ def choplifter(size : tuple = (1280, 720)):
 
             chop3_rect.top = chop_rect.top
             chop3_rect.left = chop_rect.left + 16
-
             
             chop4_rect.left = chop_rect.left + 16
             chop4_rect.top = chop_rect.top + 9
@@ -666,10 +705,46 @@ def choplifter(size : tuple = (1280, 720)):
                 base_destroyed += 1
 
             elif chop_rect.colliderect(base[1]):
-                print("Hélicoptère détruit... \n")
-                print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets")
-                print(f"{rescued} otages secourus")
-                running = False
+                if lives == 0:
+                    print("Hélicoptère détruit... \n")
+                    print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
+                    print(f"{rescued} otages secourus")
+                    running = False
+
+                else:
+                    print("Hélicoptère détruit... \n")
+                    lives -= 1
+
+                    bg0_rect.left = 0
+                    bg_rect.left = size[0]
+                    bg2_rect.left = bg_rect.left + size[0]
+
+                    helibase_rect.top = size[1] - (helibase_rect.height)
+                    helibase_rect.left = int(round(0.4 * bg0_rect.width, 0)) - helibase_rect.width
+
+                    heliport_rect.top = size[1] - heliport_rect.height - 8
+                    heliport_rect.left = int(round(0.4 * bg0_rect.width, 0))
+
+                    chop_rect.left = heliport_rect.left + int(round(0.5 * heliport_rect.width)) - int(round(0.5 * chop_rect.width))
+                    chop_rect.top = heliport_rect.top
+
+                    chop2_rect.top = chop_rect.top
+                    chop2_rect.center = heliport_rect.center
+
+                    chop3_rect.top = chop_rect.top
+                    chop3_rect.left = chop_rect.left + 16
+
+                    chop4_rect.left = chop_rect.left + 16
+                    chop4_rect.top = chop_rect.top + 9
+
+                    tank_rect.left = bg_rect.left
+                    tank2_rect.left = bg2_rect.left + bg2_rect.width - tank_rect.width
+                    tank3_rect.left = bg_rect.left
+                    tank4_rect.left = bg2_rect.left + bg2_rect.width - tank3_rect.width
+
+                    for k in range(len(bases)):
+                        bases[k][1].left = bases_lefts[k]
+
 
         # fill the screen with a color to wipe away anything from last frame
         screen.fill("lavender")
@@ -678,6 +753,7 @@ def choplifter(size : tuple = (1280, 720)):
         screen.blit(bg2, bg2_rect)
 
         # Texts
+        title = cms_font.render(f'CHOPLIFTER - {lives} lives', True, (0, 0, 0, 0))
         screen.blit(title, title_rect)
 
         # Assets
