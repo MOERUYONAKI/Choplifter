@@ -28,6 +28,7 @@ def choplifter(size : tuple = (1280, 720)):
     bases_lefts = []
 
     hostages = []
+    hostages_number = 0
     inside = 0
     rescued = 0
 
@@ -149,6 +150,8 @@ def choplifter(size : tuple = (1280, 720)):
         # Création des otages
         hostages.append([])
         for j in range(0, random.randint(4, 10), 2):
+            hostages_number += 1
+
             hostages[i].append([py.image.load('Python scripts\\Choplifter\\assets\\hostage.png').convert_alpha()])
             hostages[i].append([py.image.load('Python scripts\\Choplifter\\assets\\revert_hostage.png').convert_alpha()])
 
@@ -586,7 +589,7 @@ def choplifter(size : tuple = (1280, 720)):
                 running = False
 
             else:
-                print("Hélicoptère détruit... \n")
+                print("Hélicoptère détruit...")
                 lives -= 1
 
                 bg0_rect.left = 0
@@ -706,7 +709,7 @@ def choplifter(size : tuple = (1280, 720)):
 
             elif chop_rect.colliderect(base[1]):
                 if lives == 1:
-                    print("Hélicoptère détruit... \n")
+                    print("Hélicoptère détruit...")
                     print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
                     print(f"{rescued} otages secourus")
                     running = False
@@ -823,6 +826,7 @@ def choplifter(size : tuple = (1280, 720)):
                     elif hostages[i][j][2] == False:
                         if based == 1:
                             hostages[i][j][2] = None
+                            hostages_number -= 1
 
                             hostages[i][j][1].top = 0 - 250
                             hostages[i][j + 1][1].top = 0 - 250
@@ -856,6 +860,13 @@ def choplifter(size : tuple = (1280, 720)):
 
             else:
                 screen.blit(chop3_image, chop3_rect)
+
+        # Fin du jeu 
+        if hostages_number < 1:
+            print("Aucun otage restant... \n")
+            print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
+            print(f"{rescued} otages secourus")
+            running = False
 
         # flip() the display to put your work on screen
         py.display.flip()
