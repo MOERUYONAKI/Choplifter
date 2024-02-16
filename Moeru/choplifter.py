@@ -116,17 +116,21 @@ def choplifter(size : tuple = (1280, 720)):
         bases[i][1].left = random.randint(100 + int(round((2 * size[0] / bases_numbers) * (i), 0)), int(round((2 * size[0] / bases_numbers) * (i + 1), 0)) - 100)
 
         # Création des otages
-        hostages.append([[py.image.load('Python scripts\\Choplifter\\assets\\hostage.png').convert_alpha()], [py.image.load('Python scripts\\Choplifter\\assets\\revert_hostage.png').convert_alpha()]])
-        hostages[i][0][0] = py.transform.scale(hostages[i][0][0], (9, 18))
-        hostages[i][0].append(hostages[i][0][0].get_rect())
-        hostages[i][0].append(True)
-        hostages[i][1][0] = py.transform.scale(hostages[i][1][0], (9, 18))
-        hostages[i][1].append(hostages[i][1][0].get_rect())
-        hostages[i][1].append(False)
-        hostages[i][0][1].top = (size[1] - hostages[i][0][1].height) + 1
-        hostages[i][1][1].top = (size[1] - hostages[i][1][1].height) + 1
-        hostages[i][0][1].left = bases[i][1].left
-        hostages[i][1][1].left = bases[i][1].left
+        hostages.append([])
+        for j in range(0, random.randint(4, 10), 2):
+            hostages[i].append([py.image.load('Python scripts\\Choplifter\\assets\\hostage.png').convert_alpha()])
+            hostages[i].append([py.image.load('Python scripts\\Choplifter\\assets\\revert_hostage.png').convert_alpha()])
+            hostages[i][j][0] = py.transform.scale(hostages[i][j][0], (9, 18))
+            hostages[i][j].append(hostages[i][j][0].get_rect())
+            hostages[i][j].append(True)
+
+            hostages[i][j + 1][0] = py.transform.scale(hostages[i][j + 1][0], (9, 18))
+            hostages[i][j + 1].append(hostages[i][j + 1][0].get_rect())
+
+            hostages[i][j][1].top = (size[1] - hostages[i][j][1].height) + 1
+            hostages[i][j + 1][1].top = hostages[i][j][1].top
+            hostages[i][j][1].left = bases[i][1].left
+            hostages[i][j + 1][1].left = hostages[i][j][1].left
 
     pew_image = py.image.load('Python scripts\\Choplifter\\assets\\green_pewpew.png').convert_alpha()
     pew_rect = pew_image.get_rect()
@@ -651,11 +655,12 @@ def choplifter(size : tuple = (1280, 720)):
                 screen.blit(bases[i][0], bases[i][1])
 
             else:
-                if hostages[i][0][2] == True:
-                    screen.blit(hostages[i][0][0], hostages[i][0][1])
-
-                if hostages[i][1][2] == True:
-                    screen.blit(hostages[i][1][0], hostages[i][1][1])
+                for j in range(0, len(hostages[i]), 2):
+                    if hostages[i][j][2] == True:
+                        a = random.choice([-2, -1, 1, 2])
+                        hostages[i][j][1].left += a
+                        hostages[i][j + 1][1].left += a
+                        screen.blit(hostages[i][j][0], hostages[i][j][1]) if a > 0 else screen.blit(hostages[i][j + 1][0], hostages[i][j + 1][1])
 
         if move_id == 1:
             screen.blit(pew_image, pew_rect)
