@@ -45,7 +45,7 @@ def choplifter_survival(size : tuple = (1280, 720)):
     bg2_rect.left = size[0]
 
     cms_font = py.font.Font('C:\\Windows\\WinSxS\\amd64_microsoft-windows-f..ruetype-comicsansms_31bf3856ad364e35_10.0.22621.1_none_3deaef772e20c404\\comicbd.ttf', 24)
-    title = cms_font.render(f'CHOPLIFTER - 2', True, (0, 0, 0, 0))
+    title = cms_font.render(f'CHOPLIFTER - SURVIVAL', True, (0, 0, 0, 0))
     title_rect = title.get_rect()
     title_rect.center = (size[0] // 2, 12)
 
