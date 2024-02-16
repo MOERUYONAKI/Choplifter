@@ -5,7 +5,7 @@ import random
 def choplifter(size : tuple = (1280, 720)):
     last_move = 'z'
     bg_move = 0
-    grounded = 0
+    grounded = 1
 
     tank_position = 0
     tank_move = 0
@@ -88,6 +88,7 @@ def choplifter(size : tuple = (1280, 720)):
     tank_image = py.image.load('Python scripts\\Choplifter\\assets\\tank.png').convert_alpha()
     tank_rect = tank_image.get_rect()
     tank_rect.top = size[1] - 27
+    tank_rect.left = bg_rect.left
 
     tank2_image = py.image.load('Python scripts\\Choplifter\\assets\\revert_tank.png').convert_alpha()
     tank2_rect = tank2_image.get_rect()
@@ -203,7 +204,7 @@ def choplifter(size : tuple = (1280, 720)):
 
             last_move = 'z'
 
-        if pressed[py.K_s]: # - Bas
+        if pressed[py.K_s] and grounded == 0: # - Bas
             chop_rect.top += 5
             chop2_rect.top += 5
             chop3_rect.top += 5
