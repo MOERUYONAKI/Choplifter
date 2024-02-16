@@ -13,7 +13,6 @@ def choplifter(size : tuple = (1280, 720)):
 
     tank2_move = 1
 
-    jet_position = 0
     jet_move = 0
     jet_destroyed = 0
 
@@ -43,11 +42,28 @@ def choplifter(size : tuple = (1280, 720)):
     bg = py.image.load('Python scripts\\Choplifter\\assets\\background.png').convert_alpha()
     bg = py.transform.scale(bg, size)
     bg_rect = bg.get_rect()
+    bg_rect.left += size[0]
+
+    bg0 = py.image.load('Python scripts\\Choplifter\\assets\\background2.png').convert_alpha()
+    bg0 = py.transform.scale(bg0, size)
+    bg0_rect = bg0.get_rect()
 
     bg2 = py.image.load('Python scripts\\Choplifter\\assets\\background2.png').convert_alpha()
     bg2 = py.transform.scale(bg2, size)
     bg2_rect = bg2.get_rect()
-    bg2_rect.left = size[0]
+    bg2_rect.left = bg_rect.left + size[0]
+
+    helibase_image = py.image.load('Python scripts\\Choplifter\\assets\\heli_base.png').convert_alpha()
+    helibase_image = py.transform.scale(helibase_image, (186, 256))
+    helibase_rect = helibase_image.get_rect()
+    helibase_rect.top = size[1] - (helibase_rect.height)
+    helibase_rect.left = int(round(0.4 * bg0_rect.width, 0)) - helibase_rect.width
+
+    heliport_image = py.image.load('Python scripts\\Choplifter\\assets\\heliport.png').convert_alpha()
+    heliport_image = py.transform.scale(heliport_image, (128, 45))
+    heliport_rect = heliport_image.get_rect()
+    heliport_rect.top = size[1] - heliport_rect.height - 8
+    heliport_rect.left = int(round(0.4 * bg0_rect.width, 0))
 
     cms_font = py.font.Font('C:\\Windows\\WinSxS\\amd64_microsoft-windows-f..ruetype-comicsansms_31bf3856ad364e35_10.0.22621.1_none_3deaef772e20c404\\comicbd.ttf', 24)
     title = cms_font.render(f'CHOPLIFTER', True, (0, 0, 0, 0))
@@ -94,7 +110,7 @@ def choplifter(size : tuple = (1280, 720)):
     jet_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
     jet_rect.left = jet_rect.width
 
-    jet_position -= jet_rect.width
+    jet_position = bg0_rect.left - jet_rect.width
 
     jet2_image = py.image.load('Python scripts\\Choplifter\\assets\\revert_jet.png').convert_alpha()
     jet2_rect = jet2_image.get_rect()
@@ -113,7 +129,7 @@ def choplifter(size : tuple = (1280, 720)):
         bases[i].append(bases[i][0].get_rect())
         bases[i].append(True)
         bases[i][1].top = size[1] - 57
-        bases[i][1].left = random.randint(100 + int(round((2 * size[0] / bases_numbers) * (i), 0)), int(round((2 * size[0] / bases_numbers) * (i + 1), 0)) - 100)
+        bases[i][1].left = random.randint(size[0] + 100 + int(round((2 * size[0] / bases_numbers) * (i), 0)), int(round((2 * size[0] / bases_numbers) * (i + 1), 0)) + size[0] - 100)
 
         # Création des otages
         hostages.append([])
@@ -220,20 +236,22 @@ def choplifter(size : tuple = (1280, 720)):
             last_move = 's'
 
         if pressed[py.K_q] and grounded == 0: # - Gauche  
-            if chop_rect.left < int(round(0.3 * size[0], 0)) and bg_rect.left < 0:
+            if chop_rect.left < int(round(0.3 * size[0], 0)) and bg0_rect.left < 0:
                 bg_move = 2
 
-                if bg_rect.left <= 5:
+                if bg0_rect.left <= 5:
                     bg_rect.left += 5
+                    bg0_rect.left += 5
                     bg2_rect.left += 5
                     for base in bases:
                         base[1].left += 5
 
                 else:
-                    bg2_rect.left -= bg_rect.left
+                    bg_rect.left -= bg0_rect.left
+                    bg2_rect.left -= bg0_rect.left
                     for base in bases:
                         base[1].left -= bg2_rect.left
-                    bg_rect.left = 0
+                    bg0_rect.left = 0
 
             else:
                 chop_rect.left -= 5
@@ -271,12 +289,14 @@ def choplifter(size : tuple = (1280, 720)):
 
                 if bg2_rect.left >= 5:
                     bg_rect.left -= 5
+                    bg0_rect.left -= 5
                     bg2_rect.left -= 5
                     for base in bases:
                         base[1].left -= 5
 
                 else:
                     bg_rect.left -= bg2_rect.left
+                    bg0_rect.left -= bg2_rect.left
                     for base in bases:
                         base[1].left -= bg2_rect.left
                     bg2_rect.left = 0  
@@ -491,7 +511,7 @@ def choplifter(size : tuple = (1280, 720)):
             else:
                 jet_rect.left += 8
 
-        elif jet_position > 0 - jet_rect.width:
+        elif jet_position > 0 - size[0] - jet_rect.width:
             jet2_rect.left = bg2_rect.left + bg2_rect.width if jet_move == 0 else jet2_rect.left
 
             jet_move = 1
@@ -513,9 +533,9 @@ def choplifter(size : tuple = (1280, 720)):
                 jet2_rect.left -= 8
 
         else:
-            jet_position = 0 - jet_rect.width
+            jet_position = 0 - size[0] - jet_rect.width
             jet_move = 0
-            jet_rect.left = bg_rect.left - jet_rect.width
+            jet_rect.left = bg0_rect.left - jet_rect.width
             jet2_rect.left = bg2_rect.left + bg2_rect.width 
             jet_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
             jet2_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
@@ -622,12 +642,21 @@ def choplifter(size : tuple = (1280, 720)):
         # fill the screen with a color to wipe away anything from last frame
         screen.fill("lavender")
         screen.blit(bg, bg_rect)
+        screen.blit(bg0, bg0_rect)
         screen.blit(bg2, bg2_rect)
 
         # Texts
         screen.blit(title, title_rect)
 
         # Assets
+        helibase_rect.top = size[1] - (helibase_rect.height)
+        helibase_rect.left = bg0_rect.left + int(round(0.4 * bg0_rect.width, 0)) - helibase_rect.width
+        screen.blit(helibase_image, helibase_rect)
+
+        heliport_rect.top = size[1] - heliport_rect.height - 8
+        heliport_rect.left = bg0_rect.left + int(round(0.4 * bg0_rect.width, 0))
+        screen.blit(heliport_image, heliport_rect)
+
         if tank_move == 0:
             screen.blit(tank_image, tank_rect)
 
