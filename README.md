@@ -16,7 +16,7 @@
 **3 - /help**  
 > Give the commands list  
   
-**4 - /play** *[ -f ]*  
+**4 - /play** *[ -f ]* *[ -s ]*  
 > Start the Choplifter game  
 > [ -f ] - Fullscreen mode  
 > [ -s ] - Survival mode  
