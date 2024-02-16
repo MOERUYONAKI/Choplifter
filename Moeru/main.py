@@ -66,18 +66,13 @@ def cmd_start(): # Démarage de la console CHPrompt
 
     cmd = input("CHPrompt > ")
     cmd = cmd.split(' ')
-    cmd_size = len(cmd)
 
     if cmd[0] in commands or f'/{cmd[0]}' in commands:
         if cmd[0] in ('help', '/help', 'h'):
             help()
 
         elif cmd[0] in ('play', '/play', 'p'):
-            if cmd_size == 1:
-                play()
-
-            else:
-                play(fullscreen = True if '-f' in cmd else False, survival = True if '-s' in cmd else False)
+            play(fullscreen = True if '-f' in cmd else False, survival = True if '-s' in cmd else False)
 
         elif cmd[0] in ('clear', '/clear', 'cls'):
             clear()
