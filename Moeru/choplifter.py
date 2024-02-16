@@ -6,6 +6,7 @@ def choplifter(size : tuple = (1280, 720)):
     last_move = 'z'
     bg_move = 0
     grounded = 1
+    based = 1
 
     tank_position = 0
     tank_move = 0
@@ -22,8 +23,11 @@ def choplifter(size : tuple = (1280, 720)):
 
     bases_numbers = random.randint(2, 3)
     bases = []
-    hostages = []
     base_destroyed = 0
+
+    hostages = []
+    inside = 0
+    rescued = 0
 
     move_id = 0 # pew_rect
     move_id2 = 0 # pew2_rect
@@ -142,6 +146,7 @@ def choplifter(size : tuple = (1280, 720)):
         for j in range(0, random.randint(4, 10), 2):
             hostages[i].append([py.image.load('Python scripts\\Choplifter\\assets\\hostage.png').convert_alpha()])
             hostages[i].append([py.image.load('Python scripts\\Choplifter\\assets\\revert_hostage.png').convert_alpha()])
+
             hostages[i][j][0] = py.transform.scale(hostages[i][j][0], (9, 18))
             hostages[i][j].append(hostages[i][j][0].get_rect())
             hostages[i][j].append(True)
@@ -179,6 +184,7 @@ def choplifter(size : tuple = (1280, 720)):
 
         if pressed[py.K_z]: # - Haut
             grounded = 0
+            based = 0
 
             chop_rect.top -= 5
             chop2_rect.top -= 5
@@ -340,6 +346,7 @@ def choplifter(size : tuple = (1280, 720)):
         for event in py.event.get():
             if event.type == py.QUIT:
                 print(f"\nEnnemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
+                print(f"{rescued} otages secourus")
                 running = False # end of the loop
 
             if event.type == py.KEYDOWN:
@@ -569,10 +576,12 @@ def choplifter(size : tuple = (1280, 720)):
         if chop_rect.colliderect(tank_rect) or chop_rect.colliderect(tank2_rect) or chop_rect.colliderect(jet_rect) or chop_rect.colliderect(jet2_rect) or chop_rect.colliderect(alien_rect):
             print("Hélicoptère détruit... \n")
             print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
+            print(f"{rescued} otages secourus")
             running = False
 
         if chop_rect.colliderect(heliport_rect) and last_move == 's': # Atterrissage
             grounded = 1
+            based = 1
 
             chop_rect.left = heliport_rect.left + int(round(0.5 * heliport_rect.width)) - int(round(0.5 * chop_rect.width))
             chop_rect.top = heliport_rect.top
@@ -659,6 +668,7 @@ def choplifter(size : tuple = (1280, 720)):
             elif chop_rect.colliderect(base[1]):
                 print("Hélicoptère détruit... \n")
                 print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets")
+                print(f"{rescued} otages secourus")
                 running = False
 
         # fill the screen with a color to wipe away anything from last frame
@@ -703,15 +713,50 @@ def choplifter(size : tuple = (1280, 720)):
 
         for i in range(len(bases)):
             if bases[i][2] == True:
+                for j in range(0, len(hostages[i]), 2):
+                    hostages[i][j][1].left = bases[i][1].left
+                    hostages[i][j + 1][1].left = hostages[i][j][1].left
+
                 screen.blit(bases[i][0], bases[i][1])
 
             else:
                 for j in range(0, len(hostages[i]), 2):
                     if hostages[i][j][2] == True:
-                        a = random.choice([-2, -1, 1, 2])
-                        hostages[i][j][1].left += a
-                        hostages[i][j + 1][1].left += a
-                        screen.blit(hostages[i][j][0], hostages[i][j][1]) if a > 0 else screen.blit(hostages[i][j + 1][0], hostages[i][j + 1][1])
+                        if chop4_rect.colliderect(hostages[i][j][1]) and grounded == 1: # Récupération
+                            hostages[i][j][2] = False
+
+                            print("Otage ramassé")
+                            inside += 1
+
+                        else:
+                            temp = 0
+
+                            if grounded == 1 and chop_rect.left < hostages[i][j][1].left:
+                                temp = -2
+
+                            elif grounded == 1 and chop_rect.left > hostages[i][j][1].left:
+                                temp = 2
+
+                            else:
+                                temp = random.choice([-3, -1, 0, 1, 3])
+
+                            hostages[i][j][1].left += temp
+                            hostages[i][j + 1][1].left += temp
+                            screen.blit(hostages[i][j][0], hostages[i][j][1]) if temp >= 0 else screen.blit(hostages[i][j + 1][0], hostages[i][j + 1][1])
+
+                    elif hostages[i][j][2] == False:
+                        if based == 1:
+                            hostages[i][j][2] = None
+
+                            hostages[i][j][1].top = 0 - 250
+                            hostages[i][j + 1][1].top = 0 - 250
+
+                            print("Otage secouru")
+                            rescued += 1
+
+                        else:
+                            hostages[i][j][1].center = chop4_rect.center
+                            hostages[i][j + 1][1].center = chop4_rect.center
 
         if move_id == 1:
             screen.blit(pew_image, pew_rect)
