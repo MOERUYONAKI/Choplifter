@@ -2,20 +2,21 @@ import pygame as py
 import time
 import os 
 from choplifter import *
+from choplifter_2 import *
 
 def help(): # Commande d'aide - renvoie la liste des commandes avec une description rapide
     print('Commands list -')
     print('1 - /clear \n - Clear the CHPrompt')
     print('2 - /exit \n - Close the CHPrompt')
     print('3 - /help \n - Give the commands list')
-    print('4 - /play \n - Start the Choplifter game (-f for fullscreen mode)')
+    print('4 - /play \n - Start the Choplifter game (-f for fullscreen mode / -s for survival mode)')
     print('5 - /repo \n - Return the repository link')
 
     time.sleep(1)
     print(' ')
     cmd_start()
 
-def play(fullscreen : bool = False): # Commande de démarrage - lance le jeu en plein écran ou fenêtré
+def play(fullscreen : bool = False, survival : bool = False): # Commande de démarrage - lance le jeu en plein écran ou fenêtré
     if fullscreen:
         py.display.set_mode((0, 0), py.FULLSCREEN)
         size = (py.display.Info().current_w, py.display.Info().current_h)
@@ -28,7 +29,7 @@ def play(fullscreen : bool = False): # Commande de démarrage - lance le jeu en 
 
     time.sleep(0.5)
     print(size)
-    choplifter(size)
+    choplifter(size) if not survival else choplifter_survival(size)
 
     time.sleep(1)
     print(' ')
@@ -76,11 +77,7 @@ def cmd_start(): # Démarage de la console CHPrompt
                 play()
 
             else:
-                if cmd[1] == '-f':
-                    play(fullscreen = True)
-
-                else:
-                    play()
+                play(fullscreen = True if '-f' in cmd else False, survival = True if '-s' in cmd else False)
 
         elif cmd[0] in ('clear', '/clear', 'cls'):
             clear()
