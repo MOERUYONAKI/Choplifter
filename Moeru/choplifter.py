@@ -753,6 +753,7 @@ def choplifter(size : tuple = (1280, 720)):
 
                             print("Otage secouru")
                             rescued += 1
+                            inside -= 1
 
                         else:
                             hostages[i][j][1].center = chop4_rect.center
