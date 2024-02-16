@@ -456,6 +456,12 @@ def choplifter_survival(size : tuple = (1280, 720)):
         if jet_position < (2 * size[0]) and jet_move == 0 and int(round(time.time() - start_timer, 0)) > 15: # arrivée après 15 secondes de jeu
             jet_position += 8
 
+            if jet_rect.top > chop_rect.top:
+                jet_rect.top -= random.choice([0, 1, 3])
+
+            elif jet_rect.top < chop_rect.top:
+                jet_rect.top += random.choice([0, 1, 3])
+
             if bg_move == 1: # Mouvement vers la droite
                 jet_rect.left += 3
 
@@ -470,6 +476,12 @@ def choplifter_survival(size : tuple = (1280, 720)):
 
             jet_move = 1
             jet_position -= 8
+
+            if jet2_rect.top > chop_rect.top:
+                jet2_rect.top -= random.choice([0, 1, 3])
+
+            elif jet2_rect.top < chop_rect.top:
+                jet2_rect.top += random.choice([0, 1, 3])
             
             if bg_move == 1: # Mouvement vers la droite
                 jet2_rect.left -= 13
