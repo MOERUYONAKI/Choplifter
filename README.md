@@ -18,7 +18,8 @@
   
 **4 - /play** *[ -f ]*  
 > Start the Choplifter game  
-> [ -f ] - Mode plein écran  
+> [ -f ] - Fullscreen mode  
+> [ -s ] - Survival mode  
   
 **5 - /repo**  
 > Return the repository link  
