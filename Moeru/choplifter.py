@@ -40,6 +40,7 @@ def choplifter(size : tuple = (1280, 720)):
 
     hostages = []
     hostages_number = 0
+    total_hostage = 0
     inside = 0
     rescued = 0
 
@@ -152,6 +153,7 @@ def choplifter(size : tuple = (1280, 720)):
         hostages.append([])
         for j in range(0, random.randint(4, 10), 2):
             hostages_number += 1
+            total_hostage += 1
 
             hostages[i].append([py.image.load('Python scripts\\Choplifter\\assets\\hostage.png').convert_alpha()])
             hostages[i].append([py.image.load('Python scripts\\Choplifter\\assets\\revert_hostage.png').convert_alpha()])
@@ -168,21 +170,15 @@ def choplifter(size : tuple = (1280, 720)):
             hostages[i][j][1].left = bases[i][1].left
             hostages[i][j + 1][1].left = hostages[i][j][1].left
 
-    pew_image = py.image.load('Python scripts\\Choplifter\\assets\\green_pewpew.png').convert_alpha()
-    pew_rect = pew_image.get_rect()
-
+    pew_image, pew_rect = add_asset('Python scripts\\Choplifter\\assets\\green_pewpew.png')
     pew_rect.left = chop_rect.left + 32
     pew_rect.top = chop_rect.top + 16
 
-    pew2_image = py.image.load('Python scripts\\Choplifter\\assets\\green_pewpew2.png').convert_alpha()
-    pew2_rect = pew2_image.get_rect()
-
+    pew2_image, pew2_rect = add_asset('Python scripts\\Choplifter\\assets\\green_pewpew2.png')
     pew2_rect.left = chop_rect.left + 26
     pew2_rect.top = chop_rect.top + 12
 
-    pew3_image = py.image.load('Python scripts\\Choplifter\\assets\\green_revert_pewpew.png').convert_alpha()
-    pew3_rect = pew3_image.get_rect()
-
+    pew3_image, pew3_rect = add_asset('Python scripts\\Choplifter\\assets\\green_revert_pewpew.png')
     pew3_rect.left = chop_rect.left + 32
     pew3_rect.top = chop_rect.top + 16
 
@@ -411,7 +407,7 @@ def choplifter(size : tuple = (1280, 720)):
                     print("Le tir est de nouveau prêt !")
 
             if move_id == 2: # mouvement du tir (gauche)
-                if pew3_rect.left >= bg_rect.left - 5:
+                if pew3_rect.left >= bg0_rect.left - 5:
                     if bg_move == 2: # Mouvement vers la gauche
                         pew3_rect.left -= 5
 
@@ -678,7 +674,7 @@ def choplifter(size : tuple = (1280, 720)):
         if pew_rect.colliderect(jet_rect) or pew2_rect.colliderect(jet_rect) or pew3_rect.colliderect(jet_rect):
             jet_position = bg2_rect.left + bg2_rect.width 
             jet_move = 1
-            jet_rect.left = bg_rect.left - jet_rect.width
+            jet_rect.left = bg0_rect.left - jet_rect.width
             jet2_rect.left = bg2_rect.left + bg2_rect.width 
 
             print("Jet détruit !")
@@ -687,7 +683,7 @@ def choplifter(size : tuple = (1280, 720)):
         if pew_rect.colliderect(jet2_rect) or pew2_rect.colliderect(jet2_rect) or pew3_rect.colliderect(jet2_rect):
             jet_position = 0 - jet_rect.width
             jet_move = 0
-            jet_rect.left = bg_rect.left - jet_rect.width
+            jet_rect.left = bg0_rect.left - jet_rect.width
             jet2_rect.left = bg2_rect.left + bg2_rect.width 
 
             print("Jet détruit !")
@@ -866,7 +862,7 @@ def choplifter(size : tuple = (1280, 720)):
         if hostages_number < 1:
             print("Aucun otage restant... \n")
             print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
-            print(f"{rescued} otages secourus")
+            print(f"{rescued} otages secourus sur {total_hostage}")
             running = False
 
         # flip() the display to put your work on screen
