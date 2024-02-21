@@ -2,6 +2,17 @@ import pygame as py
 import time
 import random
 
+def add_asset(image_path : str): # Add an asset by an image - return an image and the image's rect
+    try:
+        image = py.image.load(image_path).convert_alpha()
+        rect = image.get_rect()
+
+        return image, rect
+    
+    except:
+        print("Erreur de génération")
+        return False, False
+
 def choplifter(size : tuple = (1280, 720)):
     last_move = 'z'
     bg_move = 0
@@ -77,57 +88,47 @@ def choplifter(size : tuple = (1280, 720)):
     title_rect = title.get_rect()
     title_rect.center = (size[0] // 2, 12)
 
-    chop_image = py.image.load('Python scripts\\Choplifter\\assets\\helicopter.png').convert_alpha()
-    chop_rect = chop_image.get_rect()
+    chop_image, chop_rect = add_asset('Python scripts\\Choplifter\\assets\\helicopter.png')
     chop_rect.left = heliport_rect.left + int(round(0.5 * heliport_rect.width)) - int(round(0.5 * chop_rect.width))
     chop_rect.top = heliport_rect.top
 
-    chop2_image = py.image.load('Python scripts\\Choplifter\\assets\\revert_helicopter.png').convert_alpha()
-    chop2_rect = chop2_image.get_rect()
+    chop2_image, chop2_rect = add_asset('Python scripts\\Choplifter\\assets\\revert_helicopter.png')
     chop2_rect.top = chop_rect.top
     chop2_rect.center = heliport_rect.center
 
-    chop3_image = py.image.load('Python scripts\\Choplifter\\assets\\helico_ball.png').convert_alpha()
-    chop3_rect = chop3_image.get_rect()
+    chop3_image, chop3_rect = add_asset('Python scripts\\Choplifter\\assets\\helico_ball.png')
     chop3_rect.top = chop_rect.top
     chop3_rect.left = chop_rect.left + 16
 
-    chop4_image = py.image.load('Python scripts\\Choplifter\\assets\\grounded_helicopter.png').convert_alpha()
-    chop4_rect = chop4_image.get_rect()
+    chop4_image, chop4_rect = add_asset('Python scripts\\Choplifter\\assets\\grounded_helicopter.png')
     chop4_rect.left = chop_rect.left + 16
     chop4_rect.top = chop_rect.top + 9
 
-    tank_image = py.image.load('Python scripts\\Choplifter\\assets\\tank.png').convert_alpha()
-    tank_rect = tank_image.get_rect()
+    tank_image, tank_rect = add_asset('Python scripts\\Choplifter\\assets\\tank.png')
     tank_rect.top = size[1] - 27
     tank_rect.left = bg_rect.left
 
-    tank2_image = py.image.load('Python scripts\\Choplifter\\assets\\revert_tank.png').convert_alpha()
-    tank2_rect = tank2_image.get_rect()
+    tank2_image, tank2_rect = add_asset('Python scripts\\Choplifter\\assets\\revert_tank.png')
     tank2_rect.top = size[1] - 27
     tank2_rect.left = bg2_rect.left + bg2_rect.width - tank_rect.width
 
-    tank3_image = py.image.load('Python scripts\\Choplifter\\assets\\tank.png').convert_alpha()
-    tank3_rect = tank3_image.get_rect()
+    tank3_image, tank3_rect = add_asset('Python scripts\\Choplifter\\assets\\tank.png')
     tank3_rect.top = size[1] - 27
     tank3_rect.left = bg_rect.left
 
-    tank4_image = py.image.load('Python scripts\\Choplifter\\assets\\revert_tank.png').convert_alpha()
-    tank4_rect = tank4_image.get_rect()
+    tank4_image, tank4_rect = add_asset('Python scripts\\Choplifter\\assets\\revert_tank.png')
     tank4_rect.top = size[1] - 27
     tank4_rect.left = bg2_rect.left + bg2_rect.width - tank3_rect.width
     
     tank2_position = (2 * size[0] - tank_rect.width)
 
-    jet_image = py.image.load('Python scripts\\Choplifter\\assets\\jet.png').convert_alpha()
-    jet_rect = jet_image.get_rect()
+    jet_image, jet_rect = add_asset('Python scripts\\Choplifter\\assets\\jet.png')
     jet_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
     jet_rect.left = jet_rect.width
 
     jet_position = bg0_rect.left - jet_rect.width
 
-    jet2_image = py.image.load('Python scripts\\Choplifter\\assets\\revert_jet.png').convert_alpha()
-    jet2_rect = jet2_image.get_rect()
+    jet2_image, jet2_rect = add_asset('Python scripts\\Choplifter\\assets\\revert_jet.png')
     jet2_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
     jet2_rect.left = bg2_rect.left + bg2_rect.width 
 
