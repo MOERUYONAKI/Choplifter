@@ -798,11 +798,20 @@ def choplifter(size : tuple = (1280, 720)):
             else:
                 for j in range(0, len(hostages[i]), 2):
                     if hostages[i][j][2] == True:
-                        if chop4_rect.colliderect(hostages[i][j][1]) and grounded == 1: # Récupération
+                        if (chop4_rect.left - 5 < hostages[i][j][1].left < chop4_rect.left + 5) and grounded == 1: # Récupération
                             hostages[i][j][2] = False
 
                             print("Otage ramassé")
                             inside += 1
+            
+                        elif chop4_rect.colliderect(hostages[i][j][1]) and grounded == 0:
+                            hostages[i][j][2] = None
+                            hostages_number -= 1                            
+                            
+                            hostages[i][j][1].top = 0 - 250
+                            hostages[i][j + 1][1].top = 0 - 250
+
+                            print("Un otage a succombé")
 
                         else:
                             temp = 0
