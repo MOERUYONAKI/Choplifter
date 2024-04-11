@@ -619,6 +619,16 @@ def choplifter(size : tuple = (1280, 720)):
                 for k in range(len(bases)):
                     bases[k][1].left = bases_lefts[k]
 
+                    for l in range(0, len(hostages[k]), 2):
+                        if hostages[k][l][2] == False:
+                            hostages[k][l][2] = None
+                            hostages_number -= 1                            
+                            
+                            hostages[k][l][1].top = 0 - 250
+                            hostages[k][l + 1][1].top = 0 - 250
+
+                            print("Un otage a succombé")
+
         if chop_rect.colliderect(heliport_rect) and last_move == 's': # Atterrissage
             grounded = 1
             based = 1
@@ -744,6 +754,16 @@ def choplifter(size : tuple = (1280, 720)):
 
                     for k in range(len(bases)):
                         bases[k][1].left = bases_lefts[k]
+
+                        for l in range(0, len(hostages[k]), 2):
+                            if hostages[k][l][2] == False:
+                                hostages[k][l][2] = None
+                                hostages_number -= 1                            
+                                
+                                hostages[k][l][1].top = 0 - 250
+                                hostages[k][l + 1][1].top = 0 - 250
+
+                                print("Un otage a succombé")
 
 
         # fill the screen with a color to wipe away anything from last frame
