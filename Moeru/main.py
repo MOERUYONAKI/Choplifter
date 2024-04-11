@@ -64,10 +64,10 @@ def cmd_start(): # Démarage de la console CHPrompt
         'r'
     ]
 
-    cmd = input("CHPrompt > ")
+    cmd = input("CHPrompt > ") # Affichage du prompt
     cmd = cmd.split(' ')
 
-    if cmd[0] in commands or f'/{cmd[0]}' in commands:
+    if cmd[0] in commands or f'/{cmd[0]}' in commands: # Vérification de l'entrée
         if cmd[0] in ('help', '/help', 'h'):
             help()
 
