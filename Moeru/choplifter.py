@@ -58,27 +58,27 @@ def choplifter(size : tuple = (1280, 720)):
 
     surface = py.display.get_surface()
 
-    bg = py.image.load('Python scripts\\Choplifter\\assets\\background.png').convert_alpha()
+    bg = py.image.load('assets\\background.png').convert_alpha()
     bg = py.transform.scale(bg, size)
     bg_rect = bg.get_rect()
     bg_rect.left += size[0]
 
-    bg0 = py.image.load('Python scripts\\Choplifter\\assets\\background2.png').convert_alpha()
+    bg0 = py.image.load('assets\\background2.png').convert_alpha()
     bg0 = py.transform.scale(bg0, size)
     bg0_rect = bg0.get_rect()
 
-    bg2 = py.image.load('Python scripts\\Choplifter\\assets\\background2.png').convert_alpha()
+    bg2 = py.image.load('assets\\background2.png').convert_alpha()
     bg2 = py.transform.scale(bg2, size)
     bg2_rect = bg2.get_rect()
     bg2_rect.left = bg_rect.left + size[0]
 
-    helibase_image = py.image.load('Python scripts\\Choplifter\\assets\\heli_base.png').convert_alpha()
+    helibase_image = py.image.load('assets\\heli_base.png').convert_alpha()
     helibase_image = py.transform.scale(helibase_image, (186, 256))
     helibase_rect = helibase_image.get_rect()
     helibase_rect.top = size[1] - (helibase_rect.height)
     helibase_rect.left = int(round(0.4 * bg0_rect.width, 0)) - helibase_rect.width
 
-    heliport_image = py.image.load('Python scripts\\Choplifter\\assets\\heliport.png').convert_alpha()
+    heliport_image = py.image.load('assets\\heliport.png').convert_alpha()
     heliport_image = py.transform.scale(heliport_image, (128, 45))
     heliport_rect = heliport_image.get_rect()
     heliport_rect.top = size[1] - heliport_rect.height - 8
@@ -89,58 +89,58 @@ def choplifter(size : tuple = (1280, 720)):
     title_rect = title.get_rect()
     title_rect.center = (size[0] // 2, 12)
 
-    chop_image, chop_rect = add_asset('Python scripts\\Choplifter\\assets\\helicopter.png')
+    chop_image, chop_rect = add_asset('assets\\helicopter.png')
     chop_rect.left = heliport_rect.left + int(round(0.5 * heliport_rect.width)) - int(round(0.5 * chop_rect.width))
     chop_rect.top = heliport_rect.top
 
-    chop2_image, chop2_rect = add_asset('Python scripts\\Choplifter\\assets\\revert_helicopter.png')
+    chop2_image, chop2_rect = add_asset('assets\\revert_helicopter.png')
     chop2_rect.top = chop_rect.top
     chop2_rect.center = heliport_rect.center
 
-    chop3_image, chop3_rect = add_asset('Python scripts\\Choplifter\\assets\\helico_ball.png')
+    chop3_image, chop3_rect = add_asset('assets\\helico_ball.png')
     chop3_rect.top = chop_rect.top
     chop3_rect.left = chop_rect.left + 16
 
-    chop4_image, chop4_rect = add_asset('Python scripts\\Choplifter\\assets\\grounded_helicopter.png')
+    chop4_image, chop4_rect = add_asset('assets\\grounded_helicopter.png')
     chop4_rect.left = chop_rect.left + 16
     chop4_rect.top = chop_rect.top + 9
 
-    tank_image, tank_rect = add_asset('Python scripts\\Choplifter\\assets\\tank.png')
+    tank_image, tank_rect = add_asset('assets\\tank.png')
     tank_rect.top = size[1] - 27
     tank_rect.left = bg_rect.left
 
-    tank2_image, tank2_rect = add_asset('Python scripts\\Choplifter\\assets\\revert_tank.png')
+    tank2_image, tank2_rect = add_asset('assets\\revert_tank.png')
     tank2_rect.top = size[1] - 27
     tank2_rect.left = bg2_rect.left + bg2_rect.width - tank_rect.width
 
-    tank3_image, tank3_rect = add_asset('Python scripts\\Choplifter\\assets\\tank.png')
+    tank3_image, tank3_rect = add_asset('assets\\tank.png')
     tank3_rect.top = size[1] - 27
     tank3_rect.left = bg_rect.left
 
-    tank4_image, tank4_rect = add_asset('Python scripts\\Choplifter\\assets\\revert_tank.png')
+    tank4_image, tank4_rect = add_asset('assets\\revert_tank.png')
     tank4_rect.top = size[1] - 27
     tank4_rect.left = bg2_rect.left + bg2_rect.width - tank3_rect.width
     
     tank2_position = (2 * size[0] - tank_rect.width)
 
-    jet_image, jet_rect = add_asset('Python scripts\\Choplifter\\assets\\jet.png')
+    jet_image, jet_rect = add_asset('assets\\jet.png')
     jet_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
     jet_rect.left = jet_rect.width
 
     jet_position = bg0_rect.left - jet_rect.width
 
-    jet2_image, jet2_rect = add_asset('Python scripts\\Choplifter\\assets\\revert_jet.png')
+    jet2_image, jet2_rect = add_asset('assets\\revert_jet.png')
     jet2_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
     jet2_rect.left = bg2_rect.left + bg2_rect.width 
 
-    alien_image = py.image.load('Python scripts\\Choplifter\\assets\\saucer.png').convert_alpha()
+    alien_image = py.image.load('assets\\saucer.png').convert_alpha()
     alien_image = py.transform.scale(alien_image, (42, 38))
     alien_rect = alien_image.get_rect()
     alien_rect.top = bg_rect.top - alien_rect.height
 
     for i in range(bases_numbers):
         # Création des bases
-        bases.append([py.image.load('Python scripts\\Choplifter\\assets\\basement.png').convert_alpha()])
+        bases.append([py.image.load('assets\\basement.png').convert_alpha()])
         bases[i][0] = py.transform.scale(bases[i][0], (81, 60))
         bases[i].append(bases[i][0].get_rect())
         bases[i].append(True)
@@ -155,8 +155,8 @@ def choplifter(size : tuple = (1280, 720)):
             hostages_number += 1
             total_hostage += 1
 
-            hostages[i].append([py.image.load('Python scripts\\Choplifter\\assets\\hostage.png').convert_alpha()])
-            hostages[i].append([py.image.load('Python scripts\\Choplifter\\assets\\revert_hostage.png').convert_alpha()])
+            hostages[i].append([py.image.load('assets\\hostage.png').convert_alpha()])
+            hostages[i].append([py.image.load('assets\\revert_hostage.png').convert_alpha()])
 
             hostages[i][j][0] = py.transform.scale(hostages[i][j][0], (9, 18))
             hostages[i][j].append(hostages[i][j][0].get_rect())
@@ -170,15 +170,15 @@ def choplifter(size : tuple = (1280, 720)):
             hostages[i][j][1].left = bases[i][1].left
             hostages[i][j + 1][1].left = hostages[i][j][1].left
 
-    pew_image, pew_rect = add_asset('Python scripts\\Choplifter\\assets\\green_pewpew.png')
+    pew_image, pew_rect = add_asset('assets\\green_pewpew.png')
     pew_rect.left = chop_rect.left + 32
     pew_rect.top = chop_rect.top + 16
 
-    pew2_image, pew2_rect = add_asset('Python scripts\\Choplifter\\assets\\green_pewpew2.png')
+    pew2_image, pew2_rect = add_asset('assets\\green_pewpew2.png')
     pew2_rect.left = chop_rect.left + 26
     pew2_rect.top = chop_rect.top + 12
 
-    pew3_image, pew3_rect = add_asset('Python scripts\\Choplifter\\assets\\green_revert_pewpew.png')
+    pew3_image, pew3_rect = add_asset('assets\\green_revert_pewpew.png')
     pew3_rect.left = chop_rect.left + 32
     pew3_rect.top = chop_rect.top + 16
 
