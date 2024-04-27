@@ -3,8 +3,9 @@ import time
 import random
 
 from init.asset import add_asset
-from init.background import Ground
-from init.chop import Chop, Pew
+from init.background import Background
+from init.chop import Chop, Pew as ChopPew
+from init.jet import Jet, Pew as JetPew
 
 def choplifter(size : tuple = (1280, 720)):
     bg_move = 0
@@ -42,8 +43,9 @@ def choplifter(size : tuple = (1280, 720)):
 
     screen = py.display.set_mode(size)
 
-    cms_font = py.font.Font('C:\\Windows\\WinSxS\\amd64_microsoft-windows-f..ruetype-comicsansms_31bf3856ad364e35_10.0.22621.1_none_3deaef772e20c404\\comicbd.ttf', 24)
-    loadtxt = cms_font.render(f'CHOPLIFTER - Loading...', True, (254, 254, 254, 0))
+    cms_font = py.font.Font('assets\\Fonts\\amd64_microsoft-windows-f..ruetype-comicsansms_31bf3856ad364e35_10.0.22621.1_none_3deaef772e20c404\\comic.ttf', 24)
+    
+    loadtxt = cms_font.render(f'CHOPLIFTER - Loading...', True, (0, 0, 0, 0))
     loadtxt_rect = loadtxt.get_rect()
     loadtxt_rect.center = (size[0] // 2, size[1] - 25)
     screen.blit(loadtxt, loadtxt_rect)
@@ -54,37 +56,19 @@ def choplifter(size : tuple = (1280, 720)):
 
     surface = py.display.get_surface()
 
-    ground = Ground(size)
+    bg = Background(size)
     chop = Chop(size)
-    pews = Pew(chop)
+    pews = ChopPew(chop)
 
-    bg = py.image.load('assets\\background.png').convert_alpha()
-    bg = py.transform.scale(bg, size)
-    bg_rect = bg.get_rect()
-    bg_rect.left += size[0]
+    jet1 = Jet(size)
+    j1_pews = JetPew(jet1)
+    jet2 = Jet(size)
+    j2_pews = JetPew(jet2)
+    jet2.active_left()
+    
+    jet_position = 0 - size[0] - jet1.get_parts()[0][1].width
 
-    bg0 = py.image.load('assets\\background2.png').convert_alpha()
-    bg0 = py.transform.scale(bg0, size)
-    bg0_rect = bg0.get_rect()
-
-    bg2 = py.image.load('assets\\background2.png').convert_alpha()
-    bg2 = py.transform.scale(bg2, size)
-    bg2_rect = bg2.get_rect()
-    bg2_rect.left = bg_rect.left + size[0]
-
-    helibase_image = py.image.load('assets\\heli_base.png').convert_alpha()
-    helibase_image = py.transform.scale(helibase_image, (186, 256))
-    helibase_rect = helibase_image.get_rect()
-    helibase_rect.top = size[1] - (helibase_rect.height) - 60
-    helibase_rect.left = int(round(0.4 * bg0_rect.width, 0)) - helibase_rect.width
-
-    heliport_image = py.image.load('assets\\heliport.png').convert_alpha()
-    heliport_image = py.transform.scale(heliport_image, (128, 45))
-    heliport_rect = heliport_image.get_rect()
-    heliport_rect.top = size[1] - heliport_rect.height - 32
-    heliport_rect.left = int(round(0.4 * bg0_rect.width, 0)) - int(round(0.3 * helibase_rect.width))
-
-    chop.set_center(heliport_rect.center)
+    chop.set_center(bg.get_heliport().center)
     chop.move_top(10)
     pews.reset()
 
@@ -93,37 +77,33 @@ def choplifter(size : tuple = (1280, 720)):
     title_rect.center = (size[0] // 2, 12)
 
     tank_image, tank_rect = add_asset('assets\\tank.png')
-    tank_rect.top = size[1] - 75
-    tank_rect.left = bg_rect.left
+    tank_rect.top = int(round(0.76 * size[1], 0))
+    tank_rect.left = bg.get_parts()[1][1].left
 
     tank2_image, tank2_rect = add_asset('assets\\revert_tank.png')
-    tank2_rect.top = size[1] - 75
-    tank2_rect.left = bg2_rect.left + bg2_rect.width - tank_rect.width
+    tank2_rect.top = int(round(0.76 * size[1], 0))
+    tank2_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank_rect.width
 
     tank3_image, tank3_rect = add_asset('assets\\tank.png')
-    tank3_rect.top = size[1] - 75
-    tank3_rect.left = bg_rect.left
+    tank3_rect.top = int(round(0.76 * size[1], 0))
+    tank3_rect.left = bg.get_parts()[1][1].left
 
     tank4_image, tank4_rect = add_asset('assets\\revert_tank.png')
-    tank4_rect.top = size[1] - 75
-    tank4_rect.left = bg2_rect.left + bg2_rect.width - tank3_rect.width
+    tank4_rect.top = int(round(0.76 * size[1], 0))
+    tank4_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank3_rect.width
     
     tank2_position = (2 * size[0] - tank_rect.width)
 
-    jet_image, jet_rect = add_asset('assets\\jet.png')
-    jet_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0))) - 48
-    jet_rect.left = jet_rect.width
+    jet1.get_parts()[0][1].top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0))) - 48
+    jet1.get_parts()[0][1].left = jet1.get_parts()[0][1].width
 
-    jet_position = bg0_rect.left - jet_rect.width
-
-    jet2_image, jet2_rect = add_asset('assets\\revert_jet.png')
-    jet2_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0))) - 48
-    jet2_rect.left = bg2_rect.left + bg2_rect.width 
+    jet2.get_parts()[0][1].top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0))) - 48
+    jet2.get_parts()[0][1].left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width 
 
     alien_image = py.image.load('assets\\saucer.png').convert_alpha()
     alien_image = py.transform.scale(alien_image, (42, 38))
     alien_rect = alien_image.get_rect()
-    alien_rect.top = bg_rect.top - alien_rect.height
+    alien_rect.top = bg.get_parts()[1][1].top - alien_rect.height
 
     for i in range(bases_numbers):
         # Création des bases
@@ -131,7 +111,7 @@ def choplifter(size : tuple = (1280, 720)):
         bases[i][0] = py.transform.scale(bases[i][0], (81, 60))
         bases[i].append(bases[i][0].get_rect())
         bases[i].append(True)
-        bases[i][1].top = size[1] - 150
+        bases[i][1].top = size[1] - int(round(0.22 * size[1], 0))
         rdm_left = random.randint(size[0] + 100 + int(round((2 * size[0] / bases_numbers) * (i), 0)), int(round((2 * size[0] / bases_numbers) * (i + 1), 0)) + size[0] - 100)
         bases[i][1].left = rdm_left
         bases_lefts.append(rdm_left)
@@ -152,7 +132,7 @@ def choplifter(size : tuple = (1280, 720)):
             hostages[i][j + 1][0] = py.transform.scale(hostages[i][j + 1][0], (9, 18))
             hostages[i][j + 1].append(hostages[i][j + 1][0].get_rect())
 
-            hostages[i][j][1].top = (size[1] - hostages[i][j][1].height) + 1
+            hostages[i][j][1].top = size[1] - int(round(0.2 * size[1], 0))
             hostages[i][j + 1][1].top = hostages[i][j][1].top
             hostages[i][j][1].left = bases[i][1].left
             hostages[i][j + 1][1].left = hostages[i][j][1].left
@@ -194,17 +174,16 @@ def choplifter(size : tuple = (1280, 720)):
             chop.move_top(5)
 
             if 'l' not in pews.get_moves():
-                pews.move_top_ls(+5)
+                pews.move_top_ls(5)
 
             if 'r' not in pews.get_moves():
-                pews.move_top_rs(+5)
+                pews.move_top_rs(5)
 
             if 'd' not in pews.get_moves():
-                pews.move_top_drop(+5)
+                pews.move_top_drop(5)
 
             if chop.get_top() > size[1] - 32:
                 chop.active_grounded()
-
                 chop.move_top(size[1] - chop.get_top() - 32)
 
                 if 'l' not in pews.get_moves():
@@ -219,24 +198,18 @@ def choplifter(size : tuple = (1280, 720)):
         if pressed[py.K_q] and chop.is_grounded() == 0: # - Gauche  
             chop.active_left()
 
-            if chop.get_left() < int(round(0.3 * size[0], 0)) and bg0_rect.left < 0:
+            if chop.get_left() < int(round(0.3 * size[0], 0)) and bg.get_left() < 0:
                 bg_move = 2
 
-                if bg0_rect.left <= 5:
-                    bg_rect.left += 5
-                    bg0_rect.left += 5
-                    bg2_rect.left += 5
-                    ground.move_left(5)
+                if bg.get_left() <= 5:
+                    bg.move_left(5)
                     for base in bases:
                         base[1].left += 5
 
                 else:
-                    bg_rect.left -= bg0_rect.left
-                    bg2_rect.left -= bg0_rect.left
-                    ground.move_left(0 - bg0_rect.left)
+                    bg.move_left(-1 * bg.get_left())
                     for base in bases:
-                        base[1].left -= bg2_rect.left
-                    bg0_rect.left = 0
+                        base[1].left -= bg.get_left()
 
             else:
                 chop.move_left(-5)
@@ -265,24 +238,18 @@ def choplifter(size : tuple = (1280, 720)):
         if pressed[py.K_d] and chop.is_grounded() == 0: # - Droite
             chop.active_right()
 
-            if chop.get_left() > (size[0] - int(round(0.3 * size[0], 0))) and bg2_rect.left > 0:
+            if chop.get_left() > (size[0] - int(round(0.3 * size[0], 0))) and bg.get_right() > 0:
                 bg_move = 1
 
-                if bg2_rect.left >= 5:
-                    bg_rect.left -= 5
-                    bg0_rect.left -= 5
-                    bg2_rect.left -= 5
-                    ground.move_left(-5)
+                if bg.get_right() >= 5:
+                    bg.move_left(-5)
                     for base in bases:
                         base[1].left -= 5
 
                 else:
-                    bg_rect.left -= bg2_rect.left
-                    bg0_rect.left -= bg2_rect.left
-                    ground.move_left(0 - bg2_rect.left)
+                    bg.move_left(0 - bg.get_right())
                     for base in bases:
-                        base[1].left -= bg2_rect.left
-                    bg2_rect.left = 0  
+                        base[1].left -= bg.get_right()
             
             else:
                 chop.move_left(5)
@@ -350,7 +317,7 @@ def choplifter(size : tuple = (1280, 720)):
         # RENDER YOUR GAME HERE
         if 'r' in pews.get_moves() or 'l' in pews.get_moves():
             if 'r' in pews.get_moves(): # mouvement du tir (droite)
-                if pews.parts[0][1].left <= bg2_rect.left - 5:
+                if pews.parts[0][1].left <= bg.get_parts()[2][1].left - 5:
                     if bg_move == 1: # Mouvement vers la droite
                         pews.move_left_rs(5)
 
@@ -360,15 +327,15 @@ def choplifter(size : tuple = (1280, 720)):
                     else:
                         pews.move_left_rs(10)
 
-                elif pews.parts[0][1].left > bg2_rect.left + 18:
-                    pews.parts[0][1].left = bg2_rect.left + 18
+                elif pews.parts[0][1].left > bg.get_parts()[2][1].left + 18:
+                    pews.parts[0][1].left = bg.get_parts()[2][1].left + 18
 
                 if (time.time() - basic_shot_start) > 1.5:
                     pews.reset_rs()
                     print("Le tir est de nouveau prêt !")
 
             elif 'l' in pews.get_moves(): # mouvement du tir (gauche)
-                if pews.parts[2][1].left >= bg0_rect.left - 5:
+                if pews.parts[2][1].left >= bg.get_parts()[0][1].left - 5:
                     if bg_move == 2: # Mouvement vers la gauche
                         pews.move_left_ls(-5)
 
@@ -378,8 +345,8 @@ def choplifter(size : tuple = (1280, 720)):
                     else:
                         pews.move_left_ls(-10)
 
-                elif pews.parts[2][1].left > bg_rect.left - 18:
-                    pews.parts[2][1].left = bg_rect.left - 18
+                elif pews.parts[2][1].left > bg.get_parts()[1][1].left - 18:
+                    pews.parts[2][1].left = bg.get_parts()[1][1].left - 18
 
                 if (time.time() - basic_shot_start) > 1.5:
                     pews.reset_ls()
@@ -412,7 +379,7 @@ def choplifter(size : tuple = (1280, 720)):
                 tank_rect.left += 3
 
         elif tank_position > 0:
-            tank2_rect.left = bg2_rect.left + bg2_rect.width - tank2_rect.width if tank_move == 0 else tank2_rect.left
+            tank2_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank2_rect.width if tank_move == 0 else tank2_rect.left
 
             tank_move = 1
             tank_position -= 3
@@ -429,8 +396,8 @@ def choplifter(size : tuple = (1280, 720)):
         else:
             tank_position = 0
             tank_move = 0
-            tank_rect.left = bg_rect.left
-            tank2_rect.left = bg2_rect.left + bg2_rect.width - tank2_rect.width
+            tank_rect.left = bg.get_parts()[1][1].left
+            tank2_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank2_rect.width
 
         # - 2nd tank
         if tank2_position < (2 * size[0] - tank3_rect.width) and tank2_move == 0:
@@ -446,7 +413,7 @@ def choplifter(size : tuple = (1280, 720)):
                 tank3_rect.left += 3
 
         elif tank2_position > 0 and int(round(time.time() - start_timer, 0)) > 15:
-            tank4_rect.left = bg2_rect.left + bg2_rect.width - tank4_rect.width if tank2_move == 0 else tank4_rect.left
+            tank4_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank4_rect.width if tank2_move == 0 else tank4_rect.left
 
             tank2_move = 1
             tank2_position -= 3
@@ -463,56 +430,56 @@ def choplifter(size : tuple = (1280, 720)):
         else:
             tank2_position = 0
             tank2_move = 0
-            tank3_rect.left = bg_rect.left
-            tank4_rect.left = bg2_rect.left + bg2_rect.width - tank4_rect.width
+            tank3_rect.left = bg.get_parts()[1][1].left
+            tank4_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank4_rect.width
 
         # Jets moves
         if jet_position < (2 * size[0]) and jet_move == 0 and int(round(time.time() - start_timer, 0)) > 15: # arrivée après 15 secondes de jeu
             jet_position += 8
 
-            if jet_rect.top > chop.get_top():
-                jet_rect.top -= random.choice([0, 1, 3])
+            if jet1.get_parts()[0][1].top > chop.get_top():
+                jet1.move_top(0 - random.choice([0, 1, 3]))
 
-            elif jet_rect.top < chop.get_top():
-                jet_rect.top += random.choice([0, 1, 3])
+            elif jet1.get_parts()[0][1].top < chop.get_top():
+                jet1.move_top(random.choice([0, 1, 3]))
 
             if bg_move == 1: # Mouvement vers la droite
-                jet_rect.left += 3
+                jet1.move_left(3)
 
             elif bg_move == 2: # Mouvement vers la gauche
-                jet_rect.left += 13
+                jet1.move_left(13)
             
             else:
-                jet_rect.left += 8
+                jet1.move_left(8)
 
-        elif jet_position > 0 - size[0] - jet_rect.width:
-            jet2_rect.left = bg2_rect.left + bg2_rect.width if jet_move == 0 else jet2_rect.left
+        elif jet_position > 0 - size[0] - jet1.get_parts()[0][1].width:
+            jet2.move_left(bg.get_parts()[2][1].left + bg.get_parts()[2][1].width if jet_move == 0 else 0)
 
             jet_move = 1
             jet_position -= 8
 
-            if jet2_rect.top > chop.get_top():
-                jet2_rect.top -= random.choice([0, 1, 3])
+            if jet2.get_top() > chop.get_top():
+                jet2.move_top(0 - random.choice([0, 1, 3]))
 
-            elif jet2_rect.top < chop.get_top():
-                jet2_rect.top += random.choice([0, 1, 3])
+            elif jet2.get_top() < chop.get_top():
+                jet2.move_top(random.choice([0, 1, 3]))
             
             if bg_move == 1: # Mouvement vers la droite
-                jet2_rect.left -= 13
+                jet2.move_left(-3)
 
             elif bg_move == 2: # Mouvement vers la gauche
-                jet2_rect.left -= 3
+                jet2.move_left(-13)
             
             else:
-                jet2_rect.left -= 8
+                jet2.move_left(-8)
 
         else:
-            jet_position = 0 - size[0] - jet_rect.width
+            jet_position = 0 - size[0] - jet1.get_parts()[0][1].width
             jet_move = 0
-            jet_rect.left = bg0_rect.left - jet_rect.width
-            jet2_rect.left = bg2_rect.left + bg2_rect.width 
-            jet_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
-            jet2_rect.top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
+            jet1.get_parts()[0][1].left = bg.get_parts()[0][1].left - jet1.get_parts()[0][1].width
+            jet2.get_parts()[0][1].left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width 
+            jet1.get_parts()[0][1].top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
+            jet2.get_parts()[0][1].top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
 
         # Aliens moves
         if int(round(time.time() - start_timer, 0) + 1) % 12 == 0 and int(round(time.time() - start_timer, 0) + 1) > 45 and alien_move == 0: # Arrivée après 45 secondes de jeu / toute les 15 secondes
@@ -524,17 +491,17 @@ def choplifter(size : tuple = (1280, 720)):
                 alien_rect.top += 1
                 alien_rect.left += random.choice([-12, -8, -5, -3, -1, 0, 1, 3, 5, 8, 12])
 
-            elif alien_rect.top >= bg_rect.top:
+            elif alien_rect.top >= bg.get_parts()[1][1].top:
                 alien_move = 2
                 alien_rect.top -= 2
                 alien_rect.left += random.choice([-12, -8, -5, -3, -1, 0, 1, 3, 5, 8, 12])
 
             else:
                 alien_move = 0
-                alien_rect.top = bg_rect.top - alien_rect.height
+                alien_rect.top = bg.get_parts()[1][1].top - alien_rect.height
 
         # Collision events
-        if chop.get_collid().colliderect(tank_rect) or chop.get_collid().colliderect(tank2_rect) or chop.get_collid().colliderect(tank3_rect) or chop.get_collid().colliderect(tank4_rect) or chop.get_collid().colliderect(jet_rect) or chop.get_collid().colliderect(jet2_rect) or chop.get_collid().colliderect(alien_rect):
+        if chop.get_collid().colliderect(tank_rect) or chop.get_collid().colliderect(tank2_rect) or chop.get_collid().colliderect(tank3_rect) or chop.get_collid().colliderect(tank4_rect) or chop.get_collid().colliderect(jet1.get_parts()[0][1]) or chop.get_collid().colliderect(jet2.get_parts()[0][1]) or chop.get_collid().colliderect(alien_rect):
             if lives == 1:
                 print("Hélicoptère détruit... \n")
                 print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
@@ -545,25 +512,22 @@ def choplifter(size : tuple = (1280, 720)):
                 print("Hélicoptère détruit...")
                 lives -= 1
 
-                bg0_rect.left = 0
-                bg_rect.left = size[0]
-                bg2_rect.left = bg_rect.left + size[0]
+                bg.get_parts()[0][1].left = 0
+                bg.get_parts()[1][1].left = size[0]
+                bg.get_parts()[2][1].left = bg.get_parts()[1][1].left + size[0]
 
-                helibase_rect.top = size[1] - (helibase_rect.height)
-                helibase_rect.left = int(round(0.4 * bg0_rect.width, 0)) - helibase_rect.width
-
-                heliport_rect.top = size[1] - heliport_rect.height - 8
-                heliport_rect.left = int(round(0.4 * bg0_rect.width, 0))
+                bg.get_heliport().top = int(round(0.764 * size[1], 0))
+                bg.get_heliport().left = int(round(0.48125 * size[0], 0))
 
                 chop.active_grounded()
-                chop.set_center(heliport_rect.center)
+                chop.set_center(bg.get_heliport().center)
                 chop.move_top(10)
                 pews.reset()
 
-                tank_rect.left = bg_rect.left
-                tank2_rect.left = bg2_rect.left + bg2_rect.width - tank_rect.width
-                tank3_rect.left = bg_rect.left
-                tank4_rect.left = bg2_rect.left + bg2_rect.width - tank3_rect.width
+                tank_rect.left = bg.get_parts()[1][1].left
+                tank2_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank_rect.width
+                tank3_rect.left = bg.get_parts()[1][1].left
+                tank4_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank3_rect.width
 
                 for k in range(len(bases)):
                     bases[k][1].left = bases_lefts[k]
@@ -578,17 +542,18 @@ def choplifter(size : tuple = (1280, 720)):
 
                             print("Un otage a succombé")
 
-        if chop.get_collid().colliderect(heliport_rect) and chop.last == 's': # Atterrissage
+        if chop.get_collid().colliderect(bg.get_heliport()) and chop.last == 's': # Atterrissage
             based = 1
 
-            chop.set_center(heliport_rect.center)
+            chop.set_center(bg.get_heliport().center)
+            chop.active_grounded()
             chop.move_top(10)
 
         if pews.get_rs_collid().colliderect(tank_rect) or pews.get_drop_collid().colliderect(tank_rect) or pews.get_ls_collid().colliderect(tank_rect):
             tank_position = 2 * size[0] - tank_rect.width
             tank_move = 1
-            tank_rect.left = bg_rect.left
-            tank2_rect.left =  bg2_rect.left + bg2_rect.width - tank2_rect.width
+            tank_rect.left = bg.get_parts()[1][1].left
+            tank2_rect.left =  bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank2_rect.width
 
             print("Tank détruit !")
             tank_destroyed += 1
@@ -596,8 +561,8 @@ def choplifter(size : tuple = (1280, 720)):
         if pews.get_rs_collid().colliderect(tank2_rect) or pews.get_drop_collid().colliderect(tank2_rect) or pews.get_ls_collid().colliderect(tank2_rect):
             tank_position = 0
             tank_move = 0
-            tank_rect.left = bg_rect.left
-            tank2_rect.left = bg2_rect.left + bg2_rect.width - tank2_rect.width
+            tank_rect.left = bg.get_parts()[1][1].left
+            tank2_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank2_rect.width
 
             print("Tank détruit !")
             tank_destroyed += 1
@@ -605,8 +570,8 @@ def choplifter(size : tuple = (1280, 720)):
         if pews.get_rs_collid().colliderect(tank3_rect) or pews.get_drop_collid().colliderect(tank3_rect) or pews.get_ls_collid().colliderect(tank3_rect):
             tank2_position = 2 * size[0] - tank3_rect.width
             tank2_move = 1
-            tank3_rect.left = bg_rect.left
-            tank4_rect.left =  bg2_rect.left + bg2_rect.width - tank4_rect.width
+            tank3_rect.left = bg.get_parts()[1][1].left
+            tank4_rect.left =  bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank4_rect.width
 
             print("Tank détruit !")
             tank_destroyed += 1
@@ -614,33 +579,33 @@ def choplifter(size : tuple = (1280, 720)):
         if pews.get_rs_collid().colliderect(tank4_rect) or pews.get_drop_collid().colliderect(tank4_rect) or pews.get_ls_collid().colliderect(tank4_rect):
             tank2_position = 0
             tank2_move = 0
-            tank3_rect.left = bg_rect.left
-            tank4_rect.left =  bg2_rect.left + bg2_rect.width - tank4_rect.width
+            tank3_rect.left = bg.get_parts()[1][1].left
+            tank4_rect.left =  bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank4_rect.width
 
             print("Tank détruit !")
             tank_destroyed += 1
 
-        if pews.get_rs_collid().colliderect(jet_rect) or pews.get_drop_collid().colliderect(jet_rect) or pews.get_ls_collid().colliderect(jet_rect):
-            jet_position = bg2_rect.left + bg2_rect.width 
+        if pews.get_rs_collid().colliderect(jet1.get_parts()[0][1]) or pews.get_drop_collid().colliderect(jet1.get_parts()[0][1]) or pews.get_ls_collid().colliderect(jet1.get_parts()[0][1]):
+            jet_position = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width 
             jet_move = 1
-            jet_rect.left = bg0_rect.left - jet_rect.width
-            jet2_rect.left = bg2_rect.left + bg2_rect.width 
+            jet1.get_parts()[0][1].left = bg.get_parts()[0][1].left - jet1.get_parts()[0][1].width
+            jet2.get_parts()[0][1].left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width 
 
             print("Jet détruit !")
             jet_destroyed += 1
 
-        if pews.get_rs_collid().colliderect(jet2_rect) or pews.get_drop_collid().colliderect(jet2_rect) or pews.get_ls_collid().colliderect(jet2_rect):
-            jet_position = 0 - jet_rect.width
+        if pews.get_rs_collid().colliderect(jet2.get_parts()[0][1]) or pews.get_drop_collid().colliderect(jet2.get_parts()[0][1]) or pews.get_ls_collid().colliderect(jet2.get_parts()[0][1]):
+            jet_position = 0 - jet1.get_parts()[0][1].width
             jet_move = 0
-            jet_rect.left = bg0_rect.left - jet_rect.width
-            jet2_rect.left = bg2_rect.left + bg2_rect.width 
+            jet1.get_parts()[0][1].left = bg.get_parts()[0][1].left - jet1.get_parts()[0][1].width
+            jet2.get_parts()[0][1].left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width 
 
             print("Jet détruit !")
             jet_destroyed += 1
 
         if pews.get_rs_collid().colliderect(alien_rect) or pews.get_drop_collid().colliderect(alien_rect) or pews.get_ls_collid().colliderect(alien_rect):
             alien_move = 0
-            alien_rect.top = bg_rect.top - alien_rect.height
+            alien_rect.top = bg.get_parts()[1][1].top - alien_rect.height
 
             print("Alien éliminé !")
             alien_destroyed += 1
@@ -655,25 +620,17 @@ def choplifter(size : tuple = (1280, 720)):
 
         # fill the screen with a color to wipe away anything from last frame
         screen.fill("lavender")
-        screen.blit(bg, bg_rect)
-        screen.blit(bg0, bg0_rect)
-        screen.blit(bg2, bg2_rect)
+        screen.blit(bg.get_parts()[0][0], bg.get_parts()[0][1])
+        screen.blit(bg.get_parts()[1][0], bg.get_parts()[1][1])
+        screen.blit(bg.get_parts()[2][0], bg.get_parts()[2][1])
 
         # Texts
         title = cms_font.render(f'CHOPLIFTER - {lives} lives', True, (0, 0, 0, 0))
         screen.blit(title, title_rect)
 
         # Assets
-        for elt in ground.get_parts():
+        for elt in bg.get_parts():
             screen.blit(elt[0], elt[1])
-
-        helibase_rect.top = size[1] - (helibase_rect.height) - 60
-        helibase_rect.left = bg0_rect.left + int(round(0.4 * bg0_rect.width, 0)) - helibase_rect.width
-        screen.blit(helibase_image, helibase_rect)
-
-        heliport_rect.top = size[1] - heliport_rect.height - 32
-        heliport_rect.left = bg0_rect.left + int(round(0.4 * bg0_rect.width, 0)) - int(round(0.3 * helibase_rect.width))
-        screen.blit(heliport_image, heliport_rect)
 
         if tank_move == 0:
             screen.blit(tank_image, tank_rect)
@@ -688,11 +645,14 @@ def choplifter(size : tuple = (1280, 720)):
             screen.blit(tank4_image, tank4_rect)
 
         if jet_move == 0:
-
-            screen.blit(jet_image, jet_rect)
+            for elt in jet1.get_parts():
+                if elt[2] == True:
+                    screen.blit(elt[0], elt[1])
         
         elif jet_move == 1:
-            screen.blit(jet2_image, jet2_rect)
+            for elt in jet2.get_parts():
+                if elt[2] == True:
+                    screen.blit(elt[0], elt[1])
 
         if alien_move != 0:
             screen.blit(alien_image, alien_rect)
