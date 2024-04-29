@@ -1,9 +1,11 @@
 import pygame as py
-from .asset import add_asset
+from .asset import add_asset, Vehicule
     
-class Jet():
+class Jet(Vehicule):
     def __init__(self, size : tuple = (1280, 720)):
         self.size = size
+        self.position = 0
+        self.move = 0
         
         parts = []
 
@@ -15,6 +17,12 @@ class Jet():
         parts.append([jet2_image, jet2_rect, False])
 
         self.parts = parts
+
+    def get_position(self):
+        return self.position
+
+    def get_move(self):
+        return self.move
 
     def get_parts(self):
         return self.parts
@@ -30,10 +38,8 @@ class Jet():
     def get_top(self):
         return self.parts[0][1].top
     
-    def is_grounded(self):
-        for i in range(len(self.parts)):
-            if self.parts[i][2] == True:
-                return 0 if i != 3 else 1
+    def is_right(self):
+        return True if self.parts[0][2] else False
             
     def active_right(self):
         self.parts[0][2] = True
@@ -42,6 +48,12 @@ class Jet():
     def active_left(self):
         self.parts[0][2] = False
         self.parts[1][2] = True
+
+    def set_position(self, px : int):
+        self.position = px
+
+    def set_move(self, move : int):
+        self.move = move if move in [0, 1] else 0
     
     def set_center(self, center : tuple):
         for elt in self.parts:
@@ -82,6 +94,10 @@ class Pew():
         parts.append([leftshot_image, leftshot_rect, False])
 
         self.parts = parts
+        self.shot = False
+
+    def get_parts(self):
+        return self.parts
 
     def get_moves(self):
         moves = ''
@@ -89,11 +105,8 @@ class Pew():
         if self.parts[0][2] == True:
             moves += 'r'
 
-        elif self.parts[2][2] == True:
+        elif self.parts[1][2] == True:
             moves += 'l'
-
-        if self.parts[1][2] == True:
-            moves += 'd'
 
         return moves
     
@@ -103,26 +116,31 @@ class Pew():
     def get_ls_collid(self):
         return self.parts[2][1]
     
-    def move_left_rs(self, px : int):
+    def move_left(self, px : int):
         self.parts[0][1].left += px
+        self.parts[1][1].left += px
 
-    def move_top_rs(self, px : int):
+    def move_top(self, px : int):
         self.parts[0][1].top += px
-
-    def reset_rs(self):
-        self.parts[0][1].center = (self.jet.get_left(), self.jet.get_top())
-        self.parts[0][2] = False
-    
-    def move_left_ls(self, px : int):
-        self.parts[2][1].left += px
-
-    def move_top_ls(self, px : int):
-        self.parts[2][1].top += px
-
-    def reset_ls(self):
-        self.parts[2][1].center = (self.jet.get_left(), self.jet.get_top())
-        self.parts[2][2] = False
+        self.parts[1][1].top += px
 
     def reset(self):
-        self.reset_rs()
-        self.reset_ls()
+        self.shot = False
+
+        self.parts[0][1].center = (self.jet.get_left(), self.jet.get_top())
+        self.parts[0][2] = False
+
+        self.parts[1][1].center = (self.jet.get_left(), self.jet.get_top())
+        self.parts[1][2] = False
+
+    def shoot(self):
+        if self.jet.is_right() and not self.shot:
+            self.shot = True
+            self.parts[0][2] = True
+
+        elif not self.jet.is_right() and not self.shot:
+            self.shot = True
+            self.parts[1][2] = True
+
+        else:
+            return False

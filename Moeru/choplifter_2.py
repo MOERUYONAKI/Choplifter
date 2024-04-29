@@ -35,11 +35,11 @@ def choplifter_survival(size : tuple = (1280, 720)):
 
     surface = py.display.get_surface()
 
-    bg = py.image.load('assets\\background.png').convert_alpha()
+    bg = py.image.load('assets\\bg2.png').convert_alpha()
     bg = py.transform.scale(bg, size)
     bg_rect = bg.get_rect()
 
-    bg2 = py.image.load('assets\\background2.png').convert_alpha()
+    bg2 = py.image.load('assets\\bg3.png').convert_alpha()
     bg2 = py.transform.scale(bg2, size)
     bg2_rect = bg2.get_rect()
     bg2_rect.left = size[0]

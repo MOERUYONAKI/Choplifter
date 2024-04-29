@@ -1,11 +1,145 @@
+# - - - - -  I M P O R T S  - - - - -
+
+# - PY imports
 import pygame as py
 import time
 import random
 
-from init.asset import add_asset
+# - Choplifter imports
+from init.asset import add_asset, Vehicule
 from init.background import Background
 from init.chop import Chop, Pew as ChopPew
 from init.jet import Jet, Pew as JetPew
+
+
+# - - - - -  F O N C T I O N S  - - - - -
+
+# - Jet collids
+def cps_collid(vehicule : Vehicule, pews : ChopPew, bg : Background):
+    if (pews.get_rs_collid().colliderect(vehicule.get_parts()[0][1]) and bg.size[0] > vehicule.get_left()) or pews.get_drop_collid().colliderect(vehicule.get_parts()[0][1]) or (pews.get_ls_collid().colliderect(vehicule.get_parts()[0][1]) and 0 < vehicule.get_left()):
+        vehicule.get_parts()[0][1].left = bg.get_parts()[0][1].left - vehicule.get_parts()[0][1].width
+        vehicule.get_parts()[0][1].left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width
+        
+        return True
+    
+    else:
+        return False
+    
+def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : int):
+    shot_timer = 0
+
+    if jet.get_position() < (3 * bg.size[0] + jet.get_parts()[0][1].width) and jet.get_move() == 0:
+        jet.set_position(jet.get_position() + 8)
+        move = random.choice([0, 1, 3])
+
+        if jet.get_top() > chop.get_top():
+            jet.move_top(0 - move)
+            
+            if not 'r' in pews.get_moves():
+                pews.move_top(0 - move)
+
+        elif jet.get_top() < chop.get_top():
+            jet.move_top(move)
+
+            if not 'r' in pews.get_moves():
+                pews.move_top(move)
+
+        else:
+            if not pews.shot and (15 < chop.get_left() - jet.get_left() and 750 > chop.get_left() - jet.get_left()):
+                pews.shoot()
+                shot_timer = time.time()
+
+        if bg_move == 1: # Mouvement vers la droite
+            jet.move_left(3)
+
+            if pews.parts[0][2]:
+                pews.move_left(7)
+
+            else:
+                pews.move_left(3)
+
+        elif bg_move == 2: # Mouvement vers la gauche
+            jet.move_left(13)
+
+            if pews.parts[0][2]:
+                pews.move_left(17)
+
+            else:
+                pews.move_left(13)
+        
+        else:
+            jet.move_left(8)
+
+            if pews.parts[0][2]:
+                pews.move_left(12)
+
+            else:
+                pews.move_left(8)
+
+    elif jet.get_position() > 0 - jet.get_parts()[0][1].width:
+        jet.move_left(bg.get_parts()[2][1].left + bg.get_parts()[2][1].width if jet.get_move() == 0 else 0)
+
+        jet.set_move(1)
+        jet.active_left()
+
+        jet.set_position(jet.get_position() - 8)
+        move = random.choice([0, 1, 3])
+
+        if jet.get_top() > chop.get_top():
+            jet.move_top(0 - move)
+            
+            if not 'l' in pews.get_moves():
+                pews.move_top(0 - move)
+
+        elif jet.get_top() < chop.get_top():
+            jet.move_top(move)
+            
+            if not 'l' in pews.get_moves():
+                pews.move_top(move)
+
+        else:
+            if not pews.shot and (15 < jet.get_left() - chop.get_left() and 750 > jet.get_left() - chop.get_left()):
+                pews.shoot()
+                shot_timer = time.time()
+        
+        if bg_move == 1: # Mouvement vers la droite
+            jet.move_left(-3)
+
+            if pews.parts[0][2]:
+                pews.move_left(-7)
+
+            else:
+                pews.move_left(-3)
+
+        elif bg_move == 2: # Mouvement vers la gauche
+            jet.move_left(-13)
+
+            if pews.parts[0][2]:
+                pews.move_left(-17)
+
+            else:
+                pews.move_left(-13)
+        
+        else:
+            jet.move_left(-8)
+
+            if pews.parts[0][2]:
+                pews.move_left(-12)
+
+            else:
+                pews.move_left(-8)
+
+    else:
+        jet.set_move(0)
+        jet.active_right()
+        
+        if not 'r' in pews.get_moves() and not 'l' in pews.get_moves():
+            pews.reset()
+
+    return shot_timer
+
+
+# - - - - -  M A I N  - - - - -
 
 def choplifter(size : tuple = (1280, 720)):
     bg_move = 0
@@ -18,8 +152,9 @@ def choplifter(size : tuple = (1280, 720)):
 
     tank2_move = 1
 
-    jet_move = 0
     jet_destroyed = 0
+    j1_shot_timer = 0
+    j2_shot_timer = 0
 
     alien_move = 0
     alien_destroyed = 0
@@ -61,12 +196,13 @@ def choplifter(size : tuple = (1280, 720)):
     pews = ChopPew(chop)
 
     jet1 = Jet(size)
+    jet1.active_right()
     j1_pews = JetPew(jet1)
+
     jet2 = Jet(size)
-    j2_pews = JetPew(jet2)
     jet2.active_left()
-    
-    jet_position = 0 - size[0] - jet1.get_parts()[0][1].width
+    jet2.set_move(1)
+    j2_pews = JetPew(jet2)
 
     chop.set_center(bg.get_heliport().center)
     chop.move_top(10)
@@ -94,11 +230,11 @@ def choplifter(size : tuple = (1280, 720)):
     
     tank2_position = (2 * size[0] - tank_rect.width)
 
-    jet1.get_parts()[0][1].top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0))) - 48
-    jet1.get_parts()[0][1].left = jet1.get_parts()[0][1].width
+    jet1.set_center((0 - jet1.get_parts()[0][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
+    jet2.set_center((bg.get_parts()[2][1].left + bg.get_parts()[2][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
 
-    jet2.get_parts()[0][1].top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0))) - 48
-    jet2.get_parts()[0][1].left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width 
+    j1_pews.reset()
+    j2_pews.reset()
 
     alien_image = py.image.load('assets\\saucer.png').convert_alpha()
     alien_image = py.transform.scale(alien_image, (42, 38))
@@ -264,7 +400,7 @@ def choplifter(size : tuple = (1280, 720)):
                     pews.move_left_drop(5)
 
                 if chop.get_left() > size[0] - 64:
-                    chop.set_center(chop.get_top(), size[0] - 64)
+                    chop.set_center((size[0] - 32, chop.get_top() + 16))
 
                     if 'l' not in pews.get_moves():
                         pews.reset_ls()
@@ -281,6 +417,15 @@ def choplifter(size : tuple = (1280, 720)):
                 print(f"{rescued} otages secourus")
                 running = False # end of the loop
 
+            if event.type == py.KEYDOWN:
+                if event.key == py.K_SPACE: # Tir bas
+                    if 'd' not in pews.get_moves() and chop.is_grounded() == 0:
+                        pews.parts[1][2] = True
+                        print("L'utilisateur tir !")
+
+                    else:
+                        print("Impossible de tirer !")
+
                 if event.key == py.K_z: # Haut
                     print("L'utilisateur se déplace sur le haut !")
 
@@ -292,12 +437,6 @@ def choplifter(size : tuple = (1280, 720)):
 
                 if event.key == py.K_d: # Droite
                     print("L'utilisateur se déplace sur la droite !")
-
-            if event.type == py.KEYDOWN:
-                if event.key == py.K_SPACE: # Tir bas
-                    if 'd' not in pews.get_moves() and chop.is_grounded() == 0:
-                        pews.parts[1][2] = True
-                        print("L'utilisateur tir !")
 
             if event.type == py.MOUSEBUTTONDOWN:
                 if 'r' not in pews.get_moves() and 'l' not in pews.get_moves() and event.button == 1: # 1 - Click gauche
@@ -327,8 +466,8 @@ def choplifter(size : tuple = (1280, 720)):
                     else:
                         pews.move_left_rs(10)
 
-                elif pews.parts[0][1].left > bg.get_parts()[2][1].left + 18:
-                    pews.parts[0][1].left = bg.get_parts()[2][1].left + 18
+                elif pews.parts[0][1].left > bg.get_parts()[2][1].left + 24:
+                    pews.parts[0][1].left = bg.get_parts()[2][1].left + 24
 
                 if (time.time() - basic_shot_start) > 1.5:
                     pews.reset_rs()
@@ -345,8 +484,8 @@ def choplifter(size : tuple = (1280, 720)):
                     else:
                         pews.move_left_ls(-10)
 
-                elif pews.parts[2][1].left > bg.get_parts()[1][1].left - 18:
-                    pews.parts[2][1].left = bg.get_parts()[1][1].left - 18
+                elif pews.parts[2][1].left > bg.get_parts()[1][1].left - 24:
+                    pews.parts[2][1].left = bg.get_parts()[1][1].left - 24
 
                 if (time.time() - basic_shot_start) > 1.5:
                     pews.reset_ls()
@@ -434,55 +573,22 @@ def choplifter(size : tuple = (1280, 720)):
             tank4_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank4_rect.width
 
         # Jets moves
-        if jet_position < (2 * size[0]) and jet_move == 0 and int(round(time.time() - start_timer, 0)) > 15: # arrivée après 15 secondes de jeu
-            jet_position += 8
+        if int(round(time.time() - start_timer, 0)) > 10: # arrivée après 10 secondes de jeu
+            j1_shot_timer = jet_moves(chop, jet1, j1_pews, bg, bg_move)
 
-            if jet1.get_parts()[0][1].top > chop.get_top():
-                jet1.move_top(0 - random.choice([0, 1, 3]))
+        if int(round(time.time() - start_timer, 0)) > 30: # arrivée après 30 secondes de jeu
+            j2_shot_timer = jet_moves(chop, jet2, j2_pews, bg, bg_move)
 
-            elif jet1.get_parts()[0][1].top < chop.get_top():
-                jet1.move_top(random.choice([0, 1, 3]))
+        if int(round(time.time() - j1_shot_timer, 0)) > 5 and j1_shot_timer != 0:
+            j1_pews.reset()
+            j1_shot_timer = 0
 
-            if bg_move == 1: # Mouvement vers la droite
-                jet1.move_left(3)
-
-            elif bg_move == 2: # Mouvement vers la gauche
-                jet1.move_left(13)
-            
-            else:
-                jet1.move_left(8)
-
-        elif jet_position > 0 - size[0] - jet1.get_parts()[0][1].width:
-            jet2.move_left(bg.get_parts()[2][1].left + bg.get_parts()[2][1].width if jet_move == 0 else 0)
-
-            jet_move = 1
-            jet_position -= 8
-
-            if jet2.get_top() > chop.get_top():
-                jet2.move_top(0 - random.choice([0, 1, 3]))
-
-            elif jet2.get_top() < chop.get_top():
-                jet2.move_top(random.choice([0, 1, 3]))
-            
-            if bg_move == 1: # Mouvement vers la droite
-                jet2.move_left(-3)
-
-            elif bg_move == 2: # Mouvement vers la gauche
-                jet2.move_left(-13)
-            
-            else:
-                jet2.move_left(-8)
-
-        else:
-            jet_position = 0 - size[0] - jet1.get_parts()[0][1].width
-            jet_move = 0
-            jet1.get_parts()[0][1].left = bg.get_parts()[0][1].left - jet1.get_parts()[0][1].width
-            jet2.get_parts()[0][1].left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width 
-            jet1.get_parts()[0][1].top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
-            jet2.get_parts()[0][1].top = random.randint(int(round(0.15 * size[1], 0)), int(round(0.85 * size[1], 0)))
+        if int(round(time.time() - j2_shot_timer, 0)) > 5 and j2_shot_timer != 0:
+            j2_pews.reset()
+            j2_shot_timer = 0
 
         # Aliens moves
-        if int(round(time.time() - start_timer, 0) + 1) % 12 == 0 and int(round(time.time() - start_timer, 0) + 1) > 45 and alien_move == 0: # Arrivée après 45 secondes de jeu / toute les 15 secondes
+        if int(round(time.time() - start_timer, 0) + 1) % 12 == 0 and int(round(time.time() - start_timer, 0) + 1) > 30 and alien_move == 0: # Arrivée après 30 secondes de jeu / toute les 15 secondes
             alien_move = 1
             alien_rect.left = random.randint(int(round(0.75 * chop.get_left(), 0)), int(round(1.2 * chop.get_left(), 0)))
         
@@ -585,23 +691,19 @@ def choplifter(size : tuple = (1280, 720)):
             print("Tank détruit !")
             tank_destroyed += 1
 
-        if pews.get_rs_collid().colliderect(jet1.get_parts()[0][1]) or pews.get_drop_collid().colliderect(jet1.get_parts()[0][1]) or pews.get_ls_collid().colliderect(jet1.get_parts()[0][1]):
+        if cps_collid(jet1, pews, bg):
             jet_position = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width 
             jet_move = 1
-            jet1.get_parts()[0][1].left = bg.get_parts()[0][1].left - jet1.get_parts()[0][1].width
-            jet2.get_parts()[0][1].left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width 
-
-            print("Jet détruit !")
             jet_destroyed += 1
 
-        if pews.get_rs_collid().colliderect(jet2.get_parts()[0][1]) or pews.get_drop_collid().colliderect(jet2.get_parts()[0][1]) or pews.get_ls_collid().colliderect(jet2.get_parts()[0][1]):
+            print("Jet détruit !")
+
+        if cps_collid(jet2, pews, bg):
             jet_position = 0 - jet1.get_parts()[0][1].width
             jet_move = 0
-            jet1.get_parts()[0][1].left = bg.get_parts()[0][1].left - jet1.get_parts()[0][1].width
-            jet2.get_parts()[0][1].left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width 
-
-            print("Jet détruit !")
             jet_destroyed += 1
+            
+            print("Jet détruit !")
 
         if pews.get_rs_collid().colliderect(alien_rect) or pews.get_drop_collid().colliderect(alien_rect) or pews.get_ls_collid().colliderect(alien_rect):
             alien_move = 0
@@ -618,20 +720,16 @@ def choplifter(size : tuple = (1280, 720)):
                 print("Bâtiment détruit !")
                 base_destroyed += 1
 
-        # fill the screen with a color to wipe away anything from last frame
+        # Background
         screen.fill("lavender")
-        screen.blit(bg.get_parts()[0][0], bg.get_parts()[0][1])
-        screen.blit(bg.get_parts()[1][0], bg.get_parts()[1][1])
-        screen.blit(bg.get_parts()[2][0], bg.get_parts()[2][1])
-
-        # Texts
-        title = cms_font.render(f'CHOPLIFTER - {lives} lives', True, (0, 0, 0, 0))
-        screen.blit(title, title_rect)
-
-        # Assets
         for elt in bg.get_parts():
             screen.blit(elt[0], elt[1])
 
+        # Texts
+        title = cms_font.render(f'CHOPLIFTER - {lives} lives', True, (32, 32, 32, 0))
+        screen.blit(title, title_rect)
+
+        # Assets - tanks
         if tank_move == 0:
             screen.blit(tank_image, tank_rect)
 
@@ -644,19 +742,28 @@ def choplifter(size : tuple = (1280, 720)):
         elif tank2_move == 1:
             screen.blit(tank4_image, tank4_rect)
 
-        if jet_move == 0:
-            for elt in jet1.get_parts():
-                if elt[2] == True:
-                    screen.blit(elt[0], elt[1])
-        
-        elif jet_move == 1:
-            for elt in jet2.get_parts():
-                if elt[2] == True:
-                    screen.blit(elt[0], elt[1])
+        # Assets - jets
+        for elt in j1_pews.get_parts():
+            if elt[2]:
+                screen.blit(elt[0], elt[1])
 
+        for elt in j2_pews.get_parts():
+            if elt[2]:
+                screen.blit(elt[0], elt[1])
+
+        for elt in jet1.get_parts():
+            if elt[2]:
+                screen.blit(elt[0], elt[1])
+        
+        for elt in jet2.get_parts():
+            if elt[2]:
+                screen.blit(elt[0], elt[1])
+
+        # Assets - aliens
         if alien_move != 0:
             screen.blit(alien_image, alien_rect)
 
+        # Assets - bases / hostages
         for i in range(len(bases)):
             if bases[i][2] == True:
                 for j in range(0, len(hostages[i]), 2):
@@ -715,6 +822,7 @@ def choplifter(size : tuple = (1280, 720)):
                             hostages[i][j][1].center = (chop.get_top(), chop.get_left())
                             hostages[i][j + 1][1].center = (chop.get_top(), chop.get_left())
 
+        # Assets - chop
         if 'r' in pews.get_moves():
             screen.blit(pews.parts[0][0], pews.parts[0][1])
 
@@ -735,10 +843,10 @@ def choplifter(size : tuple = (1280, 720)):
             print(f"{rescued} otages secourus sur {total_hostage}")
             running = False
 
-        # flip() the display to put your work on screen
+        # Affichage des modifications
         py.display.flip()
 
-        clock.tick(75) # limits FPS to 75
+        clock.tick(75) # limite des FPS - 75
 
     py.quit()
 

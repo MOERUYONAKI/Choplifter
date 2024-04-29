@@ -1,7 +1,7 @@
 import pygame as py
-from .asset import add_asset
+from .asset import add_asset, Vehicule
     
-class Chop():
+class Chop(Vehicule):
     def __init__(self, size : tuple = (1280, 720)):
         self.size = size
         
