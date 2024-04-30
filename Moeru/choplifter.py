@@ -9,12 +9,41 @@ import random
 from init.asset import add_asset, Vehicule
 from init.background import Background
 from init.chop import Chop, Pew as ChopPew
+from init.tank import Tank, Pew as TankPew
 from init.jet import Jet, Pew as JetPew
 
 
 # - - - - -  F O N C T I O N S  - - - - -
 
-# - Jet collids
+# Chop collids
+def chop_collid(chop : Chop, elts : list):
+    if chop.get_collid().colliderect(elts[0].get_collid()): # Tank 1
+        return True
+    
+    if chop.get_collid().colliderect(elts[1].get_collid()): # Tank 2
+        return True
+    
+    if chop.get_collid().colliderect(elts[2].get_collid()): # Jet 1
+        return True
+    
+    if chop.get_collid().colliderect(elts[3].get_collid()): # Jet 2
+        return True
+    
+    if chop.get_collid().colliderect(elts[4].get_ls_collid()) or chop.get_collid().colliderect(elts[4].get_rs_collid()): # Tank pew 1
+        return True
+    
+    if chop.get_collid().colliderect(elts[5].get_ls_collid()) or chop.get_collid().colliderect(elts[5].get_rs_collid()): # Tank pew 2
+        return True
+    
+    if chop.get_collid().colliderect(elts[6].get_ls_collid()) or chop.get_collid().colliderect(elts[6].get_rs_collid()): # Jet pew 1
+        return True
+    
+    if chop.get_collid().colliderect(elts[7].get_ls_collid()) or chop.get_collid().colliderect(elts[7].get_rs_collid()): # Jet pew 2
+        return True
+
+    return False
+
+# - ChopPews collids
 def cps_collid(vehicule : Vehicule, pews : ChopPew, bg : Background):
     if (pews.get_rs_collid().colliderect(vehicule.get_parts()[0][1]) and bg.size[0] > vehicule.get_left()) or pews.get_drop_collid().colliderect(vehicule.get_parts()[0][1]) or (pews.get_ls_collid().colliderect(vehicule.get_parts()[0][1]) and 0 < vehicule.get_left()):
         vehicule.get_parts()[0][1].left = bg.get_parts()[0][1].left - vehicule.get_parts()[0][1].width
@@ -24,7 +53,103 @@ def cps_collid(vehicule : Vehicule, pews : ChopPew, bg : Background):
     
     else:
         return False
-    
+
+# - Tanks moves   
+def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_move : int):
+    shot_timer = 0
+
+    if tank.get_position() < (2 * bg.size[0] - tank.get_parts()[0][1].width) and tank.get_move() == 0:
+        tank.set_position(tank.get_position() + 3)
+        tank.active_right()
+
+        if not pews.shot and (75 < chop.get_left() - tank.get_left() and 750 > chop.get_left() - tank.get_left()):
+            pews.shoot()
+            shot_timer = time.time()
+
+        if bg_move == 1: # Mouvement vers la droite
+            tank.move_left(-2)
+
+            if pews.parts[0][2]:
+                pews.move_left(7)
+                pews.move_top(7)
+
+            else:
+                pews.move_left(1)
+
+        elif bg_move == 2: # Mouvement vers la gauche
+            tank.move_left(8)
+
+            if pews.parts[0][2]:
+                pews.move_left(11)
+                pews.move_top(11)
+
+            else:
+                pews.move_left(8)
+        
+        else:
+            tank.move_left(3)
+
+            if pews.parts[0][2]:
+                pews.move_left(6)
+                pews.move_top(6)
+
+            else:
+                pews.move_left(3)
+
+    elif tank.get_position() > 0:
+        if not tank.is_shooting():
+            tank.active_left()
+
+        tank.set_move(1)
+        tank.set_position(tank.get_position() - 3)
+
+        if not pews.shot and (75 < tank.get_left() - chop.get_left() and 750 > tank.get_left() - chop.get_left()):
+            tank.active_shooting()
+            pews.shoot()
+            shot_timer = time.time()
+        
+        if bg_move == 1: # Mouvement vers la droite
+            tank.move_left(-8)
+
+            if pews.parts[1][2]:
+                pews.move_left(-11)
+                pews.move_top(-11)
+
+            else:
+                pews.move_left(-8)
+
+        elif bg_move == 2: # Mouvement vers la gauche
+            tank.move_left(2)
+
+            if pews.parts[1][2]:
+                pews.move_left(-1)
+                pews.move_top(-1)
+
+            else:
+                pews.move_left(2)
+        
+        else:
+            tank.move_left(-3)
+
+            if pews.parts[1][2]:
+                pews.move_left(-6)
+                pews.move_top(-6)
+
+            else:
+                pews.move_left(-3)
+
+    else:
+        if not tank.is_shooting():
+            tank.active_right()
+
+        tank.set_move(0)
+        
+        if not 'r' in pews.get_moves() and not 'l' in pews.get_moves():
+            pews.reset()
+
+    return shot_timer
+
+# - Jets moves
 def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : int):
     shot_timer = 0
 
@@ -105,7 +230,7 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
         if bg_move == 1: # Mouvement vers la droite
             jet.move_left(-3)
 
-            if pews.parts[0][2]:
+            if pews.parts[1][2]:
                 pews.move_left(-7)
 
             else:
@@ -114,7 +239,7 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
         elif bg_move == 2: # Mouvement vers la gauche
             jet.move_left(-13)
 
-            if pews.parts[0][2]:
+            if pews.parts[1][2]:
                 pews.move_left(-17)
 
             else:
@@ -146,11 +271,9 @@ def choplifter(size : tuple = (1280, 720)):
     lives = 3
     based = 1
 
-    tank_position = 0
-    tank_move = 0
     tank_destroyed = 0
-
-    tank2_move = 1
+    t1_shot_timer = 0
+    t2_shot_timer = 0
 
     jet_destroyed = 0
     j1_shot_timer = 0
@@ -195,6 +318,15 @@ def choplifter(size : tuple = (1280, 720)):
     chop = Chop(size)
     pews = ChopPew(chop)
 
+    tank1 = Tank(size)
+    tank1.active_right()
+    t1_pews = TankPew(tank1)
+
+    tank2 = Tank(size)
+    tank2.active_left()
+    tank2.set_move(1)
+    t2_pews = TankPew(tank2)
+
     jet1 = Jet(size)
     jet1.active_right()
     j1_pews = JetPew(jet1)
@@ -212,26 +344,16 @@ def choplifter(size : tuple = (1280, 720)):
     title_rect = title.get_rect()
     title_rect.center = (size[0] // 2, 12)
 
-    tank_image, tank_rect = add_asset('assets\\tank.png')
-    tank_rect.top = int(round(0.76 * size[1], 0))
-    tank_rect.left = bg.get_parts()[1][1].left
-
-    tank2_image, tank2_rect = add_asset('assets\\revert_tank.png')
-    tank2_rect.top = int(round(0.76 * size[1], 0))
-    tank2_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank_rect.width
-
-    tank3_image, tank3_rect = add_asset('assets\\tank.png')
-    tank3_rect.top = int(round(0.76 * size[1], 0))
-    tank3_rect.left = bg.get_parts()[1][1].left
-
-    tank4_image, tank4_rect = add_asset('assets\\revert_tank.png')
-    tank4_rect.top = int(round(0.76 * size[1], 0))
-    tank4_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank3_rect.width
+    tank1.set_center((bg.get_parts()[1][1].left + int(round(0.5 * tank1.get_parts()[0][1].width, 0)), int(round(0.76 * size[1], 0))))
+    tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.76 * size[1], 0))))
+    tank2.set_position(3 * size[0] + tank2.get_parts()[0][1].width)
     
-    tank2_position = (2 * size[0] - tank_rect.width)
+    t1_pews.reset()
+    t2_pews.reset()
 
     jet1.set_center((0 - jet1.get_parts()[0][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
-    jet2.set_center((bg.get_parts()[2][1].left + bg.get_parts()[2][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
+    jet2.set_center((3 * size[0] + jet2.get_parts()[0][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
+    jet2.set_position(3 * size[0] + jet2.get_parts()[0][1].width)
 
     j1_pews.reset()
     j2_pews.reset()
@@ -504,86 +626,35 @@ def choplifter(size : tuple = (1280, 720)):
                 pews.reset_drop()
                 print("Le tir est de nouveau prêt !")
 
-        # Tanks moves - 1st tank
-        if tank_position < (2 * size[0] - tank_rect.width) and tank_move == 0:
-            tank_position += 3
+        # Tanks moves
+        if int(round(time.time() - start_timer, 0)) > 1: # arrivée après 1 secondes de jeu
+            t1_shot_timer = tank_moves(chop, tank1, t1_pews, bg, bg_move)
 
-            if bg_move == 1: # Mouvement vers la droite
-                tank_rect.left -= 2
+        if int(round(time.time() - start_timer, 0)) > 12: # arrivée après 12 secondes de jeu
+            t2_shot_timer = tank_moves(chop, tank2, t2_pews, bg, bg_move)
 
-            elif bg_move == 2: # Mouvement vers la gauche
-                tank_rect.left += 8
-            
-            else:
-                tank_rect.left += 3
+        if int(round(time.time() - t1_shot_timer, 0)) > 2 and t1_shot_timer != 0:
+            t1_pews.reset()
+            t1_shot_timer = 0
+            tank1.active_right() if tank1.is_right() else tank1.active_left()
 
-        elif tank_position > 0:
-            tank2_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank2_rect.width if tank_move == 0 else tank2_rect.left
-
-            tank_move = 1
-            tank_position -= 3
-            
-            if bg_move == 1: # Mouvement vers la droite
-                tank2_rect.left -= 8
-
-            elif bg_move == 2: # Mouvement vers la gauche
-                tank2_rect.left += 2
-            
-            else:
-                tank2_rect.left -= 3
-
-        else:
-            tank_position = 0
-            tank_move = 0
-            tank_rect.left = bg.get_parts()[1][1].left
-            tank2_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank2_rect.width
-
-        # - 2nd tank
-        if tank2_position < (2 * size[0] - tank3_rect.width) and tank2_move == 0:
-            tank2_position += 3
-
-            if bg_move == 1: # Mouvement vers la droite
-                tank3_rect.left -= 2
-
-            elif bg_move == 2: # Mouvement vers la gauche
-                tank3_rect.left += 8
-            
-            else:
-                tank3_rect.left += 3
-
-        elif tank2_position > 0 and int(round(time.time() - start_timer, 0)) > 15:
-            tank4_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank4_rect.width if tank2_move == 0 else tank4_rect.left
-
-            tank2_move = 1
-            tank2_position -= 3
-            
-            if bg_move == 1: # Mouvement vers la droite
-                tank4_rect.left -= 8
-
-            elif bg_move == 2: # Mouvement vers la gauche
-                tank4_rect.left += 2
-            
-            else:
-                tank4_rect.left -= 3
-
-        else:
-            tank2_position = 0
-            tank2_move = 0
-            tank3_rect.left = bg.get_parts()[1][1].left
-            tank4_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank4_rect.width
+        if int(round(time.time() - t2_shot_timer, 0)) > 2 and t2_shot_timer != 0:
+            t2_pews.reset()
+            t2_shot_timer = 0
+            tank2.active_right() if tank2.is_right() else tank2.active_left()
 
         # Jets moves
-        if int(round(time.time() - start_timer, 0)) > 10: # arrivée après 10 secondes de jeu
+        if int(round(time.time() - start_timer, 0)) > 8: # arrivée après 8 secondes de jeu
             j1_shot_timer = jet_moves(chop, jet1, j1_pews, bg, bg_move)
 
-        if int(round(time.time() - start_timer, 0)) > 30: # arrivée après 30 secondes de jeu
+        if int(round(time.time() - start_timer, 0)) > 24: # arrivée après 24 secondes de jeu
             j2_shot_timer = jet_moves(chop, jet2, j2_pews, bg, bg_move)
 
-        if int(round(time.time() - j1_shot_timer, 0)) > 5 and j1_shot_timer != 0:
+        if int(round(time.time() - j1_shot_timer, 0)) > 3 and j1_shot_timer != 0:
             j1_pews.reset()
             j1_shot_timer = 0
 
-        if int(round(time.time() - j2_shot_timer, 0)) > 5 and j2_shot_timer != 0:
+        if int(round(time.time() - j2_shot_timer, 0)) > 3 and j2_shot_timer != 0:
             j2_pews.reset()
             j2_shot_timer = 0
 
@@ -607,7 +678,9 @@ def choplifter(size : tuple = (1280, 720)):
                 alien_rect.top = bg.get_parts()[1][1].top - alien_rect.height
 
         # Collision events
-        if chop.get_collid().colliderect(tank_rect) or chop.get_collid().colliderect(tank2_rect) or chop.get_collid().colliderect(tank3_rect) or chop.get_collid().colliderect(tank4_rect) or chop.get_collid().colliderect(jet1.get_parts()[0][1]) or chop.get_collid().colliderect(jet2.get_parts()[0][1]) or chop.get_collid().colliderect(alien_rect):
+        elts = [tank1, tank2, jet1, jet2, t1_pews, t2_pews, j1_pews, j2_pews]
+
+        if chop_collid(chop, elts) or chop.get_collid().colliderect(alien_rect):
             if lives == 1:
                 print("Hélicoptère détruit... \n")
                 print(f"Ennemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
@@ -630,10 +703,18 @@ def choplifter(size : tuple = (1280, 720)):
                 chop.move_top(10)
                 pews.reset()
 
-                tank_rect.left = bg.get_parts()[1][1].left
-                tank2_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank_rect.width
-                tank3_rect.left = bg.get_parts()[1][1].left
-                tank4_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank3_rect.width
+                tank1.active_right()
+                tank2.set_move(0)
+                tank2.active_left()
+                tank2.set_move(1)
+
+                tank1.set_center((bg.get_parts()[1][1].left, int(round(0.76 * size[1], 0))))
+                tank1.set_position(0)
+                tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.76 * size[1], 0))))
+                tank2.set_position(3 * size[0] + tank2.get_parts()[0][1].width)
+                
+                t1_pews.reset()
+                t2_pews.reset()
 
                 for k in range(len(bases)):
                     bases[k][1].left = bases_lefts[k]
@@ -655,52 +736,38 @@ def choplifter(size : tuple = (1280, 720)):
             chop.active_grounded()
             chop.move_top(10)
 
-        if pews.get_rs_collid().colliderect(tank_rect) or pews.get_drop_collid().colliderect(tank_rect) or pews.get_ls_collid().colliderect(tank_rect):
-            tank_position = 2 * size[0] - tank_rect.width
-            tank_move = 1
-            tank_rect.left = bg.get_parts()[1][1].left
-            tank2_rect.left =  bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank2_rect.width
+        if cps_collid(tank1, pews, bg):
+            tank1.set_position(2 * size[0])
+            tank1.set_move(1)
+            
+            tank1.active_left()
+            tank1.set_center((3 * size[0] + tank1.get_parts()[0][1].width, int(round(0.76 * size[1], 0))))    
+            t1_pews.reset()
 
-            print("Tank détruit !")
             tank_destroyed += 1
-
-        if pews.get_rs_collid().colliderect(tank2_rect) or pews.get_drop_collid().colliderect(tank2_rect) or pews.get_ls_collid().colliderect(tank2_rect):
-            tank_position = 0
-            tank_move = 0
-            tank_rect.left = bg.get_parts()[1][1].left
-            tank2_rect.left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank2_rect.width
-
             print("Tank détruit !")
+
+        if cps_collid(tank2, pews, bg):
+            tank2.set_position(2 * size[0])
+            tank2.set_move(1)
+            
+            tank2.active_left()
+            tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.76 * size[1], 0))))    
+            t2_pews.reset()
+
             tank_destroyed += 1
-
-        if pews.get_rs_collid().colliderect(tank3_rect) or pews.get_drop_collid().colliderect(tank3_rect) or pews.get_ls_collid().colliderect(tank3_rect):
-            tank2_position = 2 * size[0] - tank3_rect.width
-            tank2_move = 1
-            tank3_rect.left = bg.get_parts()[1][1].left
-            tank4_rect.left =  bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank4_rect.width
-
             print("Tank détruit !")
-            tank_destroyed += 1
-
-        if pews.get_rs_collid().colliderect(tank4_rect) or pews.get_drop_collid().colliderect(tank4_rect) or pews.get_ls_collid().colliderect(tank4_rect):
-            tank2_position = 0
-            tank2_move = 0
-            tank3_rect.left = bg.get_parts()[1][1].left
-            tank4_rect.left =  bg.get_parts()[2][1].left + bg.get_parts()[2][1].width - tank4_rect.width
-
-            print("Tank détruit !")
-            tank_destroyed += 1
 
         if cps_collid(jet1, pews, bg):
-            jet_position = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width 
-            jet_move = 1
+            jet2.set_position(bg.get_parts()[2][1].left + bg.get_parts()[2][1].width )
+            jet2.set_move(1)
             jet_destroyed += 1
 
             print("Jet détruit !")
 
         if cps_collid(jet2, pews, bg):
-            jet_position = 0 - jet1.get_parts()[0][1].width
-            jet_move = 0
+            jet2.set_position(0 - jet1.get_parts()[0][1].width)
+            jet2.set_move(0)
             jet_destroyed += 1
             
             print("Jet détruit !")
@@ -730,17 +797,21 @@ def choplifter(size : tuple = (1280, 720)):
         screen.blit(title, title_rect)
 
         # Assets - tanks
-        if tank_move == 0:
-            screen.blit(tank_image, tank_rect)
+        for elt in t1_pews.get_parts():
+            if elt[2]:
+                screen.blit(elt[0], elt[1])
 
-        elif tank_move == 1:
-            screen.blit(tank2_image, tank2_rect)
+        for elt in t2_pews.get_parts():
+            if elt[2]:
+                screen.blit(elt[0], elt[1])
 
-        if tank2_move == 0:
-            screen.blit(tank3_image, tank3_rect)
-
-        elif tank2_move == 1:
-            screen.blit(tank4_image, tank4_rect)
+        for elt in tank1.get_parts():
+            if elt[2]:
+                screen.blit(elt[0], elt[1])
+        
+        for elt in tank2.get_parts():
+            if elt[2]:
+                screen.blit(elt[0], elt[1])
 
         # Assets - jets
         for elt in j1_pews.get_parts():
