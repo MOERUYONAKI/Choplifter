@@ -47,19 +47,23 @@ class Tank(Vehicule):
         return self.parts[0][1].top
     
     def is_right(self):
-        return True if self.parts[0][2] or self.parts[2][2] else False
+        return True if self.get_move() == 0 else False
     
     def is_shooting(self):
         if self.parts[2][2] or self.parts[3][2]:
             return True
             
     def active_right(self):
+        self.move = 0
+
         self.parts[0][2] = True
         self.parts[1][2] = False
         self.parts[2][2] = False
         self.parts[3][2] = False
             
     def active_left(self):
+        self.move = 1
+
         self.parts[0][2] = False
         self.parts[1][2] = True
         self.parts[2][2] = False
@@ -148,7 +152,8 @@ class Pew():
 
     def reset(self):
         self.shot = False
-
+        self.tank.active_right() if self.tank.is_right() else self.tank.active_left()
+            
         self.parts[0][1].center = (self.tank.get_left(), self.tank.get_top())
         self.parts[0][2] = False
 

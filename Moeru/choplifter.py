@@ -60,7 +60,9 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
 
     if tank.get_position() < (2 * bg.size[0] - tank.get_parts()[0][1].width) and tank.get_move() == 0:
         tank.set_position(tank.get_position() + 3)
-        tank.active_right()
+
+        if not tank.is_shooting():
+            tank.active_right()
 
         if not pews.shot and (75 < chop.get_left() - tank.get_left() and 750 > chop.get_left() - tank.get_left()):
             pews.shoot()
@@ -71,17 +73,17 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
 
             if pews.parts[0][2]:
                 pews.move_left(7)
-                pews.move_top(7)
+                pews.move_top(-6)
 
             else:
-                pews.move_left(1)
+                pews.move_left(-2)
 
         elif bg_move == 2: # Mouvement vers la gauche
             tank.move_left(8)
 
             if pews.parts[0][2]:
                 pews.move_left(11)
-                pews.move_top(11)
+                pews.move_top(-6)
 
             else:
                 pews.move_left(8)
@@ -91,7 +93,7 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
 
             if pews.parts[0][2]:
                 pews.move_left(6)
-                pews.move_top(6)
+                pews.move_top(-6)
 
             else:
                 pews.move_left(3)
@@ -100,11 +102,9 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
         if not tank.is_shooting():
             tank.active_left()
 
-        tank.set_move(1)
         tank.set_position(tank.get_position() - 3)
 
         if not pews.shot and (75 < tank.get_left() - chop.get_left() and 750 > tank.get_left() - chop.get_left()):
-            tank.active_shooting()
             pews.shoot()
             shot_timer = time.time()
         
@@ -113,7 +113,7 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
 
             if pews.parts[1][2]:
                 pews.move_left(-11)
-                pews.move_top(-11)
+                pews.move_top(-6)
 
             else:
                 pews.move_left(-8)
@@ -123,7 +123,7 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
 
             if pews.parts[1][2]:
                 pews.move_left(-1)
-                pews.move_top(-1)
+                pews.move_top(-6)
 
             else:
                 pews.move_left(2)
@@ -139,11 +139,6 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
                 pews.move_left(-3)
 
     else:
-        if not tank.is_shooting():
-            tank.active_right()
-
-        tank.set_move(0)
-        
         if not 'r' in pews.get_moves() and not 'l' in pews.get_moves():
             pews.reset()
 
@@ -636,12 +631,10 @@ def choplifter(size : tuple = (1280, 720)):
         if int(round(time.time() - t1_shot_timer, 0)) > 2 and t1_shot_timer != 0:
             t1_pews.reset()
             t1_shot_timer = 0
-            tank1.active_right() if tank1.is_right() else tank1.active_left()
 
         if int(round(time.time() - t2_shot_timer, 0)) > 2 and t2_shot_timer != 0:
             t2_pews.reset()
             t2_shot_timer = 0
-            tank2.active_right() if tank2.is_right() else tank2.active_left()
 
         # Jets moves
         if int(round(time.time() - start_timer, 0)) > 8: # arrivée après 8 secondes de jeu
