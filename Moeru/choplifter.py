@@ -308,23 +308,46 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
 
 # - Aliens moves
 def alien_moves(chop : Chop, alien : Alien, pews : AlienPew, bg : Background, bg_move : int):
-    shot_timer = 0
-
     if alien.get_top() < int(round(0.1 * bg.size[1], 0)) and alien.get_move() == 1:
         alien.move_top(2)
-        alien.set_center(chop.get_left() - int(round(0.5 * chop.get_collid().width, 0)), alien.get_top())
 
-    elif alien.get_top() >= bg.get_parts()[1][1].top:
-        alien.set_move(2)
+    elif alien.get_top() >= int(round(0.1 * bg.size[1], 0)) and alien.get_move() == 1:
+        move = random.randint(3, 5) if chop.get_left() > alien.get_left() else (0 - random.randint(3, 5))
+
+        if bg_move == 1: # Mouvement vers la droite
+            alien.move_left(move - 5)
+
+            if pews.parts[0][2]:
+                pews.move_left(7)
+
+            else:
+                pews.move_left(3)
+
+        elif bg_move == 2: # Mouvement vers la gauche
+            alien.move_left(move + 5)
+
+            if pews.parts[0][2]:
+                pews.move_left(17)
+
+            else:
+                pews.move_left(13)
+        
+        else:
+            alien.move_left(move)
+
+            if pews.parts[0][2]:
+                pews.move_left(12)
+
+            else:
+                pews.move_left(8)
+
+    elif alien.get_top() >= bg.get_parts()[1][1].top - alien.get_parts()[0][1].width and alien.get_move() == 2:
         alien.move_top(-3)
-        alien.set_center(chop.get_left() - int(round(0.5 * chop.get_collid().width, 0)), alien.get_top())
 
     else:
         alien.set_move(0)
-        alien.set_center(random.randint(int(round(0.35 * bg.size[0], 0), int(round(0.65 * bg.size[0], 0)))), bg.get_parts()[1][1].top - alien.get_collid().height)
+        alien.set_center((random.randint(int(round(0.35 * bg.size[0], 0)), int(round(0.65 * bg.size[0], 0))), bg.get_parts()[1][1].top - alien.get_collid().height))
         pews.reset()
-
-    return shot_timer
 
 def end_message(base_destroyed : int, tank_destroyed : int, jet_destroyed : int, alien_destroyed : int, rescued : int):
         print(f"\nEnnemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
@@ -345,6 +368,7 @@ def choplifter(size : tuple = (1280, 720)):
     j1_shot_timer = 0
     j2_shot_timer = 0
 
+    spawn_timer = 0
     alien_destroyed = 0
 
     bases_numbers = random.randint(2, 3)
@@ -613,10 +637,15 @@ def choplifter(size : tuple = (1280, 720)):
             j2_shot_timer = 0
 
         # Aliens moves
-        if int(round(time.time() - start_timer, 0) + 1) % 12 == 0 and int(round(time.time() - start_timer, 0) + 1) > 30 and alien.get_move() == 0: # Arrivée après 30 secondes de jeu / toute les 15 secondes
+        if int(round(time.time() - start_timer, 0) + 1) % 15 == 0 and int(round(time.time() - start_timer, 0) + 1) > 30 and alien.get_move() == 0: # Arrivée après 30 secondes de jeu / toute les 15 secondes
+            spawn_timer = time.time()
             alien.set_move(1)
         
         if alien.get_move() != 0:
+            if time.time() - spawn_timer >= 4 and spawn_timer != 0:
+                alien.set_move(2)
+                spawn_timer = 0
+
             alien_moves(chop, alien, alien_pew, bg, bg_move)
 
         # Collision events
@@ -773,9 +802,8 @@ def choplifter(size : tuple = (1280, 720)):
                 screen.blit(elt[0], elt[1])
 
         # Assets - aliens
-        for elt in alien.get_parts():
-            if elt[2]:
-                screen.blit(elt[0], elt[1])
+        if alien.get_move() != 0:
+            screen.blit(alien.get_parts()[0][0], alien.get_parts()[0][1])
 
         # Assets - bases / hostages
         for i in range(len(bases)):
