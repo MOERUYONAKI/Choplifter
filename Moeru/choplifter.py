@@ -349,9 +349,11 @@ def alien_moves(chop : Chop, alien : Alien, pews : AlienPew, bg : Background, bg
         alien.set_center((random.randint(int(round(0.35 * bg.size[0], 0)), int(round(0.65 * bg.size[0], 0))), bg.get_parts()[1][1].top - alien.get_collid().height))
         pews.reset()
 
+# - Endgame message
 def end_message(base_destroyed : int, tank_destroyed : int, jet_destroyed : int, alien_destroyed : int, rescued : int):
-        print(f"\nEnnemis éliminés : \n{base_destroyed} bases - {tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
-        print(f"{rescued} otages secourus") # Régler les problèmes pluriel/singulier
+        print(f"\nEnnemis éliminés : \n{base_destroyed} {'bases' if base_destroyed > 1 else 'base'} - {tank_destroyed} {'tanks' if tank_destroyed > 1 else 'tank'} - {jet_destroyed} {'jets' if jet_destroyed > 1 else 'jet'} - {alien_destroyed} {'aliens' if alien_destroyed > 1 else 'alien'}")
+        print(f"{rescued} {'otages secourus' if rescued > 1 else 'otage secouru'}")
+
 
 # - - - - -  M A I N  - - - - -
 
@@ -368,8 +370,9 @@ def choplifter(size : tuple = (1280, 720)):
     j1_shot_timer = 0
     j2_shot_timer = 0
 
-    spawn_timer = 0
     alien_destroyed = 0
+    spawn_timer = 0
+    ap_shot_timer = 0
 
     bases_numbers = random.randint(2, 3)
     base_destroyed = 0
@@ -643,10 +646,18 @@ def choplifter(size : tuple = (1280, 720)):
         
         if alien.get_move() != 0:
             if time.time() - spawn_timer >= 4 and spawn_timer != 0:
+                alien_pew.shoot()
+                ap_shot_timer = time.time()
+
                 alien.set_move(2)
                 spawn_timer = 0
 
-            alien_moves(chop, alien, alien_pew, bg, bg_move)
+            if ap_shot_timer == 0 or time.time() - ap_shot_timer > 1:
+                alien_moves(chop, alien, alien_pew, bg, bg_move)
+
+        if time.time() - ap_shot_timer > 2 and ap_shot_timer != 0:
+            alien_pew.reset()
+            ap_shot_timer = 0
 
         # Collision events
         elts = [tank1, tank2, jet1, jet2, t1_pews, t2_pews, j1_pews, j2_pews, alien, alien_pew]
@@ -804,6 +815,10 @@ def choplifter(size : tuple = (1280, 720)):
         # Assets - aliens
         if alien.get_move() != 0:
             screen.blit(alien.get_parts()[0][0], alien.get_parts()[0][1])
+
+        if alien_pew.get_shot():
+            alien_pew.move_top(12)
+            screen.blit(alien_pew.get_parts()[0][0], alien_pew.get_parts()[0][1])
 
         # Assets - bases / hostages
         for i in range(len(bases)):

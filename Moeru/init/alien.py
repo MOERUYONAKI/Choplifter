@@ -29,6 +29,9 @@ class Alien(Vehicule):
     
     def get_top(self):
         return self.parts[0][1].top
+    
+    def get_center(self):
+        return self.parts[0][1].center
 
     def set_move(self, move : int):
         self.move = move if move in [0, 1, 2] else 0
@@ -48,9 +51,9 @@ class Pew():
 
         parts = []
 
-        rightshot_image, rightshot_rect = add_asset('assets\\jet_pew.png')
-        rightshot_rect.center = (self.alien.get_left(), self.alien.get_top())
-        parts.append([rightshot_image, rightshot_rect, False])
+        laser_image, laser_rect = add_asset('assets\\laser.png')
+        laser_rect.center = (self.alien.get_left(), self.alien.get_top())
+        parts.append([laser_image, laser_rect, False])
 
         self.parts = parts
         self.shot = False
@@ -58,7 +61,7 @@ class Pew():
     def get_parts(self):
         return self.parts
 
-    def get_moves(self):
+    def get_shot(self):
         return self.shot
     
     def get_collid(self):
@@ -77,5 +80,8 @@ class Pew():
         self.parts[0][2] = False
 
     def shoot(self):
+        self.get_parts()[0][1].center = self.alien.get_center()
+        self.move_top(15)
+
         self.shot = True
         self.parts[0][2] = True
