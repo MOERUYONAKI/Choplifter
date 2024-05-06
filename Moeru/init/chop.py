@@ -92,6 +92,10 @@ class Chop(Vehicule):
         for elt in self.parts:
             elt[1].top += px
 
+    def set_top(self, px : int):
+        for elt in self.parts:
+            elt[1].top = px
+
 class Pew():
     def __init__(self, chop : Chop):
         self.chop = chop

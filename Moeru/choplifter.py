@@ -6,7 +6,7 @@ import time
 import random
 
 # - Choplifter imports
-from init.asset import add_asset, Vehicule
+from init.asset import Vehicule
 from init.background import Background
 from init.chop import Chop, Pew as ChopPew
 from init.tank import Tank, Pew as TankPew
@@ -390,6 +390,7 @@ def choplifter(size : tuple = (1280, 720)):
     loadtxt = cms_font.render(f'CHOPLIFTER - Loading...', True, (0, 0, 0, 0))
     loadtxt_rect = loadtxt.get_rect()
     loadtxt_rect.center = (size[0] // 2, size[1] - 25)
+    
     screen.blit(loadtxt, loadtxt_rect)
     py.display.flip()
     
@@ -397,7 +398,6 @@ def choplifter(size : tuple = (1280, 720)):
     start_timer = time.time()
 
     running = True
-    surface = py.display.get_surface()
 
     bg = Background(size)
     chop = Chop(size)
@@ -475,9 +475,9 @@ def choplifter(size : tuple = (1280, 720)):
             chop.active_up()
             chop.move_top(5)
 
-            if chop.get_top() > size[1] - 32:
+            if chop.get_top() > bg.get_heliport().top:
                 chop.active_grounded()
-                chop.move_top(size[1] - chop.get_top() - 32)
+                chop.set_top(bg.get_heliport().top + chop.get_collid().height)
 
         if pressed[py.K_q] and chop.is_grounded() == 0: # - Gauche  
             chop.active_left()
@@ -558,7 +558,7 @@ def choplifter(size : tuple = (1280, 720)):
                     else:
                         print("Impossible de tirer !")
 
-        # RENDER YOUR GAME HERE
+        # - Game render
         if 'r' in pews.get_moves() or 'l' in pews.get_moves():
             if 'r' in pews.get_moves(): # mouvement du tir (droite)
                 if pews.parts[0][1].left <= bg.get_parts()[2][1].left - 5:
@@ -659,7 +659,7 @@ def choplifter(size : tuple = (1280, 720)):
             alien_pew.reset()
             ap_shot_timer = 0
 
-        # Collision events
+        # Collisions events
         elts = [tank1, tank2, jet1, jet2, t1_pews, t2_pews, j1_pews, j2_pews, alien, alien_pew]
 
         if chop_collid(chop, elts):
@@ -774,7 +774,7 @@ def choplifter(size : tuple = (1280, 720)):
         for elt in bg.get_parts():
             screen.blit(elt[0], elt[1])
 
-        # Texts
+        # Textes
         title = cms_font.render(f'CHOPLIFTER - {lives} lives', True, (32, 32, 32, 0))
         screen.blit(title, title_rect)
 
@@ -911,7 +911,7 @@ def choplifter(size : tuple = (1280, 720)):
         # Affichage des modifications
         py.display.flip()
 
-        clock.tick(75) # limite des FPS - 75
+        clock.tick(75) # Limite des FPS - 75
 
     py.quit()
 

@@ -62,9 +62,11 @@ class Jet(Vehicule):
     
     def move_left(self, px : int):
         if px >= 0:
+            self.active_right()
             self.last = 'd'
 
         else:
+            self.active_left()
             self.last = 'q'
             
         for elt in self.parts:
