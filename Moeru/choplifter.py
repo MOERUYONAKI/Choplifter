@@ -124,7 +124,7 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
                 pews.move_top(-6)
 
             else:
-                pews.move_left(-2)
+                pews.reset()
 
         elif bg_move == 2: # Mouvement vers la gauche
             tank.move_left(8)
@@ -134,7 +134,7 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
                 pews.move_top(-6)
 
             else:
-                pews.move_left(8)
+                pews.reset()
         
         else:
             tank.move_left(3)
@@ -144,9 +144,11 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
                 pews.move_top(-6)
 
             else:
-                pews.move_left(3)
+                pews.reset()
 
     elif tank.get_position() > 0:
+        tank.set_move(1)
+        
         if not tank.is_shooting():
             tank.active_left()
 
@@ -164,7 +166,7 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
                 pews.move_top(-6)
 
             else:
-                pews.move_left(-8)
+                pews.reset()
 
         elif bg_move == 2: # Mouvement vers la gauche
             tank.move_left(2)
@@ -174,7 +176,7 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
                 pews.move_top(-6)
 
             else:
-                pews.move_left(2)
+                pews.reset()
         
         else:
             tank.move_left(-3)
@@ -184,9 +186,11 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
                 pews.move_top(-6)
 
             else:
-                pews.move_left(-3)
+                pews.reset()
 
     else:
+        tank.set_move(0)
+
         if not 'r' in pews.get_moves() and not 'l' in pews.get_moves():
             pews.reset()
 
@@ -224,7 +228,7 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
                 pews.move_left(7)
 
             else:
-                pews.move_left(3)
+                pews.reset()
 
         elif bg_move == 2: # Mouvement vers la gauche
             jet.move_left(13)
@@ -233,7 +237,7 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
                 pews.move_left(17)
 
             else:
-                pews.move_left(13)
+                pews.reset()
         
         else:
             jet.move_left(8)
@@ -242,13 +246,14 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
                 pews.move_left(12)
 
             else:
-                pews.move_left(8)
+                pews.reset()
 
     elif jet.get_position() > 0 - jet.get_parts()[0][1].width:
-        jet.move_left(bg.get_parts()[2][1].left + bg.get_parts()[2][1].width if jet.get_move() == 0 else 0)
-
         jet.set_move(1)
         jet.active_left()
+        
+
+        jet.move_left(bg.get_parts()[2][1].left + bg.get_parts()[2][1].width if jet.get_move() == 0 else 0)
 
         jet.set_position(jet.get_position() - 8)
         move = random.choice([0, 1, 3])
@@ -270,23 +275,23 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
                 pews.shoot()
                 shot_timer = time.time()
         
-        if bg_move == 1: # Mouvement vers la droite
+        if bg_move == 2: # Mouvement vers la droite
             jet.move_left(-3)
 
             if pews.parts[1][2]:
                 pews.move_left(-7)
 
             else:
-                pews.move_left(-3)
+                pews.reset()
 
-        elif bg_move == 2: # Mouvement vers la gauche
+        elif bg_move == 1: # Mouvement vers la gauche
             jet.move_left(-13)
 
             if pews.parts[1][2]:
                 pews.move_left(-17)
 
             else:
-                pews.move_left(-13)
+                pews.reset()
         
         else:
             jet.move_left(-8)
@@ -295,7 +300,7 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
                 pews.move_left(-12)
 
             else:
-                pews.move_left(-8)
+                pews.reset()
 
     else:
         jet.set_move(0)
@@ -434,7 +439,7 @@ def choplifter(size : tuple = (1280, 720)):
 
     tank1.set_center((bg.get_parts()[1][1].left + int(round(0.5 * tank1.get_parts()[0][1].width, 0)), int(round(0.76 * size[1], 0))))
     tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.76 * size[1], 0))))
-    tank2.set_position(3 * size[0] + tank2.get_parts()[0][1].width)
+    tank2.set_position(2 * size[0] + tank2.get_parts()[0][1].width)
     
     t1_pews.reset()
     t2_pews.reset()
@@ -475,17 +480,17 @@ def choplifter(size : tuple = (1280, 720)):
             chop.active_up()
             chop.move_top(5)
 
-            if chop.get_top() > bg.get_heliport().top:
+            if chop.get_top() >= bg.get_heliport().top:
                 chop.active_grounded()
                 chop.set_top(bg.get_heliport().top + chop.get_collid().height)
 
         if pressed[py.K_q] and chop.is_grounded() == 0: # - Gauche  
             chop.active_left()
 
-            if chop.get_left() < int(round(0.3 * size[0], 0)) and bg.get_left() < 0:
+            if chop.get_left() < int(round(0.3 * size[0], 0)) and bg.get_position() > 0:
                 bg_move = 2
 
-                if bg.get_left() <= 5:
+                if bg.get_position() >= 5:
                     bg.move_left(5)
                     for base in bases:
                         base[1].left += 5
@@ -498,13 +503,16 @@ def choplifter(size : tuple = (1280, 720)):
             else:
                 chop.move_left(-5)
 
+                if chop.get_left() < 0:
+                    chop.move_left(0 - chop.get_left())
+
         if pressed[py.K_d] and chop.is_grounded() == 0: # - Droite
             chop.active_right()
 
-            if chop.get_left() > (size[0] - int(round(0.3 * size[0], 0))) and bg.get_right() > 0:
+            if chop.get_left() > (size[0] - int(round(0.3 * size[0], 0))) and bg.get_position() < 2 * size[0]:
                 bg_move = 1
 
-                if bg.get_right() >= 5:
+                if bg.get_position() <= 2 * size[0] - 5:
                     bg.move_left(-5)
                     for base in bases:
                         base[1].left -= 5
@@ -516,6 +524,9 @@ def choplifter(size : tuple = (1280, 720)):
             
             else:
                 chop.move_left(5)
+
+                if chop.get_left() > size[0] - chop.get_collid().width:
+                    chop.move_left(size[0] - chop.get_left() - chop.get_collid().width)
 
         for event in py.event.get():
             if event.type == py.QUIT:
@@ -679,6 +690,8 @@ def choplifter(size : tuple = (1280, 720)):
                 bg.get_heliport().top = int(round(0.764 * size[1], 0))
                 bg.get_heliport().left = int(round(0.48125 * size[0], 0))
 
+                bg.position = 0
+
                 chop.active_grounded()
                 chop.set_center(bg.get_heliport().center)
                 chop.move_top(10)
@@ -692,7 +705,7 @@ def choplifter(size : tuple = (1280, 720)):
                 tank1.set_center((bg.get_parts()[1][1].left, int(round(0.76 * size[1], 0))))
                 tank1.set_position(0)
                 tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.76 * size[1], 0))))
-                tank2.set_position(3 * size[0] + tank2.get_parts()[0][1].width)
+                tank2.set_position(2 * size[0] + tank2.get_parts()[0][1].width)
                 
                 t1_pews.reset()
                 t2_pews.reset()
@@ -718,7 +731,7 @@ def choplifter(size : tuple = (1280, 720)):
             chop.move_top(10)
 
         if cps_collid(tank1, pews, bg):
-            tank1.set_position(2 * size[0])
+            tank1.set_position(2 * size[0] + tank1.get_parts()[0][1].width)
             tank1.set_move(1)
             
             tank1.active_left()
@@ -729,7 +742,7 @@ def choplifter(size : tuple = (1280, 720)):
             print("Tank détruit !")
 
         if cps_collid(tank2, pews, bg):
-            tank2.set_position(2 * size[0])
+            tank2.set_position(2 * size[0] + tank2.get_parts()[0][1].width)
             tank2.set_move(1)
             
             tank2.active_left()
@@ -832,7 +845,7 @@ def choplifter(size : tuple = (1280, 720)):
             else:
                 for j in range(0, len(hostages[i]), 2):
                     if hostages[i][j][2] == True:
-                        if (chop.get_left() - 5 < hostages[i][j][1].left < chop.get_left() + 5) and chop.is_grounded() == 1: # Récupération
+                        if (chop.get_left() + 10 < hostages[i][j][1].left < chop.get_left() + chop.get_collid().width + 5) and chop.is_grounded() == 1: # Récupération
                             hostages[i][j][2] = False
 
                             print("Otage ramassé")
@@ -850,10 +863,10 @@ def choplifter(size : tuple = (1280, 720)):
                         else:
                             temp = 0
 
-                            if chop.is_grounded() == 1 and chop.get_left() < hostages[i][j][1].left:
+                            if chop.is_grounded() == 1 and chop.get_left() + 10 < hostages[i][j][1].left:
                                 temp = -2
 
-                            elif chop.is_grounded() == 1 and chop.get_left() > hostages[i][j][1].left:
+                            elif chop.is_grounded() == 1 and chop.get_left() + chop.get_collid().width > hostages[i][j][1].left:
                                 temp = 2
 
                             else:
@@ -911,7 +924,7 @@ def choplifter(size : tuple = (1280, 720)):
         # Affichage des modifications
         py.display.flip()
 
-        clock.tick(75) # Limite des FPS - 75
+        clock.tick(90) # Limite des FPS - 90
 
     py.quit()
 

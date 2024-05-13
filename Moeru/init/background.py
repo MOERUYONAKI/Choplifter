@@ -26,6 +26,7 @@ class Background():
 
         self.parts = parts
         self.heliport = py.Rect(int(round(0.48125 * size[0], 0)), int(round(0.764 * size[1], 0)), 15, 15)
+        self.position = 0 # Min 0 - max 2 * size[0]
 
     def get_parts(self):
         return self.parts
@@ -33,13 +34,17 @@ class Background():
     def get_heliport(self):
         return self.heliport
     
-    def get_left(self): # Min -2 * size - Max 0
+    def get_position(self):
+        return self.position
+    
+    def get_left(self):
         return self.parts[0][1].left
     
-    def get_right(self): # Min 0 - Max 2 * size
+    def get_right(self):
         return self.parts[2][1].left
     
     def move_left(self, px : int):
+        self.position -= px
         self.heliport.left += px
 
         for elt in self.parts:
