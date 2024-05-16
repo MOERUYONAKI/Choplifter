@@ -711,6 +711,22 @@ def choplifter(size : tuple = (1280, 720)):
                 t1_pews.reset()
                 t2_pews.reset()
 
+                jet1 = Jet(size)
+                jet1.active_right()
+                j1_pews = JetPew(jet1)
+
+                jet2 = Jet(size)
+                jet2.active_left()
+                jet2.set_move(1)
+                j2_pews = JetPew(jet2)
+
+                jet1.set_center((0 - jet1.get_parts()[0][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
+                jet2.set_center((3 * size[0] + jet2.get_parts()[0][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
+                jet2.set_position(3 * size[0] + jet2.get_parts()[0][1].width)
+
+                j1_pews.reset()
+                j2_pews.reset()
+
                 for k in range(len(bases)):
                     bases[k][1].left = bases_lefts[k]
 
@@ -864,14 +880,20 @@ def choplifter(size : tuple = (1280, 720)):
                         else:
                             temp = 0
 
-                            if chop.is_grounded() == 1 and chop.get_left() + 10 < hostages[i][j][1].left:
+                            if chop.is_grounded() == 1 and chop.get_left() + 10 < hostages[i][j][1].left and hostages[i][j][1].left - chop.get_left() + chop.get_collid().width < 0.5 * size[0]:
                                 temp = -2
 
-                            elif chop.is_grounded() == 1 and chop.get_left() + chop.get_collid().width > hostages[i][j][1].left:
+                            elif chop.is_grounded() == 1 and chop.get_left() + chop.get_collid().width > hostages[i][j][1].left and chop.get_left() + chop.get_collid().width - hostages[i][j][1].left < 0.5 * size[0]:
                                 temp = 2
 
                             else:
                                 temp = random.choice([-3, -1, 0, 1, 3])
+                                
+                            if bg_move == 1: 
+                                temp -= 5 
+
+                            elif bg_move == 2:
+                                temp += 5
 
                             hostages[i][j][1].left += temp
                             hostages[i][j + 1][1].left += temp
