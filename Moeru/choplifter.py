@@ -542,6 +542,7 @@ def choplifter(size : tuple = (1280, 720)):
                     else:
                         print("Impossible de larguer le drop !")
 
+                # - Game logs
                 if event.key == py.K_z: # Haut
                     print("L'utilisateur se déplace sur le haut !")
 

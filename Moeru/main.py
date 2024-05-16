@@ -18,6 +18,9 @@ def help(): # Commande d'aide - renvoie la liste des commandes avec une descript
 
 def play(fullscreen : bool = False, survival : bool = False): # Commande de démarrage - lance le jeu en plein écran ou fenêtré
     if fullscreen:
+        print('This mode is not completed and may got some issues... \n') 
+        time.sleep(0.5)
+
         py.display.set_mode((0, 0), py.FULLSCREEN)
         size = (py.display.Info().current_w, py.display.Info().current_h)
 
@@ -60,6 +63,10 @@ def cmd_start(): # Démarage de la console CHPrompt
         "/clear",
         'cls',
         "/exit",
+        '/quit', 
+        'q',  
+        '/escape', 
+        'esc', 
         "/repo",
         'r'
     ]
@@ -77,7 +84,7 @@ def cmd_start(): # Démarage de la console CHPrompt
         elif cmd[0] in ('clear', '/clear', 'cls'):
             clear()
 
-        elif cmd[0] in ('exit', '/exit'):
+        elif cmd[0] in ('exit', '/exit', 'quit', '/quit', 'q', 'escape', '/escape', 'esc'):
             exit()
 
         elif cmd[0] in ('repo', '/repo', 'r'):
