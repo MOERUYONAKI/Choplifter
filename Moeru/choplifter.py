@@ -862,11 +862,14 @@ def choplifter(size : tuple = (1280, 720)):
             else:
                 for j in range(0, len(hostages[i]), 2):
                     if hostages[i][j][2] == True:
-                        if (chop.get_left() + 10 < hostages[i][j][1].left < chop.get_left() + chop.get_collid().width + 5) and chop.is_grounded() == 1 and inside < 10: # Récupération - 10 otages maximum
+                        if (chop.get_left() + 10 < hostages[i][j][1].left < chop.get_left() + chop.get_collid().width + 5) and chop.is_grounded() == 1 and inside < 8: # Récupération - 8 otages maximum
                             hostages[i][j][2] = False
 
                             print("Otage ramassé")
                             inside += 1
+
+                            if inside == 8:
+                                print("L'hélicoptère est plein !")
             
                         elif chop.get_collid().colliderect(hostages[i][j][1]) and chop.is_grounded() == 0:
                             hostages[i][j][2] = None
@@ -880,10 +883,10 @@ def choplifter(size : tuple = (1280, 720)):
                         else:
                             temp = 0
 
-                            if chop.is_grounded() == 1 and chop.get_left() + 10 < hostages[i][j][1].left and hostages[i][j][1].left - chop.get_left() + chop.get_collid().width < 0.5 * size[0] and inside < 10:
+                            if chop.is_grounded() == 1 and chop.get_left() + 10 < hostages[i][j][1].left and hostages[i][j][1].left - chop.get_left() + chop.get_collid().width < 0.5 * size[0] and inside < 8:
                                 temp = -2
 
-                            elif chop.is_grounded() == 1 and chop.get_left() + chop.get_collid().width > hostages[i][j][1].left and chop.get_left() + chop.get_collid().width - hostages[i][j][1].left < 0.5 * size[0] and inside < 10:
+                            elif chop.is_grounded() == 1 and chop.get_left() + chop.get_collid().width > hostages[i][j][1].left and chop.get_left() + chop.get_collid().width - hostages[i][j][1].left < 0.5 * size[0] and inside < 8:
                                 temp = 2
 
                             else:
