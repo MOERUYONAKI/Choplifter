@@ -437,8 +437,8 @@ def choplifter(size : tuple = (1280, 720)):
     title_rect = title.get_rect()
     title_rect.center = (size[0] // 2, 12)
 
-    tank1.set_center((bg.get_parts()[1][1].left + int(round(0.5 * tank1.get_parts()[0][1].width, 0)), int(round(0.76 * size[1], 0))))
-    tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.76 * size[1], 0))))
+    tank1.set_center((bg.get_parts()[1][1].left + int(round(0.5 * tank1.get_parts()[0][1].width, 0)), int(round(0.8 * size[1], 0))))
+    tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.8 * size[1], 0))))
     tank2.set_position(2 * size[0] + tank2.get_parts()[0][1].width)
     
     t1_pews.reset()
@@ -703,9 +703,9 @@ def choplifter(size : tuple = (1280, 720)):
                 tank2.active_left()
                 tank2.set_move(1)
 
-                tank1.set_center((bg.get_parts()[1][1].left, int(round(0.76 * size[1], 0))))
+                tank1.set_center((bg.get_parts()[1][1].left, int(round(0.8 * size[1], 0))))
                 tank1.set_position(0)
-                tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.76 * size[1], 0))))
+                tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.8 * size[1], 0))))
                 tank2.set_position(2 * size[0] + tank2.get_parts()[0][1].width)
                 
                 t1_pews.reset()
@@ -752,7 +752,7 @@ def choplifter(size : tuple = (1280, 720)):
             tank1.set_move(1)
             
             tank1.active_left()
-            tank1.set_center((3 * size[0] + tank1.get_parts()[0][1].width, int(round(0.76 * size[1], 0))))    
+            tank1.set_center((3 * size[0] + tank1.get_parts()[0][1].width, int(round(0.8 * size[1], 0))))    
             t1_pews.reset()
 
             tank_destroyed += 1
@@ -763,7 +763,7 @@ def choplifter(size : tuple = (1280, 720)):
             tank2.set_move(1)
             
             tank2.active_left()
-            tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.76 * size[1], 0))))    
+            tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.8 * size[1], 0))))    
             t2_pews.reset()
 
             tank_destroyed += 1
@@ -871,7 +871,7 @@ def choplifter(size : tuple = (1280, 720)):
                             if inside == 8:
                                 print("L'hélicoptère est plein !")
             
-                        elif chop.get_collid().colliderect(hostages[i][j][1]) and chop.is_grounded() == 0:
+                        elif (chop.get_collid().colliderect(hostages[i][j][1]) and chop.is_grounded() == 0) or tank1.get_collid().colliderect(hostages[i][j][1]) or tank2.get_collid().colliderect(hostages[i][j][1]) or alien_pew.get_collid().colliderect(hostages[i][j][1]): # Mort des otages
                             hostages[i][j][2] = None
                             hostages_number -= 1                            
                             
