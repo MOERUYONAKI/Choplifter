@@ -37,7 +37,7 @@ def bases_init(size : tuple, bases_numbers : int):
 
         # Création des otages
         hostages.append([])
-        for j in range(0, random.randint(4, 10), 2):
+        for j in range(0, random.randint(12, 32), 2):
             total_hostage += 1
 
             hostages[i].append([py.image.load('assets\\hostage.png').convert_alpha()])
@@ -862,7 +862,7 @@ def choplifter(size : tuple = (1280, 720)):
             else:
                 for j in range(0, len(hostages[i]), 2):
                     if hostages[i][j][2] == True:
-                        if (chop.get_left() + 10 < hostages[i][j][1].left < chop.get_left() + chop.get_collid().width + 5) and chop.is_grounded() == 1: # Récupération
+                        if (chop.get_left() + 10 < hostages[i][j][1].left < chop.get_left() + chop.get_collid().width + 5) and chop.is_grounded() == 1 and inside < 10: # Récupération - 10 otages maximum
                             hostages[i][j][2] = False
 
                             print("Otage ramassé")
@@ -880,10 +880,10 @@ def choplifter(size : tuple = (1280, 720)):
                         else:
                             temp = 0
 
-                            if chop.is_grounded() == 1 and chop.get_left() + 10 < hostages[i][j][1].left and hostages[i][j][1].left - chop.get_left() + chop.get_collid().width < 0.5 * size[0]:
+                            if chop.is_grounded() == 1 and chop.get_left() + 10 < hostages[i][j][1].left and hostages[i][j][1].left - chop.get_left() + chop.get_collid().width < 0.5 * size[0] and inside < 10:
                                 temp = -2
 
-                            elif chop.is_grounded() == 1 and chop.get_left() + chop.get_collid().width > hostages[i][j][1].left and chop.get_left() + chop.get_collid().width - hostages[i][j][1].left < 0.5 * size[0]:
+                            elif chop.is_grounded() == 1 and chop.get_left() + chop.get_collid().width > hostages[i][j][1].left and chop.get_left() + chop.get_collid().width - hostages[i][j][1].left < 0.5 * size[0] and inside < 10:
                                 temp = 2
 
                             else:
