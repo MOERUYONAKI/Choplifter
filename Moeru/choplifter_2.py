@@ -274,7 +274,9 @@ def choplifter_survival(size : tuple = (1280, 720)):
 
         for event in py.event.get():
             if event.type == py.QUIT:
-                print(f"\nEnnemis éliminés : \n{tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
+                score = 15 * tank_destroyed + 25 * jet_destroyed + 40 * alien_destroyed
+
+                print(f"\nEnnemis éliminés : \n{tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens \nScore final - {score}")
                 running = False # end of the loop
 
             if event.type == py.KEYDOWN:
@@ -503,8 +505,10 @@ def choplifter_survival(size : tuple = (1280, 720)):
         # Collision events
         if chop_rect.colliderect(tank_rect) or chop_rect.colliderect(tank2_rect) or chop_rect.colliderect(jet_rect) or chop_rect.colliderect(jet2_rect) or chop_rect.colliderect(alien_rect):
             print("Hélicoptère détruit... \n")
-            print(f"Ennemis éliminés : \n{tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens")
-            running = False
+            score = 15 * tank_destroyed + 25 * jet_destroyed + 40 * alien_destroyed
+
+            print(f"\nEnnemis éliminés : \n{tank_destroyed} tanks - {jet_destroyed} jets - {alien_destroyed} aliens \nScore final - {score}")
+            running = False # end of the loop
 
         if pew_rect.colliderect(tank_rect) or pew2_rect.colliderect(tank_rect) or pew3_rect.colliderect(tank_rect):
             tank_position = 2 * size[0] - tank_rect.width
