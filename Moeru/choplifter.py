@@ -691,8 +691,6 @@ def choplifter(size : tuple = (1280, 720)):
                 bg.get_heliport().top = int(round(0.764 * size[1], 0))
                 bg.get_heliport().left = int(round(0.48125 * size[0], 0))
 
-                bg.position = 0
-
                 chop.active_grounded()
                 chop.set_center(bg.get_heliport().center)
                 chop.move_top(10)
@@ -733,12 +731,18 @@ def choplifter(size : tuple = (1280, 720)):
                     for l in range(0, len(hostages[k]), 2):
                         if hostages[k][l][2] == False:
                             hostages[k][l][2] = None
-                            hostages_number -= 1                            
+                            hostages_number -= 1
                             
                             hostages[k][l][1].top = 0 - 250
                             hostages[k][l + 1][1].top = 0 - 250
 
                             print("Un otage a succombé")
+
+                        elif hostages[k][l][2] == True and bases[k][2] == False: # Repositionnement des otages libérés
+                            hostages[k][l][1].left += bg.get_position()
+                            hostages[k][l + 1][1].left += bg.get_position()
+
+                bg.position = 0
 
         if chop.get_collid().colliderect(bg.get_heliport()) and chop.last == 's': # Atterrissage
             based = 1
