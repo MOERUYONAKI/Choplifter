@@ -24,3 +24,8 @@
 **5 - /repo**  
 > Return the repository link  
   
+### III - Developers
+  
+[MOERUYONAKI](https://www.github.com/MOERUYONAKI)  
+[Kevin-Sawyer](https://www.github.com/Kevin-Sawyer)  
+  
