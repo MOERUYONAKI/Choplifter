@@ -404,7 +404,15 @@ def choplifter(size : tuple = (1280, 720)):
 
     running = True
 
-    bg = Background(size)
+    bg = py.image.load('assets\\bg2.png').convert_alpha()
+    bg = py.transform.scale(bg, size)
+    bg_rect = bg.get_rect()
+
+    bg2 = py.image.load('assets\\bg3.png').convert_alpha()
+    bg2 = py.transform.scale(bg2, size)
+    bg2_rect = bg2.get_rect()
+    bg2_rect.left = size[0]
+
     chop = Chop(size)
     pews = ChopPew(chop)
 
@@ -454,14 +462,6 @@ def choplifter(size : tuple = (1280, 720)):
     alien.set_center((random.randint(int(round(0.35 * size[0], 0)), int(round(0.65 * size[0], 0))), bg.get_parts()[1][1].top - alien.get_collid().height))
     alien_pew.reset()
 
-    temp = bases_init(size, bases_numbers)
-    bases = temp[0]
-    bases_lefts = temp[1]
-
-    hostages = temp[2]
-    hostages_number = temp[3]
-    total_hostage = temp[3]
-
     while running:
         # poll for events
         pressed = py.key.get_pressed()
@@ -492,13 +492,9 @@ def choplifter(size : tuple = (1280, 720)):
 
                 if bg.get_position() >= 5:
                     bg.move_left(5)
-                    for base in bases:
-                        base[1].left += 5
 
                 else:
                     bg.move_left(-1 * bg.get_left())
-                    for base in bases:
-                        base[1].left -= bg.get_left()
 
             else:
                 chop.move_left(-5)
@@ -744,7 +740,7 @@ def choplifter(size : tuple = (1280, 720)):
 
                 bg.position = 0
 
-        if chop.get_collid().colliderect(bg.get_heliport()) and chop.last == 's': # Atterrissage
+        if chop.get_collid().colliderect(bg.get_heliport()) and chop.last == 's': # Atterrissage à la base
             based = 1
 
             chop.set_center(bg.get_heliport().center)
