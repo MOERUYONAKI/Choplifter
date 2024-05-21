@@ -18,7 +18,7 @@
   
 **4 - /play** *[ -f ]* *[ -s ]*  
 > Start the Choplifter game  
-> [ -f ] - Fullscreen mode (experimental)  
+> [ -f ] - Fullscreen mode *(experimental)*  
 > [ -s ] - Survival mode  
   
 **5 - /repo**  
