@@ -2,7 +2,7 @@ import pygame as py
 import time
 import os 
 from choplifter import *
-from choplifter_2 import *
+from choplifter_survival import *
 
 def help(): # Commande d'aide - renvoie la liste des commandes avec une description rapide
     print('Commands list -')
@@ -27,12 +27,19 @@ def play(fullscreen : bool = False, survival : bool = False): # Commande de dém
     else:
         size = (1280, 720)
 
+    if survival:
+        print('\nDifficulty (1 - easy / 2 - medium / 3 - hard)')
+        cmd = int(input("CHPrompt > ")) # Affichage du prompt
+        print(' ')
+
+        diff = cmd if cmd in [1, 2, 3] else 1
+
     print('Choplifter is starting...')
     print('Game logs will now be sent here \n')
 
     time.sleep(0.5)
     print(size)
-    choplifter(size) if not survival else choplifter_survival(size)
+    choplifter(size) if not survival else choplifter_survival(size, diff)
 
     time.sleep(1)
     print(' ')

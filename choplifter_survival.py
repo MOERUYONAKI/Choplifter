@@ -7,7 +7,7 @@ import random
 
 # - Choplifter imports
 from init.asset import Vehicule
-from init.background import Background
+from init.background import Background_survival as Background
 from init.chop import Chop, Pew as ChopPew
 from init.tank import Tank, Pew as TankPew
 from init.jet import Jet, Pew as JetPew
@@ -15,47 +15,6 @@ from init.alien import Alien, Pew as AlienPew
 
 
 # - - - - -  F O N C T I O N S  - - - - -
-
-# - Bases and hostages init
-def bases_init(size : tuple, bases_numbers : int):
-    bases = []
-    bases_lefts = []
-
-    hostages = []
-    total_hostage = 0
-
-    for i in range(bases_numbers):
-        # Création des bases
-        bases.append([py.image.load('assets\\basement.png').convert_alpha()])
-        bases[i][0] = py.transform.scale(bases[i][0], (81, 60))
-        bases[i].append(bases[i][0].get_rect())
-        bases[i].append(True)
-        bases[i][1].top = size[1] - int(round(0.22 * size[1], 0))
-        rdm_left = random.randint(size[0] + 100 + int(round((2 * size[0] / bases_numbers) * (i), 0)), int(round((2 * size[0] / bases_numbers) * (i + 1), 0)) + size[0] - 100)
-        bases[i][1].left = rdm_left
-        bases_lefts.append(rdm_left)
-
-        # Création des otages
-        hostages.append([])
-        for j in range(0, random.randint(12, 32), 2):
-            total_hostage += 1
-
-            hostages[i].append([py.image.load('assets\\hostage.png').convert_alpha()])
-            hostages[i].append([py.image.load('assets\\revert_hostage.png').convert_alpha()])
-
-            hostages[i][j][0] = py.transform.scale(hostages[i][j][0], (9, 18))
-            hostages[i][j].append(hostages[i][j][0].get_rect())
-            hostages[i][j].append(True)
-
-            hostages[i][j + 1][0] = py.transform.scale(hostages[i][j + 1][0], (9, 18))
-            hostages[i][j + 1].append(hostages[i][j + 1][0].get_rect())
-
-            hostages[i][j][1].top = size[1] - int(round(0.2 * size[1], 0))
-            hostages[i][j + 1][1].top = hostages[i][j][1].top
-            hostages[i][j][1].left = bases[i][1].left
-            hostages[i][j + 1][1].left = hostages[i][j][1].left
-
-    return bases, bases_lefts, hostages, total_hostage
 
 # Chop collids
 def chop_collid(chop : Chop, elts : list):
@@ -95,7 +54,7 @@ def chop_collid(chop : Chop, elts : list):
 def cps_collid(vehicule : Vehicule, pews : ChopPew, bg : Background):
     if (pews.get_rs_collid().colliderect(vehicule.get_parts()[0][1]) and bg.size[0] > vehicule.get_left()) or pews.get_drop_collid().colliderect(vehicule.get_parts()[0][1]) or (pews.get_ls_collid().colliderect(vehicule.get_parts()[0][1]) and 0 < vehicule.get_left()):
         vehicule.get_parts()[0][1].left = bg.get_parts()[0][1].left - vehicule.get_parts()[0][1].width
-        vehicule.get_parts()[0][1].left = bg.get_parts()[2][1].left + bg.get_parts()[2][1].width
+        vehicule.get_parts()[0][1].left = bg.get_parts()[1][1].left + bg.get_parts()[1][1].width
         
         return True
     
@@ -200,7 +159,7 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
 def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : int):
     shot_timer = 0
 
-    if jet.get_position() < (3 * bg.size[0] + jet.get_parts()[0][1].width) and jet.get_move() == 0:
+    if jet.get_position() < (2 * bg.size[0] + jet.get_parts()[0][1].width) and jet.get_move() == 0:
         jet.set_position(jet.get_position() + 8)
         move = random.choice([0, 1, 3])
 
@@ -355,17 +314,16 @@ def alien_moves(chop : Chop, alien : Alien, pews : AlienPew, bg : Background, bg
         pews.reset()
 
 # - Endgame message
-def end_message(base_destroyed : int, tank_destroyed : int, jet_destroyed : int, alien_destroyed : int, rescued : int):
-        print(f"\nEnnemis éliminés : \n{base_destroyed} {'bases' if base_destroyed > 1 else 'base'} - {tank_destroyed} {'tanks' if tank_destroyed > 1 else 'tank'} - {jet_destroyed} {'jets' if jet_destroyed > 1 else 'jet'} - {alien_destroyed} {'aliens' if alien_destroyed > 1 else 'alien'}")
-        print(f"{rescued} {'otages secourus' if rescued > 1 else 'otage secouru'}")
+def end_message(tank_destroyed : int, jet_destroyed : int, alien_destroyed : int, score : int):
+        print(f"Ennemis éliminés : \n{tank_destroyed} {'tanks' if tank_destroyed > 1 else 'tank'} - {jet_destroyed} {'jets' if jet_destroyed > 1 else 'jet'} - {alien_destroyed} {'aliens' if alien_destroyed > 1 else 'alien'}")
+        print(f'Final score - {score}')
 
 
 # - - - - -  M A I N  - - - - -
 
-def choplifter(size : tuple = (1280, 720)):
+def choplifter_survival(size : tuple = (1280, 720), difficulty : int = 1):
     bg_move = 0
-    lives = 3
-    based = 1
+    score = 0
 
     tank_destroyed = 0
     t1_shot_timer = 0
@@ -378,12 +336,6 @@ def choplifter(size : tuple = (1280, 720)):
     alien_destroyed = 0
     spawn_timer = 0
     ap_shot_timer = 0
-
-    bases_numbers = random.randint(2, 3)
-    base_destroyed = 0
-    
-    inside = 0
-    rescued = 0
 
     # pygame setup
     py.init()
@@ -404,16 +356,10 @@ def choplifter(size : tuple = (1280, 720)):
 
     running = True
 
-    bg = py.image.load('assets\\bg2.png').convert_alpha()
-    bg = py.transform.scale(bg, size)
-    bg_rect = bg.get_rect()
-
-    bg2 = py.image.load('assets\\bg3.png').convert_alpha()
-    bg2 = py.transform.scale(bg2, size)
-    bg2_rect = bg2.get_rect()
-    bg2_rect.left = size[0]
+    bg = Background()
 
     chop = Chop(size)
+    chop.active_right()
     pews = ChopPew(chop)
 
     tank1 = Tank(size)
@@ -437,24 +383,21 @@ def choplifter(size : tuple = (1280, 720)):
     alien = Alien(size)
     alien_pew = AlienPew(alien)
 
-    chop.set_center(bg.get_heliport().center)
-    chop.move_top(10)
-    pews.reset()
-
-    title = cms_font.render(f'CHOPLIFTER - {lives} lives', True, (0, 0, 0, 0))
+    title = cms_font.render(f'CHOPLIFTER - {score}', True, (0, 0, 0, 0))
     title_rect = title.get_rect()
     title_rect.center = (size[0] // 2, 12)
 
-    tank1.set_center((bg.get_parts()[1][1].left + int(round(0.5 * tank1.get_parts()[0][1].width, 0)), int(round(0.8 * size[1], 0))))
-    tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.8 * size[1], 0))))
+    tank1.set_center(((bg.get_parts()[0][1].left - tank1.get_parts()[0][1].width), int(round(0.8 * size[1], 0))))
+    tank1.set_position(0 - tank1.get_parts()[0][1].width)
+    tank2.set_center((2 * size[0] + tank2.get_parts()[0][1].width, int(round(0.8 * size[1], 0))))
     tank2.set_position(2 * size[0] + tank2.get_parts()[0][1].width)
     
     t1_pews.reset()
     t2_pews.reset()
 
     jet1.set_center((0 - jet1.get_parts()[0][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
-    jet2.set_center((3 * size[0] + jet2.get_parts()[0][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
-    jet2.set_position(3 * size[0] + jet2.get_parts()[0][1].width)
+    jet2.set_center((2 * size[0] + jet2.get_parts()[0][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
+    jet2.set_position(2 * size[0] + jet2.get_parts()[0][1].width)
 
     j1_pews.reset()
     j2_pews.reset()
@@ -468,8 +411,6 @@ def choplifter(size : tuple = (1280, 720)):
         bg_move = 0
 
         if pressed[py.K_z]: # - Haut
-            based = 0
-
             chop.active_up()
             chop.move_top(-5)
 
@@ -480,9 +421,9 @@ def choplifter(size : tuple = (1280, 720)):
             chop.active_up()
             chop.move_top(5)
 
-            if chop.get_top() >= bg.get_heliport().top:
+            if chop.get_top() >= int(round(0.764 * size[1], 0)):
                 chop.active_grounded()
-                chop.set_top(bg.get_heliport().top + chop.get_collid().height)
+                chop.set_top(int(round(0.764 * size[1], 0)) + chop.get_collid().height)
 
         if pressed[py.K_q] and chop.is_grounded() == 0: # - Gauche  
             chop.active_left()
@@ -505,18 +446,14 @@ def choplifter(size : tuple = (1280, 720)):
         if pressed[py.K_d] and chop.is_grounded() == 0: # - Droite
             chop.active_right()
 
-            if chop.get_left() > (size[0] - int(round(0.3 * size[0], 0))) and bg.get_position() < 2 * size[0]:
+            if chop.get_left() > (size[0] - int(round(0.3 * size[0], 0))) and bg.get_position() < size[0]:
                 bg_move = 1
 
-                if bg.get_position() <= 2 * size[0] - 5:
+                if bg.get_position() <= size[0] - 5:
                     bg.move_left(-5)
-                    for base in bases:
-                        base[1].left -= 5
 
                 else:
                     bg.move_left(0 - bg.get_right())
-                    for base in bases:
-                        base[1].left -= bg.get_right()
             
             else:
                 chop.move_left(5)
@@ -526,7 +463,7 @@ def choplifter(size : tuple = (1280, 720)):
 
         for event in py.event.get():
             if event.type == py.QUIT:
-                end_message(base_destroyed, tank_destroyed, jet_destroyed, alien_destroyed, rescued)
+                end_message(tank_destroyed, jet_destroyed, alien_destroyed, score)
                 running = False # end of the loop
 
             if event.type == py.KEYDOWN:
@@ -569,7 +506,7 @@ def choplifter(size : tuple = (1280, 720)):
         # - Game render
         if 'r' in pews.get_moves() or 'l' in pews.get_moves():
             if 'r' in pews.get_moves(): # mouvement du tir (droite)
-                if pews.parts[0][1].left <= bg.get_parts()[2][1].left - 5:
+                if pews.parts[0][1].left <= bg.get_parts()[1][1].left - 5:
                     if bg_move == 1: # Mouvement vers la droite
                         pews.move_left_rs(5)
 
@@ -579,8 +516,8 @@ def choplifter(size : tuple = (1280, 720)):
                     else:
                         pews.move_left_rs(10)
 
-                elif pews.parts[0][1].left > bg.get_parts()[2][1].left + 24:
-                    pews.parts[0][1].left = bg.get_parts()[2][1].left + 24
+                elif pews.parts[0][1].left > bg.get_parts()[1][1].left + 24:
+                    pews.parts[0][1].left = bg.get_parts()[1][1].left + 24
 
                 if (time.time() - basic_shot_start) > 1.5:
                     pews.reset_rs()
@@ -671,81 +608,9 @@ def choplifter(size : tuple = (1280, 720)):
         elts = [tank1, tank2, jet1, jet2, t1_pews, t2_pews, j1_pews, j2_pews, alien, alien_pew]
 
         if chop_collid(chop, elts):
-            if lives == 1:
-                print("Hélicoptère détruit... \n")
-                end_message(base_destroyed, tank_destroyed, jet_destroyed, alien_destroyed, rescued)
-                running = False
-
-            else:
-                print("Hélicoptère détruit...")
-                lives -= 1
-
-                bg.get_parts()[0][1].left = 0
-                bg.get_parts()[1][1].left = size[0]
-                bg.get_parts()[2][1].left = bg.get_parts()[1][1].left + size[0]
-
-                bg.get_heliport().top = int(round(0.764 * size[1], 0))
-                bg.get_heliport().left = int(round(0.48125 * size[0], 0))
-
-                chop.active_grounded()
-                chop.set_center(bg.get_heliport().center)
-                chop.move_top(10)
-                pews.reset()
-
-                tank1.active_right()
-                tank2.set_move(0)
-                tank2.active_left()
-                tank2.set_move(1)
-
-                tank1.set_center((bg.get_parts()[1][1].left, int(round(0.8 * size[1], 0))))
-                tank1.set_position(0)
-                tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.8 * size[1], 0))))
-                tank2.set_position(2 * size[0] + tank2.get_parts()[0][1].width)
-                
-                t1_pews.reset()
-                t2_pews.reset()
-
-                jet1 = Jet(size)
-                jet1.active_right()
-                j1_pews = JetPew(jet1)
-
-                jet2 = Jet(size)
-                jet2.active_left()
-                jet2.set_move(1)
-                j2_pews = JetPew(jet2)
-
-                jet1.set_center((0 - jet1.get_parts()[0][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
-                jet2.set_center((3 * size[0] + jet2.get_parts()[0][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
-                jet2.set_position(3 * size[0] + jet2.get_parts()[0][1].width)
-
-                j1_pews.reset()
-                j2_pews.reset()
-
-                for k in range(len(bases)):
-                    bases[k][1].left = bases_lefts[k]
-
-                    for l in range(0, len(hostages[k]), 2):
-                        if hostages[k][l][2] == False:
-                            hostages[k][l][2] = None
-                            hostages_number -= 1
-                            
-                            hostages[k][l][1].top = 0 - 250
-                            hostages[k][l + 1][1].top = 0 - 250
-
-                            print("Un otage a succombé")
-
-                        elif hostages[k][l][2] == True and bases[k][2] == False: # Repositionnement des otages libérés
-                            hostages[k][l][1].left += bg.get_position()
-                            hostages[k][l + 1][1].left += bg.get_position()
-
-                bg.position = 0
-
-        if chop.get_collid().colliderect(bg.get_heliport()) and chop.last == 's': # Atterrissage à la base
-            based = 1
-
-            chop.set_center(bg.get_heliport().center)
-            chop.active_grounded()
-            chop.move_top(10)
+            print("Hélicoptère détruit... \n")
+            end_message(tank_destroyed, jet_destroyed, alien_destroyed, score)
+            running = False
 
         if cps_collid(tank1, pews, bg):
             tank1.set_position(2 * size[0] + tank1.get_parts()[0][1].width)
@@ -758,23 +623,29 @@ def choplifter(size : tuple = (1280, 720)):
             tank_destroyed += 1
             print("Tank détruit !")
 
+            score += 30 * difficulty
+
         if cps_collid(tank2, pews, bg):
             tank2.set_position(2 * size[0] + tank2.get_parts()[0][1].width)
             tank2.set_move(1)
             
             tank2.active_left()
-            tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.8 * size[1], 0))))    
+            tank2.set_center((2 * size[0] + tank2.get_parts()[0][1].width, int(round(0.8 * size[1], 0))))    
             t2_pews.reset()
 
             tank_destroyed += 1
             print("Tank détruit !")
 
+            score += 30 * difficulty
+
         if cps_collid(jet1, pews, bg):
-            jet2.set_position(bg.get_parts()[2][1].left + bg.get_parts()[2][1].width )
+            jet2.set_position(bg.get_parts()[1][1].left + bg.get_parts()[1][1].width )
             jet2.set_move(1)
             jet_destroyed += 1
 
             print("Jet détruit !")
+
+            score += 75 * difficulty
 
         if cps_collid(jet2, pews, bg):
             jet2.set_position(0 - jet1.get_parts()[0][1].width)
@@ -782,6 +653,8 @@ def choplifter(size : tuple = (1280, 720)):
             jet_destroyed += 1
             
             print("Jet détruit !")
+
+            score += 75 * difficulty
 
         if pews.get_rs_collid().colliderect(alien.get_collid()) or pews.get_drop_collid().colliderect(alien.get_collid()) or pews.get_ls_collid().colliderect(alien.get_collid()):
             alien.set_move(0)
@@ -791,13 +664,7 @@ def choplifter(size : tuple = (1280, 720)):
             print("Alien éliminé !")
             alien_destroyed += 1
 
-        for base in bases:
-            if pews.get_rs_collid().colliderect(base[1]) or pews.get_drop_collid().colliderect(base[1]) or pews.get_ls_collid().colliderect(base[1]):
-                base[1].top = 0 - 250
-                base[2] = False
-
-                print("Bâtiment détruit !")
-                base_destroyed += 1
+            score += 120 * difficulty
 
         # Background
         screen.fill("lavender")
@@ -805,7 +672,7 @@ def choplifter(size : tuple = (1280, 720)):
             screen.blit(elt[0], elt[1])
 
         # Textes
-        title = cms_font.render(f'CHOPLIFTER - {lives} lives', True, (32, 32, 32, 0))
+        title = cms_font.render(f'CHOPLIFTER - {score}', True, (32, 32, 32, 0))
         screen.blit(title, title_rect)
 
         # Assets - tanks
@@ -850,74 +717,6 @@ def choplifter(size : tuple = (1280, 720)):
             alien_pew.move_top(12)
             screen.blit(alien_pew.get_parts()[0][0], alien_pew.get_parts()[0][1])
 
-        # Assets - bases / hostages
-        for i in range(len(bases)):
-            if bases[i][2] == True:
-                for j in range(0, len(hostages[i]), 2):
-                    hostages[i][j][1].left = bases[i][1].left
-                    hostages[i][j + 1][1].left = hostages[i][j][1].left
-
-                screen.blit(bases[i][0], bases[i][1])
-
-            else:
-                for j in range(0, len(hostages[i]), 2):
-                    if hostages[i][j][2] == True:
-                        if (chop.get_left() + 10 < hostages[i][j][1].left < chop.get_left() + chop.get_collid().width + 5) and chop.is_grounded() == 1 and inside < 8: # Récupération - 8 otages maximum
-                            hostages[i][j][2] = False
-
-                            print("Otage ramassé")
-                            inside += 1
-
-                            if inside == 8:
-                                print("L'hélicoptère est plein !")
-            
-                        elif (chop.get_collid().colliderect(hostages[i][j][1]) and chop.is_grounded() == 0) or tank1.get_collid().colliderect(hostages[i][j][1]) or tank2.get_collid().colliderect(hostages[i][j][1]) or alien_pew.get_collid().colliderect(hostages[i][j][1]): # Mort des otages
-                            hostages[i][j][2] = None
-                            hostages_number -= 1                            
-                            
-                            hostages[i][j][1].top = 0 - 250
-                            hostages[i][j + 1][1].top = 0 - 250
-
-                            print("Un otage a succombé")
-
-                        else:
-                            temp = 0
-
-                            if chop.is_grounded() == 1 and chop.get_left() + 10 < hostages[i][j][1].left and hostages[i][j][1].left - chop.get_left() + chop.get_collid().width < 0.5 * size[0] and inside < 8:
-                                temp = -2
-
-                            elif chop.is_grounded() == 1 and chop.get_left() + chop.get_collid().width > hostages[i][j][1].left and chop.get_left() + chop.get_collid().width - hostages[i][j][1].left < 0.5 * size[0] and inside < 8:
-                                temp = 2
-
-                            else:
-                                temp = random.choice([-3, -1, 0, 1, 3])
-                                
-                            if bg_move == 1: 
-                                temp -= 5 
-
-                            elif bg_move == 2:
-                                temp += 5
-
-                            hostages[i][j][1].left += temp
-                            hostages[i][j + 1][1].left += temp
-                            screen.blit(hostages[i][j][0], hostages[i][j][1]) if temp >= 0 else screen.blit(hostages[i][j + 1][0], hostages[i][j + 1][1])
-
-                    elif hostages[i][j][2] == False:
-                        if based == 1:
-                            hostages[i][j][2] = None
-                            hostages_number -= 1
-
-                            hostages[i][j][1].top = 0 - 250
-                            hostages[i][j + 1][1].top = 0 - 250
-
-                            print("Otage secouru")
-                            rescued += 1
-                            inside -= 1
-
-                        else:
-                            hostages[i][j][1].center = (chop.get_top(), chop.get_left())
-                            hostages[i][j + 1][1].center = (chop.get_top(), chop.get_left())
-
         # Assets - chop
         if 'r' in pews.get_moves():
             screen.blit(pews.parts[0][0], pews.parts[0][1])
@@ -941,18 +740,19 @@ def choplifter(size : tuple = (1280, 720)):
             if elt[2] == True:
                 screen.blit(elt[0], elt[1])
 
-        # Fin du jeu 
-        if hostages_number < 1:
-            print("Aucun otage restant... \n")
-            end_message(base_destroyed, tank_destroyed, jet_destroyed, alien_destroyed, rescued)
-            running = False
-
         # Affichage des modifications
         py.display.flip()
 
-        clock.tick(90) # Limite des FPS - 90
+        if difficulty == 2:
+            clock.tick(90)
+
+        elif difficulty == 3:
+            clock.tick(120)
+
+        else: # Difficulté par défaut : facile
+            clock.tick(75)
 
     py.quit()
 
 if __name__ == "__main__":
-    choplifter()
+    choplifter_survival()
