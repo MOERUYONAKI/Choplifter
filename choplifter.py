@@ -356,7 +356,7 @@ def alien_moves(chop : Chop, alien : Alien, pews : AlienPew, bg : Background, bg
 
 # - Endgame message
 def end_message(base_destroyed : int, tank_destroyed : int, jet_destroyed : int, alien_destroyed : int, rescued : int):
-        print(f"\nEnnemis éliminés : \n{base_destroyed} {'bases' if base_destroyed > 1 else 'base'} - {tank_destroyed} {'tanks' if tank_destroyed > 1 else 'tank'} - {jet_destroyed} {'jets' if jet_destroyed > 1 else 'jet'} - {alien_destroyed} {'aliens' if alien_destroyed > 1 else 'alien'}")
+        print(f"Ennemis éliminés : \n{base_destroyed} {'bases' if base_destroyed > 1 else 'base'} - {tank_destroyed} {'tanks' if tank_destroyed > 1 else 'tank'} - {jet_destroyed} {'jets' if jet_destroyed > 1 else 'jet'} - {alien_destroyed} {'aliens' if alien_destroyed > 1 else 'alien'}")
         print(f"{rescued} {'otages secourus' if rescued > 1 else 'otage secouru'}")
 
 
