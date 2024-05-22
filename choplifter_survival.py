@@ -315,7 +315,7 @@ def alien_moves(chop : Chop, alien : Alien, pews : AlienPew, bg : Background, bg
 
 # - Endgame message
 def end_message(tank_destroyed : int, jet_destroyed : int, alien_destroyed : int, score : int):
-        print(f"Ennemis éliminés : \n{tank_destroyed} {'tanks' if tank_destroyed > 1 else 'tank'} - {jet_destroyed} {'jets' if jet_destroyed > 1 else 'jet'} - {alien_destroyed} {'aliens' if alien_destroyed > 1 else 'alien'}")
+        print(f"\nEnnemis éliminés : \n{tank_destroyed} {'tanks' if tank_destroyed > 1 else 'tank'} - {jet_destroyed} {'jets' if jet_destroyed > 1 else 'jet'} - {alien_destroyed} {'aliens' if alien_destroyed > 1 else 'alien'}")
         print(f'Final score - {score}')
 
 
@@ -359,7 +359,9 @@ def choplifter_survival(size : tuple = (1280, 720), difficulty : int = 1):
     bg = Background()
 
     chop = Chop(size)
-    chop.active_right()
+    chop.active_up()
+    chop.move_left(int(round(0.49 * size[0], 0)))
+    chop.move_top(int(round(0.3 * size[1], 0)))
     pews = ChopPew(chop)
 
     tank1 = Tank(size)
@@ -615,7 +617,7 @@ def choplifter_survival(size : tuple = (1280, 720), difficulty : int = 1):
         elts = [tank1, tank2, jet1, jet2, t1_pews, t2_pews, j1_pews, j2_pews, alien, alien_pew]
 
         if chop_collid(chop, elts):
-            print("Hélicoptère détruit... \n")
+            print("Hélicoptère détruit...")
             end_message(tank_destroyed, jet_destroyed, alien_destroyed, score)
             running = False
 
