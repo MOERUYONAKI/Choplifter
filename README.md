@@ -26,6 +26,6 @@
   
 ### III - Developers
   
-[MOERUYONAKI](https://www.github.com/MOERUYONAKI)  
-[Kevin-Sawyer](https://www.github.com/Kevin-Sawyer)  
+> [MOERUYONAKI](https://www.github.com/MOERUYONAKI)  
+> [Kevin-Sawyer](https://www.github.com/Kevin-Sawyer)  
   
