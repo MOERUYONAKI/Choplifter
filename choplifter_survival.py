@@ -159,7 +159,7 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
 def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : int):
     shot_timer = 0
 
-    if jet.get_position() < (2 * bg.size[0] + jet.get_parts()[0][1].width) and jet.get_move() == 0:
+    if jet.get_position() < (2 * bg.size[0] + 2 * jet.get_parts()[0][1].width) and jet.get_move() == 0:
         jet.set_position(jet.get_position() + 8)
         move = random.choice([0, 1, 3])
 
@@ -210,7 +210,6 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
     elif jet.get_position() > 0 - jet.get_parts()[0][1].width:
         jet.set_move(1)
         jet.active_left()
-        
 
         jet.move_left(bg.get_parts()[2][1].left + bg.get_parts()[2][1].width if jet.get_move() == 0 else 0)
 
@@ -389,16 +388,16 @@ def choplifter_survival(size : tuple = (1280, 720), difficulty : int = 1):
     title_rect = title.get_rect()
     title_rect.center = (size[0] // 2, 12)
 
-    tank1.set_center(((bg.get_parts()[0][1].left - tank1.get_parts()[0][1].width), int(round(0.8 * size[1], 0))))
-    tank1.set_position(0 - tank1.get_parts()[0][1].width)
-    tank2.set_center((2 * size[0] + tank2.get_parts()[0][1].width, int(round(0.8 * size[1], 0))))
-    tank2.set_position(2 * size[0] + tank2.get_parts()[0][1].width)
+    tank1.set_center((bg.get_parts()[0][1].left + int(round(0.5 * tank1.get_parts()[0][1].width, 0)), int(round(0.8 * size[1], 0))))
+    tank1.set_position(0)
+    tank2.set_center((2 * size[0] - int(round(0.5 * tank2.get_parts()[0][1].width, 0)), int(round(0.8 * size[1], 0))))
+    tank2.set_position(2 * size[0] - tank2.get_parts()[0][1].width)
     
     t1_pews.reset()
     t2_pews.reset()
 
-    jet1.set_center((0 - jet1.get_parts()[0][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
-    jet2.set_center((2 * size[0] + jet2.get_parts()[0][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
+    jet1.set_center((0 - int(round(0.5 * jet1.get_parts()[0][1].width, 0)), random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
+    jet2.set_center((2 * size[0] + int(round(0.5 * jet2.get_parts()[0][1].width, 0)), random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
     jet2.set_position(2 * size[0] + jet2.get_parts()[0][1].width)
 
     j1_pews.reset()
