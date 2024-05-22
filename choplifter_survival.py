@@ -410,6 +410,13 @@ def choplifter_survival(size : tuple = (1280, 720), difficulty : int = 1):
         pressed = py.key.get_pressed()
         bg_move = 0
 
+        # Gestion de la difficultée
+        if int(round(time.time() - start_timer, 0)) > 300 and difficulty < 3: # Niveau 3 après 5 minutes
+            difficulty = 3
+
+        elif int(round(time.time() - start_timer, 0)) > 180 and difficulty < 2: # Niveau 2 après 3 minutes
+            difficulty = 2
+
         if pressed[py.K_z]: # - Haut
             chop.active_up()
             chop.move_top(-5)
@@ -672,7 +679,15 @@ def choplifter_survival(size : tuple = (1280, 720), difficulty : int = 1):
             screen.blit(elt[0], elt[1])
 
         # Textes
-        title = cms_font.render(f'CHOPLIFTER - {score}', True, (32, 32, 32, 0))
+        diff = 'easy'
+
+        if difficulty == 2:
+            diff = 'medium'
+
+        elif difficulty == 3:
+            diff = 'hard'
+
+        title = cms_font.render(f'CHOPLIFTER - {score} ({diff})', True, (32, 32, 32, 0))
         screen.blit(title, title_rect)
 
         # Assets - tanks
