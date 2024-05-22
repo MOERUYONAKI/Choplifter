@@ -24,12 +24,7 @@
 **5 - /repo**  
 > Return the repository link  
   
-## III - Developers
-  
-> [MOERUYONAKI](https://www.github.com/MOERUYONAKI)  
-> [Kevin-Sawyer](https://www.github.com/Kevin-Sawyer)  
-  
-## IV - Game  
+## III - Game  
   
 ### Introduction
   
@@ -54,4 +49,9 @@
 ### Fin du jeu
   
 >Le jeu se termine lorsque tous les otages sont sauvés ou que l'hélicoptère est détruit. Le score final, basé sur le nombre d'otages sauvés et d'ennemis détruits, est affiché à l'écran.  
+  
+## IV - Developers
+  
+> [MOERUYONAKI](https://www.github.com/MOERUYONAKI)  
+> [Kevin-Sawyer](https://www.github.com/Kevin-Sawyer)  
   
