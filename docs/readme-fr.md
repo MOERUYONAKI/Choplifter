@@ -3,7 +3,7 @@
 ## I - Besoins
 
 **Python 3** ou une version plus récente
-> "**Pygame 2.5.0**" lib  
+> librairie "**Pygame 2.5.0**"  
 > Paquet "**PyInstaller 6.7.0**"  
   
 ## II - Commandes du CHPrompt
