@@ -4,6 +4,7 @@
 
 **Python 3** or later
 > "**Pygame 2.5.0**" lib  
+> Bundle "**PyInstaller 6.7.0**"  
   
 ## II - Commands for CHPrompt
 

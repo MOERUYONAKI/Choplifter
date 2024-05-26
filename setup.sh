@@ -11,3 +11,6 @@ python3.9 -m PyInstaller --onefile init/chop.py
 python3.9 -m PyInstaller --onefile init/tank.py
 python3.9 -m PyInstaller --onefile init/jet.py
 python3.9 -m PyInstaller --onefile init/alien.py
+
+cd dist
+main.exe
