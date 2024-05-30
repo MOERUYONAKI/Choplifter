@@ -11,3 +11,6 @@
 > [Italiano](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-it.md)  
 > [Suomalainen](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-fi.md)  
   
+> [!IMPORTANT]  
+> Certains languages may have a bad or aproximative traduction  
+  
