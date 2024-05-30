@@ -2,7 +2,10 @@
   
 [ Choplifter Game ]  
   
-```git clone https://github.com/MOERUYONAKI/Choplifter  gh repo clone MOERUYONAKI/Choplifter```  
+```
+git clone https://github.com/MOERUYONAKI/Choplifter  
+gh repo clone MOERUYONAKI/Choplifter  
+```
 
 ## Readme languages
   
