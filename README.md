@@ -10,10 +10,19 @@
 > [!IMPORTANT]  
 > Certains languages may have a bad or aproximative traduction  
   
-> [Deutsch](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-de.md)  
-> [English](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-en.md)  
-> [Español](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-es.md)  
-> [Français](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-fr.md)  
-> [Italiano](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-it.md)  
-> [Suomalainen](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-fi.md)  
+> D  
+> - [Deutsch](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-de.md)  
+  
+> E  
+> - [English](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-en.md)  
+> - [Español](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-es.md)  
+  
+> F  
+> - [Français](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-fr.md)  
+  
+> I  
+> - [Italiano](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-it.md)  
+  
+> S  
+> - [Suomalainen](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-fi.md)  
   
