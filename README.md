@@ -12,20 +12,19 @@ gh repo clone MOERUYONAKI/Choplifter
 > [!IMPORTANT]  
 > Certains languages may have a bad or aproximative traduction  
   
-  
 > D  
 > [Deutsch](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme>de.md)  
   
-> E
+> E  
 > [English](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme>en.md)  
 > [Español](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme>es.md)  
   
-> F
+> F  
 > [Français](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme>fr.md)  
   
-> I
+> I  
 > [Italiano](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme>it.md)  
    
-> S
+> S  
 > [Suomalainen](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme>fi.md)  
   
