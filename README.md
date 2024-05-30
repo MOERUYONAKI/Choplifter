@@ -9,4 +9,5 @@
 > [Español](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-es.md)  
 > [Français](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-fr.md)  
 > [Italiano](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-it.md)  
+> [Suomalainen](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-fi.md)  
   
