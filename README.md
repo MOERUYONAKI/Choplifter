@@ -13,7 +13,7 @@ gh repo clone MOERUYONAKI/Choplifter
 > Certains languages may have a bad or aproximative traduction  
   
 > D  
-> [Deutsch](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-de.md)  
+- [Deutsch](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-de.md)  
   
 > E  
 > [English](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-en.md)  
