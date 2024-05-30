@@ -4,6 +4,7 @@
 
 **Python 3** oder höher
 > "**Pygame 2.5.0**" Bibliothek  
+> "**PyInstaller 6.7.0**" Paket  
 
 ## II - Befehle für CHPrompt
 
