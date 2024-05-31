@@ -26,6 +26,9 @@ gh repo clone MOERUYONAKI/Choplifter
 > I  
 > [Italiano](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-it.md)  
   
+> N  
+> [Nederlands](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-nt.md)  
+  
 > P  
 > [Português](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-pt.md)  
    
