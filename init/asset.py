@@ -35,7 +35,7 @@ class Music():
 
     def play(self):
         self.playing = True
-        self.song.play()
+        self.song.play(loops = -1)
 
     def pause(self):
         self.playing = False
