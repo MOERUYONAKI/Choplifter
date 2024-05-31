@@ -6,7 +6,7 @@ import time
 import random
 
 # - Choplifter imports
-from init.asset import Vehicule, add_asset
+from init.asset import Vehicule, Music, add_asset
 from init.background import Background_survival as Background
 from init.chop import Chop, Pew as ChopPew
 from init.tank import Tank, Pew as TankPew
@@ -357,6 +357,9 @@ def choplifter_survival(size : tuple = (1280, 720), difficulty : int = 1):
 
     running = True
 
+    music = Music("assets\Songs\Audiomachine - By the Hand of the Mortal.mp3", 0.2)
+    music.play()
+
     # Menu assets
     menu = add_asset('assets\menu_bg.jpg')
 
@@ -444,6 +447,7 @@ def choplifter_survival(size : tuple = (1280, 720), difficulty : int = 1):
                     if event.button == 1:
                         if play_txt[1].collidepoint(py.mouse.get_pos()):
                             start_timer = time.time()
+                            music.set_volume(0.1)
                             py.mouse.set_visible(False)
                             game = True
 
@@ -524,6 +528,7 @@ def choplifter_survival(size : tuple = (1280, 720), difficulty : int = 1):
 
                 if event.type == py.KEYDOWN:
                     if event.key == py.K_ESCAPE:
+                        music.set_volume(0.2)
                         py.mouse.set_visible(True)
                         game = False 
 
@@ -820,6 +825,7 @@ def choplifter_survival(size : tuple = (1280, 720), difficulty : int = 1):
         else: # Difficulté par défaut : facile
             clock.tick(75)
 
+    music.stop()
     py.quit()
 
 if __name__ == "__main__":
