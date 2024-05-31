@@ -30,6 +30,7 @@ gh repo clone MOERUYONAKI/Choplifter
 > [Nederlands](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-nt.md)  
   
 > P  
+> [Polski](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-pl.md)  
 > [Português](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-pt.md)  
    
 > S  
