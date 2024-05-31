@@ -37,6 +37,7 @@ gh repo clone MOERUYONAKI/Choplifter
 > [Suomalainen](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-fi.md)  
 > [Svenska](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-sw.md)    
    
-> Γ  
+> Others  
 > [Γκρι](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-gr.md)  
+> [日本語](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-jp.md)  
   
