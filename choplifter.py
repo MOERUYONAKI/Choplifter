@@ -493,6 +493,8 @@ def choplifter(size : tuple = (1280, 720)):
                         game = True
 
                     if event.key == py.K_ESCAPE:
+                        print(' ')
+                        end_message(base_destroyed, tank_destroyed, jet_destroyed, alien_destroyed, rescued)
                         running = False # end of the loop
                 
                 if event.type == py.MOUSEBUTTONDOWN:
@@ -503,6 +505,8 @@ def choplifter(size : tuple = (1280, 720)):
                             game = True
 
                         elif quit_txt[1].collidepoint(py.mouse.get_pos()):
+                            print(' ')
+                            end_message(base_destroyed, tank_destroyed, jet_destroyed, alien_destroyed, rescued)
                             running = False # end of the loop
 
                 screen.blit(menu[0], menu[1])
@@ -580,6 +584,10 @@ def choplifter(size : tuple = (1280, 720)):
                     running = False # end of the loop
 
                 if event.type == py.KEYDOWN:
+                    if event.key == py.K_ESCAPE:
+                        py.mouse.set_visible(True)
+                        game = False 
+
                     if event.key == py.K_SPACE: # Tir bas
                         if 'd' not in pews.get_moves() and chop.is_grounded() == 0:
                             pews.parts[1][2] = True
