@@ -24,17 +24,33 @@ class Vehicule():
 
 class Music():
     def __init__(self, path : str, volume : float = 0.25):
-        self.song = py.mixer.Sound(path)
+        self.song = py.mixer.music
         self.volume = volume
+        self.playing = False
+
+        self.song.load(path)
+
+    def is_playing(self):
+        return self.playing
 
     def play(self):
+        self.playing = True
         self.song.play()
 
-    def set_volume(self, volume : float):
-        self.song.set_volume(volume if volume >= 0 else 0.2)
+    def pause(self):
+        self.playing = False
+        self.song.pause()
+
+    def unpause(self):
+        self.playing = True
+        self.song.unpause()
 
     def stop(self):
+        self.playing = False
         self.song.stop()
+
+    def set_volume(self, volume : float):
+        self.song.set_volume(volume if volume >= 0 else 0.25)
 
 def add_asset(image_path : str): # Add an asset by an image - return an image and the image's rect
     try:

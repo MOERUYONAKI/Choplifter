@@ -490,19 +490,18 @@ def choplifter(size : tuple = (1280, 720)):
                     running = False # end of the loop
 
                 if event.type == py.KEYDOWN:
-                    if event.key == py.K_SPACE:
+                    if event.key == py.K_SPACE or event.key == py.K_ESCAPE:
                         start_timer = time.time()
+                        music.set_volume(0.1)
                         py.mouse.set_visible(False)
                         game = True
-
-                    if event.key == py.K_ESCAPE:
-                        print(' ')
-                        end_message(base_destroyed, tank_destroyed, jet_destroyed, alien_destroyed, rescued)
-                        running = False # end of the loop
                 
                 if event.type == py.MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        if play_txt[1].collidepoint(py.mouse.get_pos()):
+                        if choplifter_txt[1].collidepoint(py.mouse.get_pos()):
+                            music.pause() if music.is_playing() else music.unpause()
+
+                        elif play_txt[1].collidepoint(py.mouse.get_pos()):
                             start_timer = time.time()
                             music.set_volume(0.1)
                             py.mouse.set_visible(False)

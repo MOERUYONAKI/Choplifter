@@ -434,18 +434,18 @@ def choplifter_survival(size : tuple = (1280, 720), difficulty : int = 1):
                     running = False # end of the loop
 
                 if event.type == py.KEYDOWN:
-                    if event.key == py.K_SPACE:
+                    if event.key == py.K_SPACE or event.key == py.K_ESCAPE:
                         start_timer = time.time()
+                        music.set_volume(0.1)
                         py.mouse.set_visible(False)
                         game = True
-
-                    if event.key == py.K_ESCAPE:
-                        end_message(tank_destroyed, jet_destroyed, alien_destroyed, score)
-                        running = False # end of the loop
                 
                 if event.type == py.MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        if play_txt[1].collidepoint(py.mouse.get_pos()):
+                        if choplifter_txt[1].collidepoint(py.mouse.get_pos()):
+                            music.pause() if music.is_playing() else music.unpause()
+
+                        elif play_txt[1].collidepoint(py.mouse.get_pos()):
                             start_timer = time.time()
                             music.set_volume(0.1)
                             py.mouse.set_visible(False)
