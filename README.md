@@ -40,4 +40,6 @@ gh repo clone MOERUYONAKI/Choplifter
 > Others  
 > [Γκρι](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-gr.md)  
 > [日本語](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-jp.md)  
+> [Türkçe](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-tk.md)  
+> [بالعربية](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-ar.md)  
   
