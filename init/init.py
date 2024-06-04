@@ -264,7 +264,7 @@ def tank_moves(chop : Chop, tank : Tank, pews : TankPew, bg : Background, bg_mov
     return shot_timer
 
 # - Jets moves
-def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : int):
+def jet_moves(chop: Chop, jet: Jet, pews: JetPew, bg: Background, bg_move: int):
     shot_timer = 0
 
     if jet.get_position() < (3 * bg.size[0] + jet.get_parts()[0][1].width) and jet.get_move() == 0:
@@ -273,18 +273,18 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
 
         if jet.get_top() > chop.get_top():
             jet.move_top(0 - move)
-            
-            if not 'r' in pews.get_moves():
+
+            if 'r' not in pews.get_moves():
                 pews.move_top(0 - move)
 
         elif jet.get_top() < chop.get_top():
             jet.move_top(move)
 
-            if not 'r' in pews.get_moves():
+            if 'r' not in pews.get_moves():
                 pews.move_top(move)
 
         else:
-            if not pews.shot and (15 < chop.get_left() - jet.get_left() and 750 > chop.get_left() - jet.get_left()):
+            if not pews.shot and 15 < chop.get_left() - jet.get_left() < 750:
                 pews.shoot()
                 shot_timer = time.time()
 
@@ -305,7 +305,7 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
 
             else:
                 pews.reset()
-        
+
         else:
             jet.move_left(8)
 
@@ -318,31 +318,30 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
     elif jet.get_position() > 0 - jet.get_parts()[0][1].width:
         jet.set_move(1)
         jet.active_left()
-        
 
         jet.move_left(bg.get_parts()[2][1].left + bg.get_parts()[2][1].width if jet.get_move() == 0 else 0)
-
         jet.set_position(jet.get_position() - 8)
+        
         move = random.choice([0, 1, 3])
 
         if jet.get_top() > chop.get_top():
             jet.move_top(0 - move)
-            
-            if not 'l' in pews.get_moves():
+
+            if 'l' not in pews.get_moves():
                 pews.move_top(0 - move)
 
         elif jet.get_top() < chop.get_top():
             jet.move_top(move)
-            
-            if not 'l' in pews.get_moves():
+
+            if 'l' not in pews.get_moves():
                 pews.move_top(move)
 
         else:
-            if not pews.shot and (15 < jet.get_left() - chop.get_left() and 750 > jet.get_left() - chop.get_left()):
+            if not pews.shot and 15 < jet.get_left() - chop.get_left() < 750:
                 pews.shoot()
                 shot_timer = time.time()
-        
-        if bg_move == 2: # Mouvement vers la droite
+
+        if bg_move == 2: # Mouvement vers la gauche
             jet.move_left(-3)
 
             if pews.parts[1][2]:
@@ -351,7 +350,7 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
             else:
                 pews.reset()
 
-        elif bg_move == 1: # Mouvement vers la gauche
+        elif bg_move == 1: # Mouvement vers la droite
             jet.move_left(-13)
 
             if pews.parts[1][2]:
@@ -359,7 +358,7 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
 
             else:
                 pews.reset()
-        
+
         else:
             jet.move_left(-8)
 
@@ -372,11 +371,12 @@ def jet_moves(chop : Chop, jet : Jet, pews : JetPew, bg : Background, bg_move : 
     else:
         jet.set_move(0)
         jet.active_right()
-        
-        if not 'r' in pews.get_moves() and not 'l' in pews.get_moves():
+
+        if 'r' not in pews.get_moves() and 'l' not in pews.get_moves():
             pews.reset()
 
     return shot_timer
+
 
 # - Aliens moves
 def alien_moves(chop : Chop, alien : Alien, pews : AlienPew, bg : Background, bg_move : int):
