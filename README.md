@@ -5,6 +5,8 @@
 ```
 git clone https://github.com/MOERUYONAKI/Choplifter  
 gh repo clone MOERUYONAKI/Choplifter  
+
+pip install -r requirements.txt
 ```
 
 ## Readme languages
