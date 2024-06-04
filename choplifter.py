@@ -42,6 +42,8 @@ def choplifter(size : tuple = (1280, 720)):
     inside = 0
     rescued = 0
 
+    respawn_timer = -1
+
     # pygame setup
     py.init()
 
@@ -358,56 +360,32 @@ def choplifter(size : tuple = (1280, 720)):
             # Collisions events
             elts = [tank1, tank2, jet1, jet2, t1_pews, t2_pews, j1_pews, j2_pews, alien, alien_pew]
 
-            if chop_collid(chop, elts):
+            if chop_collid(chop, elts) and (respawn_timer == -1 or time.time() - respawn_timer > 2):
                 if lives == 1:
                     print("Hélicoptère détruit... \n")
                     end_message(base_destroyed, tank_destroyed, jet_destroyed, alien_destroyed, rescued)
                     running = False
 
                 else:
+                    respawn_timer = time.time()
                     print("Hélicoptère détruit...")
                     lives -= 1
 
-                    bg.get_parts()[0][1].left = 0
-                    bg.get_parts()[1][1].left = size[0]
-                    bg.get_parts()[2][1].left = bg.get_parts()[1][1].left + size[0]
+                    assets = assets_init(size)
 
-                    bg.get_heliport().top = int(round(0.764 * size[1], 0))
-                    bg.get_heliport().left = int(round(0.48125 * size[0], 0))
-
-                    chop.active_grounded()
-                    chop.set_center(bg.get_heliport().center)
-                    chop.move_top(10)
-                    pews.reset()
-
-                    tank1.active_right()
-                    tank2.set_move(0)
-                    tank2.active_left()
-                    tank2.set_move(1)
-
-                    tank1.set_center((bg.get_parts()[1][1].left, int(round(0.8 * size[1], 0))))
-                    tank1.set_position(0)
-                    tank2.set_center((3 * size[0] + tank2.get_parts()[0][1].width, int(round(0.8 * size[1], 0))))
-                    tank2.set_position(2 * size[0] + tank2.get_parts()[0][1].width)
-                    
-                    t1_pews.reset()
-                    t2_pews.reset()
-
-                    jet1 = Jet(size)
-                    jet1.active_right()
-                    j1_pews = JetPew(jet1)
-
-                    jet2 = Jet(size)
-                    jet2.active_left()
-                    jet2.set_move(1)
-                    j2_pews = JetPew(jet2)
-
-                    jet1.set_center((0 - jet1.get_parts()[0][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
-                    jet2.set_center((3 * size[0] + jet2.get_parts()[0][1].width, random.randint(int(round(0.3 * size[1], 0)), int(round(0.9 * size[1], 0)) - 48)))
-                    jet2.set_position(3 * size[0] + jet2.get_parts()[0][1].width)
-
-                    j1_pews.reset()
-                    j2_pews.reset()
+                    bg = assets['bg']
+                    chop = assets['chop']
+                    pews = assets['pews']
+                    tank1 = assets['tank1']
+                    t1_pews = assets['t1_pews']
+                    tank2 = assets['tank2']
+                    t2_pews = assets['t2_pews']
+                    jet1 = assets['jet1']
+                    j1_pews = assets['j1_pews']
+                    jet2 = assets['jet2']
+                    j2_pews = assets['j2_pews']
+                    alien = assets['alien']
+                    alien_pew = assets['alien_pew']
 
                     for k in range(len(bases)):
                         bases[k][1].left = bases_lefts[k]
@@ -457,18 +435,28 @@ def choplifter(size : tuple = (1280, 720)):
                 tank_destroyed += 1
                 print("Tank détruit !")
 
-            if cps_collid(jet1, pews, bg):
-                jet2.set_position(bg.get_parts()[2][1].left + bg.get_parts()[2][1].width )
-                jet2.set_move(1)
-                jet_destroyed += 1
+            if cps_collid(jet1, pews, bg) and (respawn_timer == -1 or time.time() - respawn_timer > 2):
+                if jet1.get_move() == 0:
+                    jet1.set_position(bg.get_parts()[2][1].left + bg.get_parts()[2][1].width )
+                    jet1.set_move(1)
 
+                else:
+                    jet1.set_position(0 - jet1.get_parts()[0][1].width)
+                    jet1.set_move(0)
+
+                jet_destroyed += 1
                 print("Jet détruit !")
 
-            if cps_collid(jet2, pews, bg):
-                jet2.set_position(0 - jet1.get_parts()[0][1].width)
-                jet2.set_move(0)
-                jet_destroyed += 1
+            if cps_collid(jet2, pews, bg) and (respawn_timer == -1 or time.time() - respawn_timer > 2):
+                if jet2.get_move() == 0:
+                    jet2.set_position(bg.get_parts()[2][1].left + bg.get_parts()[2][1].width )
+                    jet2.set_move(1)
+
+                else:
+                    jet2.set_position(0 - jet2.get_parts()[0][1].width)
+                    jet2.set_move(0)
                 
+                jet_destroyed += 1
                 print("Jet détruit !")
 
             if pews.get_rs_collid().colliderect(alien.get_collid()) or pews.get_drop_collid().colliderect(alien.get_collid()) or pews.get_ls_collid().colliderect(alien.get_collid()):
