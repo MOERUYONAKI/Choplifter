@@ -8,17 +8,17 @@ class Tank(Vehicule):
         
         parts = []
 
-        tank_image, tank_rect = add_asset('Windows\\assets\\tank.png')
+        tank_image, tank_rect = add_asset('assets\\tank.png')
         parts.append([tank_image, tank_rect, False])
 
-        tank2_image, tank2_rect = add_asset('Windows\\assets\\revert_tank.png')
+        tank2_image, tank2_rect = add_asset('assets\\revert_tank.png')
         tank2_rect.center = tank_rect.center
         parts.append([tank2_image, tank2_rect, False])
 
-        tank3_image, tank3_rect = add_asset('Windows\\assets\\shooting_tank.png')
+        tank3_image, tank3_rect = add_asset('assets\\shooting_tank.png')
         parts.append([tank3_image, tank3_rect, False])
 
-        tank4_image, tank4_rect = add_asset('Windows\\assets\\revert_shooting_tank.png')
+        tank4_image, tank4_rect = add_asset('assets\\revert_shooting_tank.png')
         tank4_rect.center = tank_rect.center
         parts.append([tank4_image, tank4_rect, False])
 
@@ -111,11 +111,11 @@ class Pew():
 
         parts = []
 
-        rightshot_image, rightshot_rect = add_asset('Windows\\assets\\tank_pew.png')
+        rightshot_image, rightshot_rect = add_asset('assets\\tank_pew.png')
         rightshot_rect.center = (self.tank.get_left(), self.tank.get_top())
         parts.append([rightshot_image, rightshot_rect, False])
 
-        leftshot_image, leftshot_rect = add_asset('Windows\\assets\\revert_tank_pew.png')
+        leftshot_image, leftshot_rect = add_asset('assets\\revert_tank_pew.png')
         leftshot_rect.center = (self.tank.get_left(), self.tank.get_top())
         parts.append([leftshot_image, leftshot_rect, False])
 

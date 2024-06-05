@@ -8,10 +8,10 @@ class Jet(Vehicule):
         
         parts = []
 
-        jet_image, jet_rect = add_asset('Windows\\assets\\jet.png')
+        jet_image, jet_rect = add_asset('assets\\jet.png')
         parts.append([jet_image, jet_rect, False])
 
-        jet2_image, jet2_rect = add_asset('Windows\\assets\\revert_jet.png')
+        jet2_image, jet2_rect = add_asset('assets\\revert_jet.png')
         jet2_rect.center = jet_rect.center
         parts.append([jet2_image, jet2_rect, False])
 
@@ -88,11 +88,11 @@ class Pew():
 
         parts = []
 
-        rightshot_image, rightshot_rect = add_asset('Windows\\assets\\jet_pew.png')
+        rightshot_image, rightshot_rect = add_asset('assets\\jet_pew.png')
         rightshot_rect.center = (self.jet.get_left(), self.jet.get_top())
         parts.append([rightshot_image, rightshot_rect, False])
 
-        leftshot_image, leftshot_rect = add_asset('Windows\\assets\\revert_jet_pew.png')
+        leftshot_image, leftshot_rect = add_asset('assets\\revert_jet_pew.png')
         leftshot_rect.center = (self.jet.get_left(), self.jet.get_top())
         parts.append([leftshot_image, leftshot_rect, False])
 

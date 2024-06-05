@@ -343,7 +343,7 @@ def choplifter_survival(size : tuple = (1280, 720), difficulty : int = 1):
 
     screen = py.display.set_mode(size)
 
-    cms_font = py.font.Font('Linux/assets/Fonts/amd64_microsoft-windows-f..ruetype-comicsansms_31bf3856ad364e35_10.0.22621.1_none_3deaef772e20c404/comic.ttf', 24)
+    cms_font = py.font.Font('assets/Fonts/amd64_microsoft-windows-f..ruetype-comicsansms_31bf3856ad364e35_10.0.22621.1_none_3deaef772e20c404/comic.ttf', 24)
     
     loadtxt = cms_font.render(f'CHOPLIFTER - Loading...', True, (0, 0, 0, 0))
     loadtxt_rect = loadtxt.get_rect()
@@ -357,19 +357,19 @@ def choplifter_survival(size : tuple = (1280, 720), difficulty : int = 1):
 
     running = True
 
-    music = Music("Linux/assets/Songs/Audiomachine - By the Hand of the Mortal.mp3", 0.2)
+    music = Music("assets/Songs/Audiomachine - By the Hand of the Mortal.mp3", 0.2)
     music.play()
 
     # Menu assets
-    menu = add_asset('Linux/assets/menu_bg.jpg')
+    menu = add_asset('assets/menu_bg.jpg')
 
-    choplifter_txt = add_asset('Linux/assets/choplifter_txt.png') 
+    choplifter_txt = add_asset('assets/choplifter_txt.png') 
     choplifter_txt[1].center = (int(round(size[0] / 2, 0)), int(round(0.06 * size[1], 0)))
 
-    play_txt = add_asset('Linux/assets/play_txt.png') 
+    play_txt = add_asset('assets/play_txt.png') 
     play_txt[1].center = (int(round(size[0] / 2, 0)), int(round(size[1] / 2.15, 0)))
 
-    quit_txt = add_asset('Linux/assets/quit_txt.png') 
+    quit_txt = add_asset('assets/quit_txt.png') 
     quit_txt[1].center = (int(round(size[0] / 2, 0)), int(round(size[1] / 1.65, 0)))
 
     # Game assets

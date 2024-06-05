@@ -7,18 +7,18 @@ class Chop(Vehicule):
         
         parts = []
 
-        chop_image, chop_rect = add_asset('Windows\\assets\\helicopter.png')
+        chop_image, chop_rect = add_asset('assets\\helicopter.png')
         parts.append([chop_image, chop_rect, False])
 
-        chop2_image, chop2_rect = add_asset('Windows\\assets\\revert_helicopter.png')
+        chop2_image, chop2_rect = add_asset('assets\\revert_helicopter.png')
         chop2_rect.center = chop_rect.center
         parts.append([chop2_image, chop2_rect, False])
 
-        chop3_image, chop3_rect = add_asset('Windows\\assets\\helico_ball.png')
+        chop3_image, chop3_rect = add_asset('assets\\helico_ball.png')
         chop3_rect.center = chop_rect.center
         parts.append([chop3_image, chop3_rect, False])
 
-        chop4_image, chop4_rect = add_asset('Windows\\assets\\grounded_helicopter.png')
+        chop4_image, chop4_rect = add_asset('assets\\grounded_helicopter.png')
         chop4_rect.center = chop_rect.center
         parts.append([chop4_image, chop4_rect, True])
 
@@ -102,15 +102,15 @@ class Pew():
 
         parts = []
 
-        rightshot_image, rightshot_rect = add_asset('Windows\\assets\\green_pewpew.png')
+        rightshot_image, rightshot_rect = add_asset('assets\\green_pewpew.png')
         rightshot_rect.center = (self.chop.get_left() + 32, self.chop.get_top() + 24)
         parts.append([rightshot_image, rightshot_rect, False])
 
-        drop_image, drop_rect = add_asset('Windows\\assets\\green_pewpew2.png')
+        drop_image, drop_rect = add_asset('assets\\green_pewpew2.png')
         drop_rect.center = (self.chop.get_left() + 32, self.chop.get_top() + 24)
         parts.append([drop_image, drop_rect, False])
 
-        leftshot_image, leftshot_rect = add_asset('Windows\\assets\\green_revert_pewpew.png')
+        leftshot_image, leftshot_rect = add_asset('assets\\green_revert_pewpew.png')
         leftshot_rect.center = (self.chop.get_left() + 32, self.chop.get_top() + 24)
         parts.append([leftshot_image, leftshot_rect, False])
 

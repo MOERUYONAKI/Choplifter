@@ -7,18 +7,18 @@ class Background():
 
         parts = []
 
-        base_bg_image = py.image.load('Windows\\assets\\bg1.png').convert_alpha()
+        base_bg_image = py.image.load('assets\\bg1.png').convert_alpha()
         base_bg_image = py.transform.scale(base_bg_image, size)
         base_bg_rect = base_bg_image.get_rect()
         parts.append([base_bg_image, base_bg_rect])
 
-        part1_bg_image = py.image.load('Windows\\assets\\bg2.png').convert_alpha()
+        part1_bg_image = py.image.load('assets\\bg2.png').convert_alpha()
         part1_bg_image = py.transform.scale(part1_bg_image, size)
         part1_bg_rect = part1_bg_image.get_rect()
         part1_bg_rect.left = size[0]
         parts.append([part1_bg_image, part1_bg_rect])
 
-        part2_bg_image = py.image.load('Windows\\assets\\bg3.png').convert_alpha()
+        part2_bg_image = py.image.load('assets\\bg3.png').convert_alpha()
         part2_bg_image = py.transform.scale(part2_bg_image, size)
         part2_bg_rect = part2_bg_image.get_rect()
         part2_bg_rect.left = 2 * size[0]
@@ -56,12 +56,12 @@ class Background_survival():
 
         parts = []
 
-        part1_bg_image = py.image.load('Windows\\assets\\bg2.png').convert_alpha()
+        part1_bg_image = py.image.load('assets\\bg2.png').convert_alpha()
         part1_bg_image = py.transform.scale(part1_bg_image, size)
         part1_bg_rect = part1_bg_image.get_rect()
         parts.append([part1_bg_image, part1_bg_rect])
 
-        part2_bg_image = py.image.load('Windows\\assets\\bg3.png').convert_alpha()
+        part2_bg_image = py.image.load('assets\\bg3.png').convert_alpha()
         part2_bg_image = py.transform.scale(part2_bg_image, size)
         part2_bg_rect = part2_bg_image.get_rect()
         part2_bg_rect.left = size[0]

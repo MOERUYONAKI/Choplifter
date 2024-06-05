@@ -8,7 +8,7 @@ class Alien(Vehicule):
         
         parts = []
 
-        alien_image, alien_rect = add_asset('Windows\\assets\\saucer.png')
+        alien_image, alien_rect = add_asset('assets\\saucer.png')
         parts.append([alien_image, alien_rect, True])
 
         self.parts = parts
@@ -51,7 +51,7 @@ class Pew():
 
         parts = []
 
-        laser_image, laser_rect = add_asset('Windows\\assets\\laser.png')
+        laser_image, laser_rect = add_asset('assets\\laser.png')
         laser_rect.center = (self.alien.get_left(), self.alien.get_top())
         parts.append([laser_image, laser_rect, False])
 

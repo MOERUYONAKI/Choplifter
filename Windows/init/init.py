@@ -93,7 +93,7 @@ def bases_init(size : tuple, bases_numbers : int):
 
     for i in range(bases_numbers):
         # Création des bases
-        bases.append([py.image.load('Windows\\assets\\basement.png').convert_alpha()])
+        bases.append([py.image.load('assets\\basement.png').convert_alpha()])
         bases[i][0] = py.transform.scale(bases[i][0], (81, 60))
         bases[i].append(bases[i][0].get_rect())
         bases[i].append(True)
@@ -107,8 +107,8 @@ def bases_init(size : tuple, bases_numbers : int):
         for j in range(0, random.randint(12, 32), 2):
             total_hostage += 1
 
-            hostages[i].append([py.image.load('Windows\\assets\\hostage.png').convert_alpha()])
-            hostages[i].append([py.image.load('Windows\\assets\\revert_hostage.png').convert_alpha()])
+            hostages[i].append([py.image.load('assets\\hostage.png').convert_alpha()])
+            hostages[i].append([py.image.load('assets\\revert_hostage.png').convert_alpha()])
 
             hostages[i][j][0] = py.transform.scale(hostages[i][j][0], (9, 18))
             hostages[i][j].append(hostages[i][j][0].get_rect())
