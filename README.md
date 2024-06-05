@@ -45,5 +45,6 @@ pip install -r requirements.txt
 > Others  
 > [Γκρι](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-gr.md)  
 > [日本語](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-jp.md)  
+> [中文](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-ch.md)  
 > [بالعربية](https://github.com/MOERUYONAKI/Choplifter/tree/main/docs/readme-ar.md)  
   
