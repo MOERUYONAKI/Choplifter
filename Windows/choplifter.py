@@ -162,7 +162,7 @@ def choplifter(size : tuple = (1280, 720)):
             if pressed[py.K_q] and chop.is_grounded() == 0: # - Gauche  
                 chop.active_left()
 
-                if chop.get_left() < int(round(0.3 * size[0], 0)) and bg.get_position() > 0:
+                if chop.get_left() < int(round(0.4 * size[0], 0)) and bg.get_position() > 0:
                     bg_move = 2
 
                     if bg.get_position() >= 5:
@@ -184,7 +184,7 @@ def choplifter(size : tuple = (1280, 720)):
             if pressed[py.K_d] and chop.is_grounded() == 0: # - Droite
                 chop.active_right()
 
-                if chop.get_left() > (size[0] - int(round(0.3 * size[0], 0))) and bg.get_position() < 2 * size[0]:
+                if chop.get_left() > (size[0] - int(round(0.4 * size[0], 0))) and bg.get_position() < 2 * size[0]:
                     bg_move = 1
 
                     if bg.get_position() <= 2 * size[0] - 5:
