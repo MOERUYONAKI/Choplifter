@@ -8,11 +8,6 @@ import random
 # - Choplifter imports
 from init.init import *
 from init.asset import Vehicule, Music, add_asset
-from init.background import Background
-from init.chop import Chop, Pew as ChopPew
-from init.tank import Tank, Pew as TankPew
-from init.jet import Jet, Pew as JetPew
-from init.alien import Alien, Pew as AlienPew
 
 
 # - - - - -  M A I N  - - - - -
@@ -63,7 +58,7 @@ def choplifter(size : tuple = (1280, 720)):
 
     running = True
 
-    music = Music("assets\Songs\Audiomachine - By the Hand of the Mortal.mp3", 0.2)
+    music = Music("assets\Songs\Audiomachine - By the Hand of the Mortal.mp3", 0.25)
     music.play()
 
     # Menu assets
@@ -119,7 +114,7 @@ def choplifter(size : tuple = (1280, 720)):
                 if event.type == py.KEYDOWN:
                     if event.key == py.K_SPACE or event.key == py.K_ESCAPE:
                         start_timer = time.time()
-                        music.set_volume(0.1)
+                        music.set_volume(0.18)
                         py.mouse.set_visible(False)
                         game = True
                 
@@ -130,7 +125,7 @@ def choplifter(size : tuple = (1280, 720)):
 
                         elif play_txt[1].collidepoint(py.mouse.get_pos()):
                             start_timer = time.time()
-                            music.set_volume(0.1)
+                            music.set_volume(0.18)
                             py.mouse.set_visible(False)
                             game = True
 
@@ -216,7 +211,7 @@ def choplifter(size : tuple = (1280, 720)):
 
                 if event.type == py.KEYDOWN:
                     if event.key == py.K_ESCAPE:
-                        music.set_volume(0.2)
+                        music.set_volume(0.25)
                         py.mouse.set_visible(True)
                         game = False 
 
