@@ -62,7 +62,11 @@ def choplifter(size : tuple = (1280, 720)):
     music.play()
 
     # Menu assets
-    menu = add_asset('assets\menu_bg.jpg')
+    image = py.image.load('assets\\menu_bg.jpg').convert_alpha()
+    image = py.transform.scale(image, size)
+    rect = image.get_rect()
+    
+    menu = (image, rect)
 
     choplifter_txt = add_asset('assets\\choplifter_txt.png') 
     choplifter_txt[1].center = (int(round(size[0] / 2, 0)), int(round(0.06 * size[1], 0)))
